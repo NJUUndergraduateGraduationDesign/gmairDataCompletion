@@ -1,14 +1,12 @@
 package edu.nju.gmairdatacompletion.daoImpl;
 
+import edu.nju.gmairdatacompletion.cfg.HibernateUtil;
 import edu.nju.gmairdatacompletion.dao.BaseDao;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.EntityManagerFactory;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,17 +14,10 @@ import java.util.List;
 @Repository
 public class BaseDaoImpl implements BaseDao {
 
-    @Autowired
-    private EntityManagerFactory entityManagerFactory;
-
-    private Session getSession() {
-        return entityManagerFactory.unwrap(SessionFactory.class).getCurrentSession();
-    }
-
     @Override
     public Serializable add(Object obj) {
         Serializable res = null;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             res = session.save(obj);
@@ -40,7 +31,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public <T> boolean delete(Class<T> entityClass, Serializable id) {
         boolean res = false;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             Object obj = session.get(entityClass, id);
@@ -56,7 +47,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public boolean update(Object obj) {
         boolean res = false;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             session.update(obj);
@@ -71,7 +62,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public <T> T searchById(Class<T> entityClass, Serializable id) {
         T res = null;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             res = session.get(entityClass, id);
@@ -85,7 +76,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public <T> List<T> searchByHql(String hql, Serializable... args) {
         ArrayList<T> res = null;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             Query query = session.createQuery(hql);
@@ -108,7 +99,7 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public boolean executeHql(String hql, Serializable... args) {
         boolean res = false;
-        Session session = getSession();
+        Session session = HibernateUtil.getSession();
         try {
             Transaction transaction = session.beginTransaction();
             Query query = session.createQuery(hql);
