@@ -40,10 +40,10 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public <T> boolean delete(Class<T> entityClass, Serializable id) {
         boolean res = false;
-        Object obj = searchById(entityClass, id);
         Session session = getSession();
         try {
             Transaction transaction = session.beginTransaction();
+            Object obj = session.get(entityClass, id);
             session.delete(obj);
             transaction.commit();
             res = true;
