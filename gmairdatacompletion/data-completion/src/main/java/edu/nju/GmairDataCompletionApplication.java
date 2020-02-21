@@ -1,4 +1,4 @@
-package edu.nju.gmairdatacompletion;
+package edu.nju;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
