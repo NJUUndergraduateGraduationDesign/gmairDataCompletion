@@ -1,6 +1,6 @@
 package edu.nju.mongo.repository;
 
-import edu.nju.mongo.model.MachineStatus;
+import edu.nju.mongo.model.MachineV2Status;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.List;
@@ -11,6 +11,6 @@ import java.util.List;
  * @description：repository of machineStatus
  */
 
-public interface MachineStatusRepository extends MongoRepository<MachineStatus, String> {
-    List<MachineStatus> findByUid(String uid);
+public interface MachineV2StatusRepository extends MongoRepository<MachineV2Status, String> {
+    List<MachineV2Status> findByUid(String uid);
 }

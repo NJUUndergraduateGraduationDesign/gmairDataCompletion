@@ -2,6 +2,8 @@ package edu.nju.mongo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author ：tsl
@@ -10,6 +12,33 @@ import lombok.Data;
  */
 
 @Data
+@NoArgsConstructor
 @AllArgsConstructor
+@Document("machine_v3_status")
 public class MachineV3Status {
+    private String uid;
+
+    private int pm2_5a;
+
+    private int pm2_5b;
+
+    private int tempIndoor;
+
+    private int tempOutdoor;
+
+    private int humidity;
+
+    private int co2;
+
+    private int status;
+
+    private int mode;
+
+    private int volume;
+
+    private int heat;
+
+    private int light;
+
+    private int childlock;
 }

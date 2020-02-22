@@ -2,6 +2,8 @@ package edu.nju.mongo.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author ：tsl
@@ -10,6 +12,7 @@ import lombok.Data;
  */
 
 @Data
-@AllArgsConstructor
+@NoArgsConstructor
+@Document("machine_v1_status")
 public class MachineV1Status {
 }

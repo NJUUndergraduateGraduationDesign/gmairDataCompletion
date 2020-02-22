@@ -1,7 +1,7 @@
 package edu.nju.gmairdatacompletion.controller;
 
-import edu.nju.mongo.model.MachineStatus;
-import edu.nju.mongo.service.MachineStatusService;
+import edu.nju.mongo.model.MachineV2Status;
+import edu.nju.mongo.service.MachineV2StatusService;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,11 +19,11 @@ import javax.annotation.Resource;
 @RequestMapping("/test")
 public class TestController {
     @Resource
-    MachineStatusService machineStatusService;
+    MachineV2StatusService machineV2StatusService;
 
     @PostMapping(value = "/status")
-    public MachineStatus status(@RequestParam String id) {
-        return machineStatusService.findById(id);
+    public MachineV2Status status(@RequestParam String id) {
+        return machineV2StatusService.findById(id);
     }
 
 }
