@@ -19,7 +19,7 @@ public class UserController {
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     @ResponseBody
-    public Serializable add(){
+    public Serializable add() {
         User user = new User();
         user.setUserName("a");
         return userService.addUser(user);

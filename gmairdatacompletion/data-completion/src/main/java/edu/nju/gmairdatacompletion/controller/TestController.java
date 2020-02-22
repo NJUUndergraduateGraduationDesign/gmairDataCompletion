@@ -21,8 +21,8 @@ public class TestController {
     @Resource
     MachineStatusService machineStatusService;
 
-    @PostMapping(value="/status")
-    public MachineStatus status(@RequestParam String id){
+    @PostMapping(value = "/status")
+    public MachineStatus status(@RequestParam String id) {
         return machineStatusService.findById(id);
     }
 

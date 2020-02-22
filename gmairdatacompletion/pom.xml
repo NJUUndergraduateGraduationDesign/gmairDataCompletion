@@ -16,8 +16,8 @@
     <groupId>edu.nju</groupId>
     <artifactId>gmairdatacompletion</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>gmairDataCompletion</name>
-    <description>gmairDataCompletion</description>
+    <name>gmair-data-completion</name>
+    <description>data completion of Gmair</description>
 
     <properties>
         <java.version>1.8</java.version>

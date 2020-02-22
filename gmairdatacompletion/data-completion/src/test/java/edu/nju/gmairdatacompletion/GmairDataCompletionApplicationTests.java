@@ -1,4 +1,4 @@
-package edu.nju;
+package edu.nju.gmairdatacompletion;
 
 import edu.nju.mongo.service.MachineStatusService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +17,11 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void testCount(){
+        System.out.println(machineStatusServiceImpl.count());
     }
 
 }
