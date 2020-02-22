@@ -6,6 +6,8 @@
     <modules>
         <module>mongo</module>
         <module>data-completion</module>
+        <module>data-analysis</module>
+        <module>backend</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
