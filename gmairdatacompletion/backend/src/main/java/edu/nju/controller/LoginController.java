@@ -9,7 +9,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +26,7 @@ public class LoginController {
     @PostMapping("/login")
     public ResponseDTO login(@RequestParam String uid) {
         Subject subject = SecurityUtils.getSubject();
-        UsernamePasswordToken token=new UsernamePasswordToken(uid,"");
+        UsernamePasswordToken token = new UsernamePasswordToken(uid, "");
         try {
             subject.login(token);
             return ResponseDTO.ofSuccess();
@@ -37,7 +36,7 @@ public class LoginController {
     }
 
     @PostMapping("/logout")
-    public ResponseDTO logout(){
+    public ResponseDTO logout() {
         ShiroUtil.logout();
         return ResponseDTO.ofSuccess();
     }
