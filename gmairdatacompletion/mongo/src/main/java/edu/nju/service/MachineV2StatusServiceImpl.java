@@ -2,14 +2,12 @@ package edu.nju.service;
 
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
-import edu.nju.repository.dto.UidOnly;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * @author ：tsl
@@ -19,6 +17,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class MachineV2StatusServiceImpl implements MachineV2StatusService {
+    @Resource
+    private MongoTemplate mongoTemplate;
     @Resource
     private MachineV2StatusRepository machineV2StatusRepository;
 
@@ -46,7 +46,7 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     @Override
     public long getStartTimeByUid(String uid) {
         MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
-        return machineV2Status==null?0:machineV2Status.getCreateAt();
+        return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
     }
 
     @Override
@@ -61,6 +61,6 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
 
     @Override
     public List<String> getAllUids() {
-        return machineV2StatusRepository.findAllUids();
+        return mongoTemplate.query(MachineV2Status.class).distinct("uid").as(String.class).all();
     }
 }
