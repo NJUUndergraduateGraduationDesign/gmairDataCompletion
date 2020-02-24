@@ -10,11 +10,7 @@ import java.util.List;
  * @description：service interface of machineStatus
  */
 public interface MachineV2StatusService {
-    long count();
-
     List<MachineV2Status> findByUid(String uid);
-
-    List<MachineV2Status> findAll();
 
     /*
     根据Id查询:如果不存在返回null
@@ -36,4 +32,24 @@ public interface MachineV2StatusService {
     如果有id且数据库存在相同id则更新;
      */
     void saveOrUpdate(MachineV2Status machineV2Status);
+
+    /*
+    获取所有的Uid:对象中只有uid有值
+     */
+    List<String> getAllUids();
+
+    /*
+    根据uid返回该设备最早记录的时间
+     */
+    long getStartTimeByUid(String uid);
+
+    /*
+    根据uid返回该设备指定时间戳内的时间
+     */
+    List<MachineV2Status> fetchBatchByUid(String uid,long start,long end);
+
+    /*
+    批量插入
+     */
+    void insertBatch(List<MachineV2Status> machineV2Statuses);
 }

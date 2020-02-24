@@ -2,11 +2,14 @@ package edu.nju.service;
 
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
+import edu.nju.repository.dto.UidOnly;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * @author ：tsl
@@ -20,18 +23,8 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     private MachineV2StatusRepository machineV2StatusRepository;
 
     @Override
-    public long count() {
-        return machineV2StatusRepository.count();
-    }
-
-    @Override
     public List<MachineV2Status> findByUid(String uid) {
         return machineV2StatusRepository.findByUid(uid);
-    }
-
-    @Override
-    public List<MachineV2Status> findAll() {
-        return machineV2StatusRepository.findAll();
     }
 
     @Override
@@ -48,5 +41,26 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     @Override
     public void saveOrUpdate(MachineV2Status machineV2Status) {
         machineV2StatusRepository.save(machineV2Status);
+    }
+
+    @Override
+    public long getStartTimeByUid(String uid) {
+        MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
+        return machineV2Status==null?0:machineV2Status.getCreateAt();
+    }
+
+    @Override
+    public List<MachineV2Status> fetchBatchByUid(String uid, long start, long end) {
+        return machineV2StatusRepository.findByUidAndCreateAtBetweenOrderByCreateAt(uid, start, end);
+    }
+
+    @Override
+    public void insertBatch(List<MachineV2Status> machineV2Statuses) {
+        machineV2StatusRepository.insert(machineV2Statuses);
+    }
+
+    @Override
+    public List<String> getAllUids() {
+        return machineV2StatusRepository.findAllUids();
     }
 }
