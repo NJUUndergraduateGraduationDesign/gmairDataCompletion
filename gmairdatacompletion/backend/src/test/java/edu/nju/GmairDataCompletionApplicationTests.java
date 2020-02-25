@@ -9,6 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
@@ -51,11 +52,17 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testFetchBatch() {
+        /*
         System.out.println("startTime:" + new Date());
         List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 1569859200000L, 1569945600000L);
         System.out.println("endTime:" + new Date());
-        System.out.println(machineV2StatusList.size());
-        System.out.println(machineV2StatusList);
+         */
+
+        System.out.println("startTime:" + new Date());
+        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 50);
+        System.out.println("endTime:" + new Date());
+        System.out.println(machineV2StatusPage.getSize());
+        System.out.println(machineV2StatusPage.getContent());
     }
 
     @Test

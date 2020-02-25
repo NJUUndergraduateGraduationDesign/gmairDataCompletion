@@ -1,6 +1,7 @@
 package edu.nju.service;
 
 import edu.nju.model.MachineV2Status;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -46,7 +47,9 @@ public interface MachineV2StatusService {
     /*
     根据uid返回该设备指定时间戳内的时间
      */
-    List<MachineV2Status> fetchBatchByUid(String uid,long start,long end);
+    List<MachineV2Status> fetchBatchByUid(String uid, long start, long end);
+
+    Page<MachineV2Status> fetchBatchByUid(String uid, int pageIndex, int pageSize);
 
     /*
     批量插入

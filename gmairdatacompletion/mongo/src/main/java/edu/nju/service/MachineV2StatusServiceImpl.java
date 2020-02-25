@@ -3,6 +3,9 @@ package edu.nju.service;
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -49,6 +52,11 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     public long getStartTimeByUid(String uid) {
         MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
         return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
+    }
+
+    @Override
+    public Page<MachineV2Status> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
+        return machineV2StatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
     }
 
     @Override
