@@ -32,5 +32,9 @@ public class ResponseDTO {
     public static ResponseDTO ofServerError() {
         return new ResponseDTO(ResponseCodeEnum.RESPONSE_SERVER_ERROR.getCode(), ResponseCodeEnum.RESPONSE_SERVER_ERROR.getDesc(), null);
     }
+
+    public static ResponseDTO ofShiroError(){
+        return new ResponseDTO(ResponseCodeEnum.RESPONSE_SHIRO_ERROR.getCode(),ResponseCodeEnum.RESPONSE_SHIRO_ERROR.getDesc(),null);
+    }
 }
 

@@ -5,6 +5,7 @@ import edu.nju.model.MachineV2Status;
 import edu.nju.service.MachinePartialStatusService;
 import edu.nju.service.MachineV2StatusService;
 import edu.nju.service.MachineV3StatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
+@Slf4j
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GmairDataCompletionApplication.class)
 class GmairDataCompletionApplicationTests {
@@ -28,6 +30,11 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void contextLoads() {
+    }
+
+    @Test
+    void testLogs(){
+        log.info("testLog");
     }
 
     @Test

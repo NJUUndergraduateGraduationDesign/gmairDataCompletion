@@ -2,6 +2,7 @@ package edu.nju.service;
 
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
  * @description：service implement of machineStatus
  */
 
+@Slf4j
 @Service
 public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     @Resource
