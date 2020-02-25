@@ -61,12 +61,13 @@ public class DataCompletionImpl implements DataCompletion {
             int currentPageSize = pageSize + 1; //让偶数组的数据多一个，可以不漏补任何数据
             Page<MachineV2Status> selectedData;
 
-            while (!(selectedData =
-                    machineV2StatusService.fetchBatchByUid(oneUid, pageIndex, currentPageSize))
-                    .isEmpty()) {
+            while ((selectedData =
+                    machineV2StatusService.fetchBatchByUid(oneUid, pageIndex, pageSize))
+                    .hasContent()) {
                 //这里调用补全方法
-                count += selectedData.getSize();
-                System.out.println("count: " + count + " size: " + selectedData.getSize());
+                count += selectedData.getNumberOfElements();
+                System.out.println("pageIndex: " + pageIndex + " count: "
+                        + count + " size: " + selectedData.getNumberOfElements());
                 missingData.addAll(mean.v2Mean(selectedData.getContent()));
                 pageIndex++;
                 currentPageSize = (pageIndex % 2) == 0 ? pageSize + 1 : pageSize;
