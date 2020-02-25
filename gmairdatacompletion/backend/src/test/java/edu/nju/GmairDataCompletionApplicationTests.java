@@ -2,6 +2,7 @@ package edu.nju;
 
 import com.google.common.collect.Sets;
 import edu.nju.model.MachineV2Status;
+import edu.nju.service.DataCompletion;
 import edu.nju.service.MachinePartialStatusService;
 import edu.nju.service.MachineV2StatusService;
 import edu.nju.service.MachineV3StatusService;
@@ -28,6 +29,8 @@ class GmairDataCompletionApplicationTests {
     MachineV3StatusService machineV3StatusServiceImpl;
     @Resource
     MachinePartialStatusService machinePartialStatusServiceImpl;
+    @Resource
+    DataCompletion dataCompletion;
 
     @Test
     void contextLoads() {
@@ -87,5 +90,10 @@ class GmairDataCompletionApplicationTests {
         System.out.println("v2partial:" + v2partialUidSet.size());
         System.out.println("v3partial:" + v3partialUidSet.size());
         System.out.println("v2v3partial:" + v2v3partialUidSet.size());
+    }
+
+    @Test
+    void testDataCompletion() {
+        dataCompletion.v2Completion();
     }
 }
