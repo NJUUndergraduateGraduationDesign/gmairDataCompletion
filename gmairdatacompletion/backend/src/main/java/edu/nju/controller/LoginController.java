@@ -8,6 +8,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,13 +26,16 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseDTO login(@RequestParam String uid) {
+        if(StringUtils.isEmpty(uid)){
+            return ResponseDTO.ofParamError("uid不能为空");
+        }
         Subject subject = SecurityUtils.getSubject();
         UsernamePasswordToken token = new UsernamePasswordToken(uid, "");
         try {
             subject.login(token);
-            return ResponseDTO.ofSuccess();
+            return ResponseDTO.ofSuccess(true);
         } catch (AuthenticationException e) {
-            return ResponseDTO.ofParamError("uid错误");
+            return ResponseDTO.ofSuccess(false);
         }
     }
 

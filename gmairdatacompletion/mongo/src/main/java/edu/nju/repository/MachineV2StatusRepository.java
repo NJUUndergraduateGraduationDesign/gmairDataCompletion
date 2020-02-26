@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.data.mongodb.repository.Query;
 
 import java.util.List;
 
@@ -19,7 +20,8 @@ public interface MachineV2StatusRepository extends MongoRepository<MachineV2Stat
 
     Page<MachineV2Status> findByUid(String uid, PageRequest createAt);
 
-    List<MachineV2Status> findByUidAndCreateAtBetweenOrderByCreateAt(String uid, long from, long to);
+    @Query(value="{$and: [{'uid': ?0},{'createAt':{$gte: ?1,$lte: ?2}}]}",sort="{'createAt':1}")
+    List<MachineV2Status> findByUid(String uid, long startTime, long endTime);
 
     MachineV2Status findFirstByUidOrderByCreateAt(String uid);
 
