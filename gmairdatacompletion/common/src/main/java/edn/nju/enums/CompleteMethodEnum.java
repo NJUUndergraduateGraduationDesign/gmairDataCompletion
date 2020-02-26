@@ -12,7 +12,9 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum CompleteMethodEnum {
-    NONE(0,"none");//原始数据为0
+    NONE(0,"none"),
+    MEAN(1,"mean"),
+    USE_PREVIOUS(2,"usePrevious");//原始数据为0
 
     private int code;
     private String name;

@@ -8,7 +8,8 @@ import edu.nju.model.MachineV3Status;
 import java.util.List;
 
 /**
- * 此接口中的所有方法的返回值都是补全的缺失值集合
+ * 具体补全方法--平均值法
+ * 所有方法返回值均为缺失数据
  */
 public interface Mean {
 

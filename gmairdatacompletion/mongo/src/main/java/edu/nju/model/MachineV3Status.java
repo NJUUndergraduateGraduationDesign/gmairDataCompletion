@@ -41,4 +41,8 @@ public class MachineV3Status {
     private int light;
 
     private int childlock;
+
+    private long createAt;
+
+    private int completeCode;
 }

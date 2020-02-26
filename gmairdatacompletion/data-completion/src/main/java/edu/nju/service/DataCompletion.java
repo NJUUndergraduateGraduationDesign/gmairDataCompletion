@@ -2,11 +2,12 @@ package edu.nju.service;
 
 public interface DataCompletion {
 
-    boolean partialCompletion();
+    void partialCompletion();
 
-    boolean v1Completion();
+    void v1Completion();
 
-    boolean v2Completion();
+    void v2Completion();
 
-    boolean v3Completion();
+    void v3Completion();
+
 }

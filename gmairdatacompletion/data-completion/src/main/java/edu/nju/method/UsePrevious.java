@@ -7,6 +7,10 @@ import edu.nju.model.MachineV3Status;
 
 import java.util.List;
 
+/**
+ * 具体补全方法--平移法
+ * 所有方法返回值均为缺失数据
+ */
 public interface UsePrevious {
 
     List<MachinePartialStatus> partialUsePrevious(List<MachinePartialStatus> selectedData);
