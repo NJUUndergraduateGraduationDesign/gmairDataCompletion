@@ -55,18 +55,20 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void testFetchBatch() {
-        /*
+    void testFetchBatch1() {
         System.out.println("startTime:" + new Date());
-        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 1569859200000L, 1569945600000L);
-        System.out.println("endTime:" + new Date());
-         */
-
-        System.out.println("startTime:" + new Date());
-        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 10, 50);
+        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 50);
         System.out.println("endTime:" + new Date());
         System.out.println(machineV2StatusPage.getSize());
         System.out.println(machineV2StatusPage.getContent());
+    }
+
+    @Test
+    void testFetchBatch2(){
+        System.out.println("startTime:" + new Date());
+        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 1569780000000L, 1569945600000L);
+        System.out.println("endTime:" + new Date());
+        System.out.println(machineV2StatusList.get(0));
     }
 
     @Test

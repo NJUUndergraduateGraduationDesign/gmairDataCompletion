@@ -61,7 +61,7 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
 
     @Override
     public List<MachineV2Status> fetchBatchByUid(String uid, long start, long end) {
-        return machineV2StatusRepository.findByUidAndCreateAtBetweenOrderByCreateAt(uid, start, end);
+        return machineV2StatusRepository.findByUid(uid, start, end);
     }
 
     @Override
