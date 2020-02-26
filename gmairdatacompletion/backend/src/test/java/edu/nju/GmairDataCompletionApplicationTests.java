@@ -1,5 +1,6 @@
 package edu.nju;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edu.nju.model.MachineV2Status;
 import edu.nju.service.MachinePartialStatusService;
@@ -34,7 +35,7 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void testLogs(){
+    void testLogs() {
         log.info("testLog");
     }
 
@@ -59,7 +60,7 @@ class GmairDataCompletionApplicationTests {
          */
 
         System.out.println("startTime:" + new Date());
-        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 50);
+        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 10, 50);
         System.out.println("endTime:" + new Date());
         System.out.println(machineV2StatusPage.getSize());
         System.out.println(machineV2StatusPage.getContent());
@@ -87,5 +88,15 @@ class GmairDataCompletionApplicationTests {
         System.out.println("v2partial:" + v2partialUidSet.size());
         System.out.println("v3partial:" + v3partialUidSet.size());
         System.out.println("v2v3partial:" + v2v3partialUidSet.size());
+    }
+
+    @Test
+    void testInsert() {
+        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 1);
+        MachineV2Status machineV2Status = machineV2StatusPage.getContent().get(0);
+        Date time = new Date(machineV2Status.getCreateAt() + 100000);
+        machineV2Status.setCreateAt(time.getTime());
+        log.info("toCreate:" + machineV2Status);
+        machineV2StatusServiceImpl.insertBatch(Lists.newArrayList(machineV2Status));
     }
 }

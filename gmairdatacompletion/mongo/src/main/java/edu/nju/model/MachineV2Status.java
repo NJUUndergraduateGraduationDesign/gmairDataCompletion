@@ -42,4 +42,6 @@ public class MachineV2Status {
     private boolean blockFlag;
 
     private long createAt;
+
+    private int completeCode;
 }
