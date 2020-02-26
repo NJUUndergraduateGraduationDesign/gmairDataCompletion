@@ -13,7 +13,6 @@ import java.util.List;
 public class DataCompletionImpl implements DataCompletion {
 
     private static final int pageSize = 10000;  //以10000个数据为一组进行补全
-    private static final int period = 3600000;
 
     @Resource
     private MachineV2StatusService machineV2StatusService;
@@ -37,45 +36,33 @@ public class DataCompletionImpl implements DataCompletion {
 
         //将所有具有V2数据的设备进行数据补全
         List<String> allUids = machineV2StatusService.getAllUids();
-
-        //这是按照时间间隔来补全的，暂时不采用
-//        for (String oneUid : allUids) {
-//            long firstRecodeTime = machineV2StatusService.getStartTimeByUid(oneUid);
-//            System.out.println(firstRecodeTime);
-//            long start = firstRecodeTime;
-//            long end = firstRecodeTime + period;
-//            List<MachineV2Status> selectedData;
-//            while ((selectedData = machineV2StatusService.fetchBatchByUid(oneUid, start, end)).size() > 0) {
-//                //这里调用补全方法
-//                if (start == 1569781825880L)
-//                    System.out.println(selectedData.get(0));
-//                missingData.addAll(mean.v2Mean(selectedData));
-//                start = end;
-//                end = start + period;
-//            }
-//            break;
-//        }
-        int count = 0;
         for (String oneUid : allUids) {
             int pageIndex = 0;
-            int currentPageSize = pageSize + 1; //让偶数组的数据多一个，可以不漏补任何数据
             Page<MachineV2Status> selectedData;
+            List<MachineV2Status> selectedDataContent = new ArrayList<>();
+            //将前一组数据的最后一条数据给下一组数据，可以做到不漏补任何一个数据
+            MachineV2Status lastDataInPage = new MachineV2Status();
 
             while ((selectedData =
                     machineV2StatusService.fetchBatchByUid(oneUid, pageIndex, pageSize))
                     .hasContent()) {
+                selectedDataContent.clear();
+
+                if (pageIndex > 0) {
+                    selectedDataContent.add(lastDataInPage);
+                }
+                selectedDataContent.addAll(selectedData.getContent());
+                //将最后一条数据赋值给lastDataInPage
+                lastDataInPage = selectedDataContent.get(selectedDataContent.size() - 1);
+
                 //这里调用补全方法
-                count += selectedData.getNumberOfElements();
-                System.out.println("pageIndex: " + pageIndex + " count: "
-                        + count + " size: " + selectedData.getNumberOfElements());
-                missingData.addAll(mean.v2Mean(selectedData.getContent()));
+                missingData.addAll(mean.v2Mean(selectedDataContent));
                 pageIndex++;
-                currentPageSize = (pageIndex % 2) == 0 ? pageSize + 1 : pageSize;
             }
-            break;
+            //需要测试此类的时候可以在此处加上break语句，只跑一个uid，节省时间
+            //break;
         }
         System.out.println("missing data: " + missingData.size());
-        System.out.println(missingData.get(0));
         //先不要存进数据库
 //        machineV2StatusService.insertBatch(missingData);
         return true;
