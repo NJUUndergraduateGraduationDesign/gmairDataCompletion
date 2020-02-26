@@ -3,6 +3,7 @@ package edu.nju;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edu.nju.model.MachineV2Status;
+import edu.nju.service.DataCompletion;
 import edu.nju.service.MachinePartialStatusService;
 import edu.nju.service.MachineV2StatusService;
 import edu.nju.service.MachineV3StatusService;
@@ -29,6 +30,8 @@ class GmairDataCompletionApplicationTests {
     MachineV3StatusService machineV3StatusServiceImpl;
     @Resource
     MachinePartialStatusService machinePartialStatusServiceImpl;
+    @Resource
+    DataCompletion dataCompletion;
 
     @Test
     void contextLoads() {
@@ -98,5 +101,10 @@ class GmairDataCompletionApplicationTests {
         machineV2Status.setCreateAt(time.getTime());
         log.info("toCreate:" + machineV2Status);
         machineV2StatusServiceImpl.insertBatch(Lists.newArrayList(machineV2Status));
+    }
+
+    @Test
+    void testDataCompletion() {
+        dataCompletion.v2Completion();
     }
 }
