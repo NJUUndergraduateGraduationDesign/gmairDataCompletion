@@ -35,7 +35,7 @@ public interface MachineV2StatusService {
     void saveOrUpdate(MachineV2Status machineV2Status);
 
     /*
-    获取所有的Uid:对象中只有uid有值
+    获取所有的Uid
      */
     List<String> getAllUids();
 

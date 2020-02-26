@@ -1,6 +1,8 @@
 package edu.nju.repository;
 
 import edu.nju.model.MachineV3Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 /**
@@ -10,4 +12,5 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 
 public interface MachineV3StatusRepository extends MongoRepository<MachineV3Status, String> {
+    Page<MachineV3Status> findByUid(String uid, PageRequest createAt);
 }

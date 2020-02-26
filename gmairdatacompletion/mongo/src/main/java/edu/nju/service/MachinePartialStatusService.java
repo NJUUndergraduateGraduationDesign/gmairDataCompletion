@@ -1,5 +1,8 @@
 package edu.nju.service;
 
+import edu.nju.model.MachinePartialStatus;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 /**
@@ -13,4 +16,8 @@ public interface MachinePartialStatusService {
     获取所有的Uid:对象中只有uid有值
     */
     List<String> getAllUids();
+
+    Page<MachinePartialStatus> fetchBatchByUid(String uid, int pageIndex, int pageSize);
+
+    void insertBatch(List<MachinePartialStatus> machinePartialStatuses);
 }

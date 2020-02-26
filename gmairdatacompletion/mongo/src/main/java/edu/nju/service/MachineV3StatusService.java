@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface MachineV3StatusService {
     /*
-    获取所有的Uid:对象中只有uid有值
+    获取所有的Uid
     */
     List<String> getAllUids();
 
@@ -22,5 +22,5 @@ public interface MachineV3StatusService {
     /*
     批量插入
      */
-    void insertBatch(List<MachineV3Status> machineV2Statuses);
+    void insertBatch(List<MachineV3Status> machineV3Statuses);
 }

@@ -1,7 +1,10 @@
 package edu.nju.service;
 
 import edu.nju.model.MachineV3Status;
+import edu.nju.repository.MachineV3StatusRepository;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +21,8 @@ import java.util.List;
 public class MachineV3StatusServiceImpl implements MachineV3StatusService {
     @Resource
     MongoTemplate mongoTemplate;
+    @Resource
+    MachineV3StatusRepository machineV3StatusRepository;
 
     @Override
     public List<String> getAllUids() {
@@ -26,11 +31,11 @@ public class MachineV3StatusServiceImpl implements MachineV3StatusService {
 
     @Override
     public Page<MachineV3Status> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
-        return null;
+        return machineV3StatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
     }
 
     @Override
-    public void insertBatch(List<MachineV3Status> machineV2Statuses) {
-
+    public void insertBatch(List<MachineV3Status> machineV3Statuses) {
+        machineV3StatusRepository.insert(machineV3Statuses);
     }
 }
