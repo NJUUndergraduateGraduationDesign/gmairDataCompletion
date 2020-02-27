@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +31,7 @@ public class V2CompletionThread {
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
         System.out.println("当前线程池" + Thread.currentThread().getName());
+        System.out.println("uid----" + uid + " start complete time: " + new Date());
         //一个uid的所有缺失数据集合
         List<MachineV2Status> missingDataByMean = new ArrayList<>();
         List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
@@ -65,6 +67,7 @@ public class V2CompletionThread {
 
         System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
                 "\nFirst missing data: " + missingDataByUsePrevious.get(0));
+        System.out.println("uid----" + uid + " end complete time: " + new Date());
         //先不要存进数据库
 //            machineV2StatusService.insertBatch(missingDataByMean);
 //            machineV2StatusService.insertBatch(missingDataByUsePrevious);

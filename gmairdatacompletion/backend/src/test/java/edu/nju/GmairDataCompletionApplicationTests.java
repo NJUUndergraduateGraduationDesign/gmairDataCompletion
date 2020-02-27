@@ -110,5 +110,10 @@ class GmairDataCompletionApplicationTests {
         System.out.println("start time: " + new Date());
         dataCompletion.v2Completion();
         System.out.println("end time: " + new Date());
+        try{
+            System.in.read();
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

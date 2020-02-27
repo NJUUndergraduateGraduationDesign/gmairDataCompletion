@@ -36,11 +36,15 @@ public class DataCompletionImpl implements DataCompletion {
     public void v2Completion() {
         //将所有设备数据进行补全
         //这边可以开多线程，多个uid同时进行补全
+        int count = 0;
         List<String> allUids = machineV2StatusService.getAllUids();
         for (String oneUid : allUids) {
+            count++;
             v2CompletionThread.iterateAndComplete(oneUid, pageSize);
+            if (count == 5)
+                break;
             //需要测试此类的时候可以在此处加上break语句，只跑一个uid，节省时间
-            break;
+//            break;
         }
     }
 
