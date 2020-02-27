@@ -57,7 +57,6 @@ public class UserRealm extends AuthorizingRealm {
             if (null == user) {
                 throw new UnsupportedTokenException("uid错误");
             } else {
-                user.setLastLoginTime(new Date());
                 return new SimpleAuthenticationInfo(uid, "", getName());
             }
         }

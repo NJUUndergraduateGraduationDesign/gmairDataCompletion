@@ -5,10 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Repository;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -20,11 +17,14 @@ import java.util.Date;
 public class User implements Serializable {
 
     @Id
-    @GeneratedValue
-    private long userId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer userId;
 
     private String uid;
 
-    private Date lastLoginTime;
-    //todo:其他用户属性等补充
+    private String cityId;
+
+    private String codeValue;
+
+    private Date bindTime;
 }
