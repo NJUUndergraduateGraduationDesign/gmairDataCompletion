@@ -20,7 +20,7 @@ public interface MachineV2StatusRepository extends MongoRepository<MachineV2Stat
 
     Page<MachineV2Status> findByUid(String uid, PageRequest createAt);
 
-    @Query(value="{$and: [{'uid': ?0},{'createAt':{$gte: ?1,$lte: ?2}}]}",sort="{'createAt':1}")
+    @Query(value="{$and: [{'uid': ?0},{'createAt':{$gte: ?1,$lt: ?2}}]}",sort="{'createAt':1}")
     List<MachineV2Status> findByUid(String uid, long startTime, long endTime);
 
     /**
