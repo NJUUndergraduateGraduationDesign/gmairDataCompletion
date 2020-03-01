@@ -12,5 +12,13 @@ import org.springframework.data.mongodb.repository.MongoRepository;
  */
 
 public interface MachineV3StatusRepository extends MongoRepository<MachineV3Status, String> {
+
+    /**
+     * 找到某一台设备的最新一条记录
+     * @param uid 设备uid
+     * @return 设备信息
+     */
+    MachineV3Status findFirstByUidOrderByCreateAtDesc(String uid);
+
     Page<MachineV3Status> findByUid(String uid, PageRequest createAt);
 }

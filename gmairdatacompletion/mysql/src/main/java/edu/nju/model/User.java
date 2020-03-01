@@ -27,4 +27,6 @@ public class User implements Serializable {
     private String codeValue;
 
     private Date bindTime;
+
+    private int dataType;
 }
