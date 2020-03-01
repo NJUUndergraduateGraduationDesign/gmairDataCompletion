@@ -1,7 +1,10 @@
 package edn.nju.enums;
 
+import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+
+import java.util.List;
 
 /**
  * @author ：tsl
@@ -18,4 +21,8 @@ public enum CompleteMethodEnum {
 
     private int code;
     private String name;
+
+    public static List<Integer> getAllCompleteMethodCode(){
+        return Lists.newArrayList(MEAN.getCode(),USE_PREVIOUS.getCode());
+    }
 }
