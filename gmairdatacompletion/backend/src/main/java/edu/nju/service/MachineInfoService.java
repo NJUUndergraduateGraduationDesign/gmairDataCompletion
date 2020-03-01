@@ -9,6 +9,11 @@ import edu.nju.dto.MachineBasicInfo;
  */
 public interface MachineInfoService {
 
+    /**
+     * 根据uid得到机器设备的基本信息
+     * @param uid 设备uid
+     * @return 机器设备的基本信息
+     */
     MachineBasicInfo getMachineBasicInfoByUid(String uid);
 
 }

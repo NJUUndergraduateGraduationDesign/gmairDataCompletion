@@ -36,6 +36,8 @@ class GmairDataCompletionApplicationTests {
     UserService userService;
     @Resource
     MachineStatusService machineStatusServiceImpl;
+    @Resource
+    MachineInfoService machineInfoService;
 
     @Test
     void contextLoads() {
@@ -136,7 +138,7 @@ class GmairDataCompletionApplicationTests {
             User user = userService.findByUid(oneId);
             if (user == null) {
                 count++;
-                System.out.println("V1: " + oneId);
+                System.out.println("V3: " + oneId);
                 continue;
             }
             user.setDataType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
@@ -152,7 +154,6 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testMethods() {
-        MachineQueryCond queryCond = new MachineQueryCond();
-        System.out.println(queryCond.getCreateTimeGTE());
+        System.out.println(machineInfoService.getMachineBasicInfoByUid(""));
     }
 }
