@@ -1,6 +1,6 @@
 package edu.nju.service;
 
-import edu.nju.bo.MachineStatusHourly;
+import edu.nju.bo.MachineV2StatusHourly;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ import java.util.List;
  */
 
 public interface MachineStatusHourlyService {
-    void saveMachineStatusHourlyList(List<MachineStatusHourly> list);
+    void saveMachineStatusHourlyList(List<MachineV2StatusHourly> list);
 
-    void saveMachineStatusHourly(MachineStatusHourly status);
+    void saveMachineStatusHourly(MachineV2StatusHourly status);
 }

@@ -6,20 +6,19 @@ import lombok.Data;
 
 /**
  * @author ：tsl
- * @date ：Created in 2020/3/1 17:10
+ * @date ：Created in 2020/3/1 23:56
  * @description：
  */
 
 @Data
 @Builder
 @AllArgsConstructor
-public class MachineStatusHourly {
+public class MachineV3StatusHourly {
     private String uid;
-    private int completeCode;
+    private int completeMethod;
     private long createAt;
-    // 这里的是pm2.5a(indoorPm25)
-    // pm2.5b(innerPm25)由partial单独统计存储
-    private double averagePm25;
+    private double averageIndoorPm25;
+    private double averageInnerPm25;
     private double averageVolume;
     private double averageHumid;
     private double averageTemp;

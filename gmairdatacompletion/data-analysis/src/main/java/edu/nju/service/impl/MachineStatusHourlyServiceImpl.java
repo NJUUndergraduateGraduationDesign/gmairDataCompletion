@@ -1,6 +1,6 @@
 package edu.nju.service.impl;
 
-import edu.nju.bo.MachineStatusHourly;
+import edu.nju.bo.MachineV2StatusHourly;
 import edu.nju.dao.*;
 import edu.nju.model.status.*;
 import edu.nju.service.MachineStatusHourlyService;
@@ -8,6 +8,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -37,13 +38,15 @@ public class MachineStatusHourlyServiceImpl implements MachineStatusHourlyServic
     @Resource
     VolumeHourlyDao volumeHourlyDaoImpl;
 
-    public void saveMachineStatusHourlyList(List<MachineStatusHourly> list) {
-        for (MachineStatusHourly status : list) {
+    @Transactional
+    public void saveMachineStatusHourlyList(List<MachineV2StatusHourly> list) {
+        for (MachineV2StatusHourly status : list) {
             saveMachineStatusHourly(status);
         }
     }
 
-    public void saveMachineStatusHourly(MachineStatusHourly status) {
+    @Transactional
+    public void saveMachineStatusHourly(MachineV2StatusHourly status) {
         Co2Hourly co2Hourly = new Co2Hourly();
         BeanUtils.copyProperties(status, co2Hourly);
         co2HourlyDaoImpl.add(co2Hourly);
