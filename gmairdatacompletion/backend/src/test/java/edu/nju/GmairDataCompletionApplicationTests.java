@@ -2,11 +2,11 @@ package edu.nju;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import edn.nju.enums.MachineStatusTypeEnum;
+import edu.nju.dto.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
-import edu.nju.service.DataCompletion;
-import edu.nju.service.MachinePartialStatusService;
-import edu.nju.service.MachineV2StatusService;
-import edu.nju.service.MachineV3StatusService;
+import edu.nju.model.User;
+import edu.nju.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +32,8 @@ class GmairDataCompletionApplicationTests {
     MachinePartialStatusService machinePartialStatusServiceImpl;
     @Resource
     DataCompletion dataCompletion;
+    @Resource
+    UserService userService;
 
     @Test
     void contextLoads() {
@@ -115,5 +117,34 @@ class GmairDataCompletionApplicationTests {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void changeTableUser() {
+        List<String> allV2Uids = machineV2StatusServiceImpl.getAllUids();
+        int count = 0;
+        for (String oneId : allV2Uids) {
+            User user = userService.findByUid(oneId);
+            if (user == null) {
+                count++;
+                System.out.println("V2: " + oneId);
+                continue;
+            }
+            user.setDataType(MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode());
+            userService.update(user);
+        }
+
+        List<String> allV3Uids = machineV3StatusServiceImpl.getAllUids();
+        for (String oneId : allV3Uids) {
+            User user = userService.findByUid(oneId);
+            if (user == null) {
+                count++;
+                System.out.println("V1: " + oneId);
+                continue;
+            }
+            user.setDataType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
+            userService.update(user);
+        }
+        System.out.println("total: " + count);
     }
 }

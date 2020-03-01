@@ -17,6 +17,13 @@ public interface MachineV3StatusService {
     */
     List<String> getAllUids();
 
+    /**
+     * 根据uid得到该设备最新的一条记录
+     * @param uid 设备uid
+     * @return 最新的一条记录
+     */
+    MachineV3Status getLatestRecord(String uid);
+
     Page<MachineV3Status> fetchBatchByUid(String uid, int pageIndex, int pageSize);
 
     /*

@@ -16,7 +16,7 @@ import java.util.Optional;
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/21 15:16
- * @description：service implement of machineStatus
+ * @description： service implement of machineStatus
  */
 
 @Slf4j
@@ -52,6 +52,11 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     public long getStartTimeByUid(String uid) {
         MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
         return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
+    }
+
+    @Override
+    public MachineV2Status getLatestRecord(String uid) {
+        return machineV2StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
     }
 
     @Override

@@ -30,6 +30,11 @@ public class MachineV3StatusServiceImpl implements MachineV3StatusService {
     }
 
     @Override
+    public MachineV3Status getLatestRecord(String uid) {
+        return machineV3StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
+    }
+
+    @Override
     public Page<MachineV3Status> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
         return machineV3StatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
     }

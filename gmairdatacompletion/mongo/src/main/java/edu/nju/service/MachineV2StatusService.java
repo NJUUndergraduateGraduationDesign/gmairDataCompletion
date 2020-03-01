@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/21 15:16
- * @description：service interface of machineStatus
+ * @description： service interface of machineStatus
  */
 public interface MachineV2StatusService {
     List<MachineV2Status> findByUid(String uid);
@@ -43,6 +43,13 @@ public interface MachineV2StatusService {
     根据uid返回该设备最早记录的时间
      */
     long getStartTimeByUid(String uid);
+
+    /**
+     * 根据uid得到该设备最新的一条记录
+     * @param uid 设备uid
+     * @return 最新的一条记录
+     */
+    MachineV2Status getLatestRecord(String uid);
 
     /*
     根据uid返回该设备指定时间戳内的时间

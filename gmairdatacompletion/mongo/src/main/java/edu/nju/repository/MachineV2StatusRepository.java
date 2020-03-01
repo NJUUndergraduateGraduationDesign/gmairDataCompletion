@@ -23,6 +23,13 @@ public interface MachineV2StatusRepository extends MongoRepository<MachineV2Stat
     @Query(value="{$and: [{'uid': ?0},{'createAt':{$gte: ?1,$lte: ?2}}]}",sort="{'createAt':1}")
     List<MachineV2Status> findByUid(String uid, long startTime, long endTime);
 
+    /**
+     * 找到某一台设备的最新一条记录
+     * @param uid 设备uid
+     * @return 设备信息
+     */
+    MachineV2Status findFirstByUidOrderByCreateAtDesc(String uid);
+
     MachineV2Status findFirstByUidOrderByCreateAt(String uid);
 
     @Aggregation("{ '$project': { '_id' : '$uid' } }")
