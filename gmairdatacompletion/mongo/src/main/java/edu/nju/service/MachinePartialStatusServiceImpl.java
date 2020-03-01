@@ -35,6 +35,11 @@ public class MachinePartialStatusServiceImpl implements MachinePartialStatusServ
     }
 
     @Override
+    public List<MachinePartialStatus> findByUid(String uid) {
+        return machinePartialStatusRepository.findByUid(uid);
+    }
+
+    @Override
     public void insertBatch(List<MachinePartialStatus> machinePartialStatuses) {
         machinePartialStatusRepository.insert(machinePartialStatuses);
     }

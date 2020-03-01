@@ -1,5 +1,6 @@
 package edu.nju.service;
 
+import edu.nju.model.MachineV2Status;
 import edu.nju.model.MachineV3Status;
 import edu.nju.repository.MachineV3StatusRepository;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,23 @@ public class MachineV3StatusServiceImpl implements MachineV3StatusService {
     @Override
     public Page<MachineV3Status> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
         return machineV3StatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
+    }
+
+    @Override
+    public List<MachineV3Status> fetchBatchByUid(String uid, long start, long end) {
+        return machineV3StatusRepository.findByUid(uid, start, end);
+    }
+
+    @Override
+    public long getStartTimeByUid(String uid) {
+        MachineV3Status machineV3Status = machineV3StatusRepository.findFirstByUidOrderByCreateAt(uid);
+        return machineV3Status == null ? 0 : machineV3Status.getCreateAt();
+    }
+
+    @Override
+    public long getLatestTimeByUid(String uid) {
+        MachineV3Status machineV3Status = machineV3StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
+        return machineV3Status == null ? 0 : machineV3Status.getCreateAt();
     }
 
     @Override

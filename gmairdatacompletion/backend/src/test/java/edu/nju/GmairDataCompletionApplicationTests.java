@@ -34,6 +34,8 @@ class GmairDataCompletionApplicationTests {
     DataCompletion dataCompletion;
     @Resource
     UserService userService;
+    @Resource
+    MachineStatusService machineStatusServiceImpl;
 
     @Test
     void contextLoads() {
@@ -50,11 +52,6 @@ class GmairDataCompletionApplicationTests {
         System.out.println(machineV2Status);
     }
 
-    @Test
-    void testFindByUID() {
-        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.findByUid("F0FE6BC350A0");
-        System.out.println(machineV2StatusList.size());
-    }
 
     @Test
     void testFetchBatch1() {
@@ -146,5 +143,10 @@ class GmairDataCompletionApplicationTests {
             userService.update(user);
         }
         System.out.println("total: " + count);
+    }
+
+    @Test
+    void testAnalyze(){
+        machineStatusServiceImpl.handleAllData();
     }
 }

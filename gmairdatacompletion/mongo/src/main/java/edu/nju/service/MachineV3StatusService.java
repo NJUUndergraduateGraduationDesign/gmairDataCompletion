@@ -1,5 +1,6 @@
 package edu.nju.service;
 
+import edu.nju.model.MachineV2Status;
 import edu.nju.model.MachineV3Status;
 import org.springframework.data.domain.Page;
 
@@ -19,12 +20,29 @@ public interface MachineV3StatusService {
 
     /**
      * 根据uid得到该设备最新的一条记录
+     *
      * @param uid 设备uid
      * @return 最新的一条记录
      */
     MachineV3Status getLatestRecord(String uid);
 
+    /*
+    根据uid返回该设备最早记录的时间
+    */
+    long getStartTimeByUid(String uid);
+
+    /*
+    根据uid返回该设备最近记录的时间
+     */
+    long getLatestTimeByUid(String uid);
+
+
     Page<MachineV3Status> fetchBatchByUid(String uid, int pageIndex, int pageSize);
+
+    /*
+    根据uid返回该设备指定时间戳内的记录
+    */
+    List<MachineV3Status> fetchBatchByUid(String uid, long start, long end);
 
     /*
     批量插入

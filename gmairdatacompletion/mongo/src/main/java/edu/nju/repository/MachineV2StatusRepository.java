@@ -16,8 +16,6 @@ import java.util.List;
  */
 
 public interface MachineV2StatusRepository extends MongoRepository<MachineV2Status, String> {
-    List<MachineV2Status> findByUid(String uid);
-
     Page<MachineV2Status> findByUid(String uid, PageRequest createAt);
 
     @Query(value="{$and: [{'uid': ?0},{'createAt':{$gte: ?1,$lt: ?2}}]}",sort="{'createAt':1}")
@@ -31,7 +29,4 @@ public interface MachineV2StatusRepository extends MongoRepository<MachineV2Stat
     MachineV2Status findFirstByUidOrderByCreateAtDesc(String uid);
 
     MachineV2Status findFirstByUidOrderByCreateAt(String uid);
-
-    @Aggregation("{ '$project': { '_id' : '$uid' } }")
-    List<String> findAllUids();
 }

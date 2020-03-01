@@ -28,11 +28,6 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     private MachineV2StatusRepository machineV2StatusRepository;
 
     @Override
-    public List<MachineV2Status> findByUid(String uid) {
-        return machineV2StatusRepository.findByUid(uid);
-    }
-
-    @Override
     public MachineV2Status findById(String id) {
         Optional<MachineV2Status> machineV2StatusOptional = machineV2StatusRepository.findById(id);
         return machineV2StatusOptional.isPresent() ? machineV2StatusOptional.get() : null;
@@ -51,6 +46,12 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     @Override
     public long getStartTimeByUid(String uid) {
         MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
+        return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
+    }
+
+    @Override
+    public long getLatestTimeByUid(String uid) {
+        MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
         return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
     }
 

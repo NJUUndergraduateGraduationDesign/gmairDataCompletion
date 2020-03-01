@@ -19,5 +19,7 @@ public interface MachinePartialStatusService {
 
     Page<MachinePartialStatus> fetchBatchByUid(String uid, int pageIndex, int pageSize);
 
+    List<MachinePartialStatus> findByUid(String uid);
+
     void insertBatch(List<MachinePartialStatus> machinePartialStatuses);
 }

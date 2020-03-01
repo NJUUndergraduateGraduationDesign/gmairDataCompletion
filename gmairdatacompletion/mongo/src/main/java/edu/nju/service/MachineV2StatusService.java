@@ -11,8 +11,6 @@ import java.util.List;
  * @description： service interface of machineStatus
  */
 public interface MachineV2StatusService {
-    List<MachineV2Status> findByUid(String uid);
-
     /*
     根据Id查询:如果不存在返回null
      */
@@ -43,6 +41,12 @@ public interface MachineV2StatusService {
     根据uid返回该设备最早记录的时间
      */
     long getStartTimeByUid(String uid);
+
+    /*
+    根据uid返回该设备最近记录的时间
+     */
+    long getLatestTimeByUid(String uid);
+
 
     /**
      * 根据uid得到该设备最新的一条记录

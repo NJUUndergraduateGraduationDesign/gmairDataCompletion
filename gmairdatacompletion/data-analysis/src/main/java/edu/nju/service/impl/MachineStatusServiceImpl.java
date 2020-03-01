@@ -4,17 +4,10 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;
 import edn.nju.enums.CompleteMethodEnum;
 import edn.nju.util.TimeUtil;
-import edu.nju.dao.*;
+import edu.nju.bo.MachineStatusHourly;
 import edu.nju.model.MachineV2Status;
-import edu.nju.model.status.*;
-import edu.nju.service.MachinePartialStatusService;
-import edu.nju.service.MachineStatusService;
-import edu.nju.service.MachineV2StatusService;
-import edu.nju.service.MachineV3StatusService;
-import lombok.Builder;
-import lombok.Data;
-import lombok.extern.log4j.Log4j;
-import org.springframework.beans.BeanUtils;
+import edu.nju.service.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -25,9 +18,10 @@ import java.util.stream.Collectors;
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/29 23:27
- * @description：implement of machine status service
+ * @description：get machine_xx_status from mongodb and translate to MachineStatusHourly business object
  */
 
+@Slf4j
 @Service
 public class MachineStatusServiceImpl implements MachineStatusService {
     @Resource
@@ -37,23 +31,7 @@ public class MachineStatusServiceImpl implements MachineStatusService {
     @Resource
     MachinePartialStatusService machinePartialStatusServiceImpl;
     @Resource
-    Co2HourlyDao co2HourlyDaoImpl;
-    @Resource
-    HeatHourlyDao heatHourlyDaoImpl;
-    @Resource
-    HumidHourlyDao humidHourlyDaoImpl;
-    @Resource
-    IndoorPm25HourlyDao indoorPm25HourlyDaoImpl;
-    @Resource
-    InnerPm25HourlyDao innerPm25HourlyDaoImpl;
-    @Resource
-    ModeHourlyDao modeHourlyDaoImpl;
-    @Resource
-    PowerHourlyDao powerHourlyDaoImpl;
-    @Resource
-    TempHourlyDao tempHourlyDaoImpl;
-    @Resource
-    VolumeHourlyDao volumeHourlyDaoImpl;
+    MachineStatusHourlyService machineStatusHourlyServiceImpl;
 
 
     private static final List<Integer> COMPLETE_METHOD_CODE_LIST = CompleteMethodEnum.getAllCompleteMethodCode();
@@ -71,9 +49,9 @@ public class MachineStatusServiceImpl implements MachineStatusService {
      */
     @Override
     public void handleAllData() {
-        handlePartialData();
+        //handlePartialData();
         handleV2Data();
-        handleV3Data();
+        //handleV3Data();
     }
 
     private void handleV2Data() {
@@ -81,32 +59,43 @@ public class MachineStatusServiceImpl implements MachineStatusService {
         List<String> uidList = machineV2StatusServiceImpl.getAllUids();
         //按uid遍历
         for (String uid : uidList) {
+            log.info("uid:{}",uid);
+
             //当前uid以小时为单位的统计数据
             List<MachineStatusHourly> hourlyList = Lists.newArrayList();
             //得到当前uid开始的记录时间和结束的记录时间
-            long time = machineV2StatusServiceImpl.getStartTimeByUid(uid);
-            long startOfThisHour = TimeUtil.startOfThisHour(time);
-            long startOfNextHour = TimeUtil.startOfNextHour(time);
+            long startTime = machineV2StatusServiceImpl.getStartTimeByUid(uid);
+            long start = TimeUtil.startOfThisHour(startTime);
+            long endTime = machineV2StatusServiceImpl.getLatestTimeByUid(uid);
+            long end = TimeUtil.startOfThisHour(endTime);
+            log.info("startTime:{},endTime:{}",start,end);
+
             List<MachineV2Status> machineV2StatusList;
             //对当前uid按小时获取记录,直到最后一个小时
-            while (!(machineV2StatusList =
-                    machineV2StatusServiceImpl.fetchBatchByUid(uid, startOfThisHour, startOfNextHour))
-                    .isEmpty()) {                //当前uid,当前小时
+            for (long cur = start; cur <= end; cur = TimeUtil.startOfNextHour(cur)) {
+                //当前uid,当前小时
+                log.info("currentHour:{}",cur);
+                long curNextHour = TimeUtil.startOfNextHour(cur);
+                machineV2StatusList =
+                        machineV2StatusServiceImpl.fetchBatchByUid(uid, cur, curNextHour);
+                log.info("fetchSize:{}",machineV2StatusList.size());
                 //去除无效数据
                 machineV2StatusList.removeIf(e -> !e.isBlockFlag());
                 //筛选出原始数据
                 List<MachineV2Status> originalDataList = machineV2StatusList.stream()
                         .filter(e -> e.getCompleteCode() == CompleteMethodEnum.NONE.getCode())
                         .collect(Collectors.toList());
+                log.info("originalSize:{}",machineV2StatusList.size());
                 //如果当前小时没有原始数据也会存入一条全为0的记录
                 if (originalDataList.isEmpty()) {
-                    hourlyList.add(new MachineStatusHourly(uid, CompleteMethodEnum.NONE.getCode(), startOfThisHour,
+                    hourlyList.add(new MachineStatusHourly(uid, CompleteMethodEnum.NONE.getCode(), cur,
                             0, 0, 0, 0,
                             0, 0, 0, 0,
                             0, 0, 0));
                 } else {
-                    MachineStatusHourly machineStatusHourly = toMachineStatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), startOfThisHour);
+                    MachineStatusHourly machineStatusHourly = toMachineStatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), cur);
                     hourlyList.add(machineStatusHourly);
+                    log.info("originalHourly:{}",machineStatusHourly);
                 }
                 for (Integer code : COMPLETE_METHOD_CODE_LIST) {
                     List<MachineV2Status> completeDataList = machineV2StatusList.stream()
@@ -117,12 +106,13 @@ public class MachineStatusServiceImpl implements MachineStatusService {
                         continue;
                     }
                     completeDataList.addAll(originalDataList);
-                    MachineStatusHourly machineStatusHourly = toMachineStatusHourly(completeDataList, code, startOfThisHour);
+                    MachineStatusHourly machineStatusHourly = toMachineStatusHourly(completeDataList, code, cur);
+                    log.info("completeMethod:{},completeSize:{},completeHourly:{}",code,completeDataList.size(),machineStatusHourly);
                     hourlyList.add(machineStatusHourly);
                 }
             }
             //一个uid批量保存一次;
-            saveMachineStatusHourlyList(hourlyList);
+            machineStatusHourlyServiceImpl.saveMachineStatusHourlyList(hourlyList);
         }
     }
 
@@ -160,67 +150,5 @@ public class MachineStatusServiceImpl implements MachineStatusService {
                 .manualMinute(manualMinute).sleepMinute(sleepMinute).heatOffMinute(heatOffMinute)
                 .heatOnMinute(heatOnMinute).createAt(createAt).build();
 
-    }
-
-    private void saveMachineStatusHourlyList(List<MachineStatusHourly> list) {
-        for (MachineStatusHourly status : list) {
-            saveMachineStatusHourly(status);
-        }
-    }
-
-    private void saveMachineStatusHourly(MachineStatusHourly status) {
-        Co2Hourly co2Hourly = new Co2Hourly();
-        BeanUtils.copyProperties(status, co2Hourly);
-        co2HourlyDaoImpl.add(co2Hourly);
-
-        HeatHourly heatHourly = new HeatHourly();
-        BeanUtils.copyProperties(status, heatHourly);
-        heatHourlyDaoImpl.add(heatHourly);
-
-        HumidHourly humidHourly = new HumidHourly();
-        BeanUtils.copyProperties(status, humidHourly);
-        humidHourlyDaoImpl.add(humidHourly);
-
-        IndoorPm25Hourly indoorPm25Hourly = new IndoorPm25Hourly();
-        BeanUtils.copyProperties(status, indoorPm25Hourly);
-        indoorPm25Hourly.setAveragePm25(status.getAveragePm25());
-        indoorPm25HourlyDaoImpl.add(indoorPm25Hourly);
-
-        ModeHourly modeHourly = new ModeHourly();
-        BeanUtils.copyProperties(status, modeHourly);
-        modeHourlyDaoImpl.add(modeHourly);
-
-        PowerHourly powerHourly = new PowerHourly();
-        BeanUtils.copyProperties(status, powerHourly);
-        powerHourlyDaoImpl.add(powerHourly);
-
-        TempHourly tempHourly = new TempHourly();
-        BeanUtils.copyProperties(status, tempHourly);
-        tempHourlyDaoImpl.add(tempHourly);
-
-        VolumeHourly volumeHourly = new VolumeHourly();
-        BeanUtils.copyProperties(status, volumeHourly);
-        volumeHourlyDaoImpl.add(volumeHourly);
-    }
-
-    @Data
-    @Builder
-    private static class MachineStatusHourly {
-        private String uid;
-        private int completeCode;
-        private long createAt;
-        // 这里的是pm2.5a(indoorPm25)
-        // pm2.5b(innerPm25)由partial单独统计存储
-        private double averagePm25;
-        private double averageVolume;
-        private double averageHumid;
-        private double averageTemp;
-        private int powerOffMinute;
-        private int powerOnMinute;
-        private int autoMinute;
-        private int manualMinute;
-        private int sleepMinute;
-        private int heatOffMinute;
-        private int heatOnMinute;
     }
 }
