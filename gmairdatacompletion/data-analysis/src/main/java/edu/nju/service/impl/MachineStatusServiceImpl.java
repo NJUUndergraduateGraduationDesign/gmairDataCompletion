@@ -28,7 +28,6 @@ import java.util.stream.Collectors;
  * @description：implement of machine status service
  */
 
-@Log4j
 @Service
 public class MachineStatusServiceImpl implements MachineStatusService {
     @Resource

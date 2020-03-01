@@ -3,7 +3,7 @@ package edu.nju.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -28,5 +28,6 @@ public class User implements Serializable {
 
     private Date bindTime;
 
+    @ColumnDefault("-1")
     private int dataType;
 }

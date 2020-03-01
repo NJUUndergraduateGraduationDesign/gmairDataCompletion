@@ -12,8 +12,6 @@ import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
-import java.util.Date;
-
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/23 16:38
@@ -54,7 +52,7 @@ public class UserRealm extends AuthorizingRealm {
             return new SimpleAuthenticationInfo(uid, "", getName());
         } else {
             User user = userService.findByUid(uid);
-            if (null == user) {
+            if (null == user || user.getDataType() < 0) {
                 throw new UnsupportedTokenException("uid错误");
             } else {
                 return new SimpleAuthenticationInfo(uid, "", getName());
