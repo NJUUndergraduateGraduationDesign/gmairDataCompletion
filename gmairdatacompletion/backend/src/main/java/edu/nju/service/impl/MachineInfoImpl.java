@@ -53,6 +53,12 @@ public class MachineInfoImpl implements MachineInfoService {
             res.setIsPower(machineV3Status.getStatus());
             res.setMode(machineV3Status.getMode());
         }
+        //该uid没有原始数据
+        else {
+            res.setHeat(-1);
+            res.setIsPower(-1);
+            res.setMode(-1);
+        }
 
         return res;
     }

@@ -154,6 +154,6 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testMethods() {
-        System.out.println(machineInfoService.getMachineBasicInfoByUid(""));
+        System.out.println(machineInfoService.getMachineBasicInfoByUid("F0FE6BAA707A").getIsPower());
     }
 }
