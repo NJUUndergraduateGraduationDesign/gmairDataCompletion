@@ -72,9 +72,9 @@ public class MachineStatusServiceImpl implements MachineStatusService {
      */
     @Override
     public void handleAllData() {
+        handlePartialData();
         handleV2Data();
         handleV3Data();
-        handlePartialData();
     }
 
     private void handleV2Data() {
@@ -101,11 +101,11 @@ public class MachineStatusServiceImpl implements MachineStatusService {
                         .collect(Collectors.toList());
                 //如果当前小时没有原始数据也会存入一条全为0的记录
                 if (originalDataList.isEmpty()) {
-                    hourlyList.add(new MachineStatusHourly(uid,CompleteMethodEnum.NONE.getCode(),startOfThisHour,
-                            0,0,0,0,
-                            0, 0,0,0,
-                            0,0,0));
-                }else{
+                    hourlyList.add(new MachineStatusHourly(uid, CompleteMethodEnum.NONE.getCode(), startOfThisHour,
+                            0, 0, 0, 0,
+                            0, 0, 0, 0,
+                            0, 0, 0));
+                } else {
                     MachineStatusHourly machineStatusHourly = toMachineStatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), startOfThisHour);
                     hourlyList.add(machineStatusHourly);
                 }
@@ -136,7 +136,7 @@ public class MachineStatusServiceImpl implements MachineStatusService {
     }
 
     /*
-    对同一个uid,一个小时,某种补全方法的数据统计
+    对v2同一个uid,一个小时,某种补全方法的数据统计
     list不为空
      */
     private MachineStatusHourly toMachineStatusHourly(List<MachineV2Status> list, int completeCode, long createAt) {
@@ -165,50 +165,53 @@ public class MachineStatusServiceImpl implements MachineStatusService {
 
     private void saveMachineStatusHourlyList(List<MachineStatusHourly> list) {
         for (MachineStatusHourly status : list) {
-            Co2Hourly co2Hourly = new Co2Hourly();
-            BeanUtils.copyProperties(status, co2Hourly);
-            co2HourlyDaoImpl.add(co2Hourly);
-
-            HeatHourly heatHourly = new HeatHourly();
-            BeanUtils.copyProperties(status, heatHourly);
-            heatHourlyDaoImpl.add(heatHourly);
-
-            HumidHourly humidHourly = new HumidHourly();
-            BeanUtils.copyProperties(status, humidHourly);
-            humidHourlyDaoImpl.add(humidHourly);
-
-            IndoorPm25Hourly indoorPm25Hourly = new IndoorPm25Hourly();
-            BeanUtils.copyProperties(status, indoorPm25Hourly);
-            indoorPm25HourlyDaoImpl.add(indoorPm25Hourly);
-
-            InnerPm25Hourly innerPm25Hourly = new InnerPm25Hourly();
-            BeanUtils.copyProperties(status, innerPm25Hourly);
-            innerPm25HourlyDaoImpl.add(innerPm25Hourly);
-
-            ModeHourly modeHourly = new ModeHourly();
-            BeanUtils.copyProperties(status, modeHourly);
-            modeHourlyDaoImpl.add(modeHourly);
-
-            PowerHourly powerHourly = new PowerHourly();
-            BeanUtils.copyProperties(status, powerHourly);
-            powerHourlyDaoImpl.add(powerHourly);
-
-            TempHourly tempHourly = new TempHourly();
-            BeanUtils.copyProperties(status, tempHourly);
-            tempHourlyDaoImpl.add(tempHourly);
-
-            VolumeHourly volumeHourly = new VolumeHourly();
-            BeanUtils.copyProperties(status, volumeHourly);
-            volumeHourlyDaoImpl.add(volumeHourly);
+            saveMachineStatusHourly(status);
         }
+    }
+
+    private void saveMachineStatusHourly(MachineStatusHourly status) {
+        Co2Hourly co2Hourly = new Co2Hourly();
+        BeanUtils.copyProperties(status, co2Hourly);
+        co2HourlyDaoImpl.add(co2Hourly);
+
+        HeatHourly heatHourly = new HeatHourly();
+        BeanUtils.copyProperties(status, heatHourly);
+        heatHourlyDaoImpl.add(heatHourly);
+
+        HumidHourly humidHourly = new HumidHourly();
+        BeanUtils.copyProperties(status, humidHourly);
+        humidHourlyDaoImpl.add(humidHourly);
+
+        IndoorPm25Hourly indoorPm25Hourly = new IndoorPm25Hourly();
+        BeanUtils.copyProperties(status, indoorPm25Hourly);
+        indoorPm25Hourly.setAveragePm25(status.getAveragePm25());
+        indoorPm25HourlyDaoImpl.add(indoorPm25Hourly);
+
+        ModeHourly modeHourly = new ModeHourly();
+        BeanUtils.copyProperties(status, modeHourly);
+        modeHourlyDaoImpl.add(modeHourly);
+
+        PowerHourly powerHourly = new PowerHourly();
+        BeanUtils.copyProperties(status, powerHourly);
+        powerHourlyDaoImpl.add(powerHourly);
+
+        TempHourly tempHourly = new TempHourly();
+        BeanUtils.copyProperties(status, tempHourly);
+        tempHourlyDaoImpl.add(tempHourly);
+
+        VolumeHourly volumeHourly = new VolumeHourly();
+        BeanUtils.copyProperties(status, volumeHourly);
+        volumeHourlyDaoImpl.add(volumeHourly);
     }
 
     @Data
     @Builder
-    private class MachineStatusHourly {
+    private static class MachineStatusHourly {
         private String uid;
         private int completeCode;
         private long createAt;
+        // 这里的是pm2.5a(indoorPm25)
+        // pm2.5b(innerPm25)由partial单独统计存储
         private double averagePm25;
         private double averageVolume;
         private double averageHumid;
