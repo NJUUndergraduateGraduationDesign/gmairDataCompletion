@@ -149,4 +149,10 @@ class GmairDataCompletionApplicationTests {
     void testAnalyze(){
         machineStatusServiceImpl.handleAllData();
     }
+
+    @Test
+    void testMethods() {
+        MachineQueryCond queryCond = new MachineQueryCond();
+        System.out.println(queryCond.getCreateTimeGTE());
+    }
 }

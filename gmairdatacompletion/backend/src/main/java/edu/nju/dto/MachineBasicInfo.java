@@ -27,11 +27,11 @@ public class MachineBasicInfo implements Serializable {
      */
     private String city;
     /**
-     * 设备在筛选时间内的开关机状态
+     * 设备最近的开关机状态
      */
     private int isPower;
     /**
-     * 设备在筛选时间内的工作模式：0-自动；1-睡眠；2-手动
+     * 设备最近的工作模式：0-自动；1-睡眠；2-手动
      */
     private int mode;
     /**
