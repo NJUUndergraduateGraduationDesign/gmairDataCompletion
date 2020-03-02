@@ -8,7 +8,5 @@ import java.util.List;
 public interface UserDao extends BaseDao<User>{
     User findByUid(String uid);
 
-    List<User> findByQueryCond(int offset, int pageSize);
-
-    List<User> findByQueryCond(int offset, int pageSize, Date createTimeGTE, Date createTimeLTE);
+    List<User> findByQueryCond(Date createTimeGTE, Date createTimeLTE);
 }

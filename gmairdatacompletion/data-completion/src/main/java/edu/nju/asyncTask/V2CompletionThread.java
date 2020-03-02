@@ -21,6 +21,9 @@ import java.util.List;
 @Service
 public class V2CompletionThread {
 
+    private static final long timeInterval = 300000;
+    private static final long timeBias     = 20000;
+
     @Resource
     private MachineV2StatusService machineV2StatusService;
     @Resource
@@ -30,8 +33,8 @@ public class V2CompletionThread {
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
-        System.out.println("当前线程池" + Thread.currentThread().getName());
-        System.out.println("uid----" + uid + " start complete time: " + new Date());
+//        System.out.println("当前线程池" + Thread.currentThread().getName());
+//        System.out.println("uid----" + uid + " start complete time: " + new Date());
         //一个uid的所有缺失数据集合
         List<MachineV2Status> missingDataByMean = new ArrayList<>();
         List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
@@ -69,7 +72,42 @@ public class V2CompletionThread {
                 "\nFirst missing data: " + missingDataByUsePrevious.get(0));
         System.out.println("uid----" + uid + " end complete time: " + new Date());
         //先不要存进数据库
-        machineV2StatusService.insertBatch(missingDataByMean);
-        machineV2StatusService.insertBatch(missingDataByUsePrevious);
+//        machineV2StatusService.insertBatch(missingDataByMean);
+//        machineV2StatusService.insertBatch(missingDataByUsePrevious);
+    }
+
+    @Async
+    public void iterateAndComplete(String uid, long timePerBatch) {
+        System.out.println("当前线程池" + Thread.currentThread().getName());
+        System.out.println("uid----" + uid + " start complete time: " + new Date());
+        //一个uid的所有缺失数据集合
+        List<MachineV2Status> missingDataByMean = new ArrayList<>();
+        List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
+        //查询的起止时间
+        long startTime = machineV2StatusService.getStartTimeByUid(uid);
+        long endTime   = machineV2StatusService.getLatestTimeByUid(uid);
+        //选中的一段数据
+        List<MachineV2Status> selectedData;
+
+        //遍历一个uid的所有数据
+        if ((selectedData =
+                machineV2StatusService.fetchBatchByUid(uid, startTime, endTime, timeInterval, timeBias))
+                .size() > 0) {
+            //这里调用所有补全方法，这边多遍历了一遍
+            missingDataByMean.addAll(mean.v2Mean(selectedData));
+            missingDataByUsePrevious.addAll(usePrevious.v2UsePrevious(selectedData));
+            startTime = endTime;
+            endTime   = startTime + timePerBatch;
+        }
+
+        System.out.println("Missing data created by MEAN: " + missingDataByMean.size() +
+                "\nFirst missing data: " + missingDataByMean.get(0));
+
+        System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
+                "\nFirst missing data: " + missingDataByUsePrevious.get(0));
+        System.out.println("uid----" + uid + " end complete time: " + new Date());
+        //先不要存进数据库
+//        machineV2StatusService.insertBatch(missingDataByMean);
+//        machineV2StatusService.insertBatch(missingDataByUsePrevious);
     }
 }

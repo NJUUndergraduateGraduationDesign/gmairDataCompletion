@@ -23,13 +23,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<User> findByQueryCond(int offset, int pageSize) {
-        return userDao.findByQueryCond(offset, pageSize);
+    public List<User> findByQueryCond(Date createTimeGTE, Date createTimeLTE) {
+        return userDao.findByQueryCond(createTimeGTE, createTimeLTE);
     }
 
     @Override
-    public List<User> findByQueryCond(int offset, int pageSize, Date createTimeGTE, Date createTimeLTE) {
-        return userDao.findByQueryCond(offset, pageSize, createTimeGTE, createTimeLTE);
+    public List<User> findAllUsers() {
+        return userDao.getAll();
     }
 
     @Override
