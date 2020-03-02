@@ -9,6 +9,7 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,8 +25,8 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    @PostMapping("/login")
-    public ResponseDTO login(@RequestParam String uid) {
+    @GetMapping("/login")
+    public ResponseDTO login(@RequestParam(value = "userName") String uid) {
         if(StringUtils.isEmpty(uid)){
             return ResponseDTO.ofParamError("uid不能为空");
         }

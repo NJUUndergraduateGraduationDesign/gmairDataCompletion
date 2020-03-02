@@ -67,7 +67,7 @@ public class MachineController {
         return ResponseDTO.ofSuccess(res);
     }
 
-    @PostMapping("/getUidInfo")
+    @GetMapping("/getUIDInf")
     public ResponseDTO getUidInfo(@RequestParam String uid) {
         return ResponseDTO.ofSuccess(machineInfoService.getMachineBasicInfoByUid(uid));
     }
