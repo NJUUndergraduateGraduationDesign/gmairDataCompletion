@@ -8,5 +8,5 @@ import edu.nju.model.status.VolumeDaily;
  * @description：
  */
 
-public interface VolumeDailyDao extends BaseDao<VolumeDaily> {
+public interface VolumeDailyDao extends BaseDailyHourlyDao<VolumeDaily> {
 }

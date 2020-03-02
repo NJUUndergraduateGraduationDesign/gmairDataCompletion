@@ -8,5 +8,5 @@ import edu.nju.model.status.VolumeHourly;
  * @description：
  */
 
-public interface VolumeHourlyDao extends BaseDao<VolumeHourly> {
+public interface VolumeHourlyDao extends BaseDailyHourlyDao<VolumeHourly> {
 }

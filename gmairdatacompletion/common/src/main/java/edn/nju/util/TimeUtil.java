@@ -54,6 +54,13 @@ public class TimeUtil {
         return cal.getTime().getTime();
     }
 
+    public static long getNDayBefore(long time,int n){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(time));
+        cal.add(Calendar.DAY_OF_YEAR, -n);
+        return cal.getTime().getTime();
+    }
+
     public static boolean isBetweenStartAndEnd(long cur, long start, long end) {
         return start <= cur && cur < end;
     }

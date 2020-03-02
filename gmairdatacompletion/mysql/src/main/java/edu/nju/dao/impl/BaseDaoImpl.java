@@ -19,11 +19,11 @@ import java.util.List;
 
 @Repository
 @SuppressWarnings("unchecked")
-public class BaseDaoImpl<T> implements BaseDao<T> {
+public abstract class BaseDaoImpl<T> implements BaseDao<T> {
     @PersistenceContext
     private EntityManager entityManager;
 
-    private Class<T> clazz;
+    protected Class<T> clazz;
 
     /*
      * 用反射获取具体类型

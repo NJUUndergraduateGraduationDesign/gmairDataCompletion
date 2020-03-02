@@ -8,5 +8,5 @@ import edu.nju.model.status.TempHourly;
  * @description：
  */
 
-public interface TempHourlyDao extends BaseDao<TempHourly> {
+public interface TempHourlyDao extends BaseDailyHourlyDao<TempHourly> {
 }

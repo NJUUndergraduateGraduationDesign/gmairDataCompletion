@@ -8,5 +8,5 @@ import edu.nju.model.status.PowerDaily;
  * @description：
  */
 
-public interface PowerDailyDao extends BaseDao<PowerDaily> {
+public interface PowerDailyDao extends BaseDailyHourlyDao<PowerDaily> {
 }

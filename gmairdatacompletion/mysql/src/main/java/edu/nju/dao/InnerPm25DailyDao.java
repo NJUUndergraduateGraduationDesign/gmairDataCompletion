@@ -8,5 +8,5 @@ import edu.nju.model.status.InnerPm25Daily;
  * @description：
  */
 
-public interface InnerPm25DailyDao extends BaseDao<InnerPm25Daily> {
+public interface InnerPm25DailyDao extends BaseDailyHourlyDao<InnerPm25Daily> {
 }

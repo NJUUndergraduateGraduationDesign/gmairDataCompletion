@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class TempDailyDaoImpl extends BaseDaoImpl<TempDaily> implements TempDailyDao {
+public class TempDailyDaoImpl extends BaseDailyHourlyDaoImpl<TempDaily> implements TempDailyDao {
 }

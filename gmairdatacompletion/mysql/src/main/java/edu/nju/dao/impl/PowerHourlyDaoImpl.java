@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class PowerHourlyDaoImpl extends BaseDaoImpl<PowerHourly> implements PowerHourlyDao {
+public class PowerHourlyDaoImpl extends BaseDailyHourlyDaoImpl<PowerHourly> implements PowerHourlyDao {
 }

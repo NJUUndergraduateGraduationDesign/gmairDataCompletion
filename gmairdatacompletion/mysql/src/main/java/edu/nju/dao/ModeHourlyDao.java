@@ -8,5 +8,5 @@ import edu.nju.model.status.ModeHourly;
  * @description：
  */
 
-public interface ModeHourlyDao extends BaseDao<ModeHourly> {
+public interface ModeHourlyDao extends BaseDailyHourlyDao<ModeHourly> {
 }

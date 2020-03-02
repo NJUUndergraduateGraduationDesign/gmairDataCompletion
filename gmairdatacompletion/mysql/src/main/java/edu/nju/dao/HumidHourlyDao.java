@@ -8,5 +8,5 @@ import edu.nju.model.status.HumidHourly;
  * @description：
  */
 
-public interface HumidHourlyDao extends BaseDao<HumidHourly> {
+public interface HumidHourlyDao extends BaseDailyHourlyDao<HumidHourly> {
 }

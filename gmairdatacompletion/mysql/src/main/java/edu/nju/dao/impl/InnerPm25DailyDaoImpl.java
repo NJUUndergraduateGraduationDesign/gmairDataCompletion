@@ -11,5 +11,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class InnerPm25DailyDaoImpl extends BaseDaoImpl<InnerPm25Daily> implements InnerPm25DailyDao {
+public class InnerPm25DailyDaoImpl extends BaseDailyHourlyDaoImpl<InnerPm25Daily> implements InnerPm25DailyDao {
 }

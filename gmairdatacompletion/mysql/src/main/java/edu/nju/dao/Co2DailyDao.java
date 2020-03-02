@@ -8,5 +8,5 @@ import edu.nju.model.status.Co2Daily;
  * @description：
  */
 
-public interface Co2DailyDao extends BaseDao<Co2Daily> {
+public interface Co2DailyDao extends BaseDailyHourlyDao<Co2Daily> {
 }

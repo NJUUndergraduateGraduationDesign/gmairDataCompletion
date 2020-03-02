@@ -8,5 +8,5 @@ import edu.nju.model.status.HeatDaily;
  * @description：
  */
 
-public interface HeatDailyDao extends BaseDao<HeatDaily> {
+public interface HeatDailyDao extends BaseDailyHourlyDao<HeatDaily> {
 }

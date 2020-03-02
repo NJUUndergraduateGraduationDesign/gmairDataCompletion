@@ -29,4 +29,8 @@ public enum CompleteMethodEnum {
     public static List<Integer> getAllCode(){
         return Lists.newArrayList(NONE.getCode(),MEAN.getCode(),USE_PREVIOUS.getCode());
     }
+
+    public static boolean isValidCode(Integer code){
+        return getAllCode().contains(code);
+    }
 }
