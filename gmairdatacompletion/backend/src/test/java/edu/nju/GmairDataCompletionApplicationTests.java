@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edu.nju.controller.MachineController;
+import edu.nju.dto.MachineBasicInfo;
+import edu.nju.dto.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
 import edu.nju.service.*;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -169,6 +172,25 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testMethods() {
-        System.out.println(machineController.getUidInfo("F0FE6BAA601B").getData());
+        System.out.println("start time: " + new Date());
+        long start = machineV2StatusServiceImpl.getStartTimeByUid("98D8632CA3F9");
+        long end = machineV2StatusServiceImpl.getLatestTimeByUid("98D8632CA3F9");
+        System.out.println(start + " " + end);
+        System.out.println("mid time: " + new Date());
+        List<MachineV2Status> res = machineV2StatusServiceImpl.fetchBatchByUid("98D8632CA3F9", start, end, 300000, 20000);
+        System.out.println("end time: " + new Date());
+        System.out.println(res.size());
+    }
+
+    @Test
+    void testMachineController() {
+        MachineQueryCond queryCond = new MachineQueryCond();
+        queryCond.setCurPage(1);
+        queryCond.setPageSize(10);
+        queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 5));
+        queryCond.setCreateTimeLTE(new Date());
+        queryCond.setIsPower(1);
+        List<MachineBasicInfo> machineBasicInfos = (List<MachineBasicInfo>) machineController.getList(queryCond).getData();
+        System.out.println(machineBasicInfos.size() + " " + machineBasicInfos.get(0));
     }
 }

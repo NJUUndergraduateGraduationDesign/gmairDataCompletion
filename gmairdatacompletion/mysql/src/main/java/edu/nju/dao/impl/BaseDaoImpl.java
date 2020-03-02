@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author ：tsl
  * @date ：Created in 2019/9/30 13:39
- * @description：implementation of baseDao
+ * @description： implementation of baseDao
  */
 
 @Repository
@@ -129,6 +129,20 @@ public class BaseDaoImpl<T> implements BaseDao<T> {
                 query.setParameter(i, values[i]);
             }
         }
+        return query.list();
+    }
+
+    @Override
+    public List<T> getLimitResultByHQL(String hql, int offset, int pageSize, Object... values) {
+        Query query = getSession().createQuery(hql);
+        if (values != null) {
+            int count = values.length;
+            for (int i = 0; i < count; i++) {
+                query.setParameter(i, values[i]);
+            }
+        }
+        query.setFirstResult(offset);
+        query.setMaxResults(pageSize);
         return query.list();
     }
 }

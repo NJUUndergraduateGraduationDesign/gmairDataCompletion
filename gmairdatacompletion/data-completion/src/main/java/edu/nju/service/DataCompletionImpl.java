@@ -12,6 +12,7 @@ import java.util.List;
 public class DataCompletionImpl implements DataCompletion {
 
     private static final int pageSize = 10000;  //以10000个数据为一组进行补全
+    private static final long timePerBatch = 10;
 
     @Resource
     private MachinePartialStatusService machinePartialStatusService;

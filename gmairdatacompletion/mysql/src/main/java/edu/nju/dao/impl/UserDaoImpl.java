@@ -15,15 +15,9 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public List<User> findByQueryCond(int offset, int pageSize) {
-        String hql = "SELECT * FROM User WHERE data_type <> -1 LIMIT ?0, ?1";
-        return getListByHQL(hql, offset, pageSize);
-    }
-
-    @Override
-    public List<User> findByQueryCond(int offset, int pageSize, Date createTimeGTE, Date createTimeLTE) {
-        String hql = "SELECT * FROM User WHERE data_type <> -1 AND " +
-                "unix_timestamp(bind_time) BETWEEN unix_timestamp(?0) AND unix_timestamp(?1) LIMIT ?2, ?3";
-        return getListByHQL(hql, createTimeGTE, createTimeLTE, offset, pageSize);
+    public List<User> findByQueryCond(Date createTimeGTE, Date createTimeLTE) {
+        String hql = "SELECT u FROM User u WHERE u.dataType <> -1 AND " +
+                "unix_timestamp(u.bindTime) BETWEEN unix_timestamp(?0) AND unix_timestamp(?1)";
+        return getListByHQL(hql, createTimeGTE, createTimeLTE);
     }
 }

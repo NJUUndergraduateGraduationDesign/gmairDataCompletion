@@ -25,4 +25,6 @@ public interface BaseDao<T> {
     T getUniqueResultByHQL(String hql, Object... values);
 
     List<T> getListByHQL(String hql, Object... values);
+
+    List<T> getLimitResultByHQL(String hql, int offset, int pageSize, Object... values);
 }

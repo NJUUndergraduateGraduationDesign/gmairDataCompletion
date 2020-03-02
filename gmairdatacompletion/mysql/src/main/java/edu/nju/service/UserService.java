@@ -8,9 +8,9 @@ import java.util.List;
 public interface UserService {
     User findByUid(String uid);
 
-    List<User> findByQueryCond(int offset, int pageSize);
+    List<User> findByQueryCond(Date createTimeGTE, Date createTimeLTE);
 
-    List<User> findByQueryCond(int offset, int pageSize, Date createTimeGTE, Date createTimeLTE);
+    List<User> findAllUsers();
 
     void update(User user);
 }
