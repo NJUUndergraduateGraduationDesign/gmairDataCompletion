@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edu.nju.controller.MachineController;
-import edu.nju.dto.MachineBasicInfo;
 import edu.nju.dto.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
@@ -17,10 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 @RunWith(SpringRunner.class)
@@ -190,7 +186,9 @@ class GmairDataCompletionApplicationTests {
         queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 5));
         queryCond.setCreateTimeLTE(new Date());
         queryCond.setIsPower(1);
-        List<MachineBasicInfo> machineBasicInfos = (List<MachineBasicInfo>) machineController.getList(queryCond).getData();
-        System.out.println(machineBasicInfos.size() + " " + machineBasicInfos.get(0));
+        Map<String, List> machineBasicInfos =
+                (Map<String, List>) machineController.getList(queryCond).getData();
+        System.out.println(machineBasicInfos.get("machineList").size() + " " +
+                machineBasicInfos.get("machineList").get(0));
     }
 }
