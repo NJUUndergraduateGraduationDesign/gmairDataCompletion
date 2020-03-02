@@ -15,8 +15,6 @@ public interface Mean {
 
     List<MachinePartialStatus> partialMean(List<MachinePartialStatus> selectedData);
 
-    List<MachineV1Status> v1Mean(List<MachineV1Status> selectedData);
-
     List<MachineV2Status> v2Mean(List<MachineV2Status> selectedData);
 
     List<MachineV3Status> v3Mean(List<MachineV3Status> selectedData);

@@ -20,9 +20,11 @@ public class MachinePartialStatus {
 
     private String name;
 
-    private Object data;
+    private int data;
 
     private boolean blockFlag;
 
     private long createAt;
+
+    private int completeCode;
 }

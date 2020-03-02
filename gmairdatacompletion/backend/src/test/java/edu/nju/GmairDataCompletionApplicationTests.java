@@ -3,6 +3,7 @@ package edu.nju;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
+import edu.nju.controller.MachineController;
 import edu.nju.dto.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
@@ -38,6 +39,8 @@ class GmairDataCompletionApplicationTests {
     MachineStatusService machineStatusServiceImpl;
     @Resource
     MachineInfoService machineInfoService;
+    @Resource
+    MachineController machineController;
 
     @Test
     void contextLoads() {
@@ -154,6 +157,6 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testMethods() {
-        System.out.println(machineInfoService.getMachineBasicInfoByUid("F0FE6BAA707A").getIsPower());
+        System.out.println(machineController.getUidInfo("F0FE6BAA601B").getData());
     }
 }
