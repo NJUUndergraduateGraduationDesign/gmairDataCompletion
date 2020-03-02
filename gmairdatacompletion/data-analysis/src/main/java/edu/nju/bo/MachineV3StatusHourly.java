@@ -17,6 +17,7 @@ public class MachineV3StatusHourly {
     private String uid;
     private int completeMethod;
     private long createAt;
+    private double averageCo2;
     private double averageIndoorPm25;
     private double averageInnerPm25;
     private double averageVolume;

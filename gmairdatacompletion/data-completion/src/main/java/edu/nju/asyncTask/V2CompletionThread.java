@@ -69,7 +69,7 @@ public class V2CompletionThread {
                 "\nFirst missing data: " + missingDataByUsePrevious.get(0));
         System.out.println("uid----" + uid + " end complete time: " + new Date());
         //先不要存进数据库
-//            machineV2StatusService.insertBatch(missingDataByMean);
-//            machineV2StatusService.insertBatch(missingDataByUsePrevious);
+        machineV2StatusService.insertBatch(missingDataByMean);
+        machineV2StatusService.insertBatch(missingDataByUsePrevious);
     }
 }

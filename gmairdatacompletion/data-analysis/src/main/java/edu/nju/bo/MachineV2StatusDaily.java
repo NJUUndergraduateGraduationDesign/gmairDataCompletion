@@ -6,14 +6,14 @@ import lombok.Data;
 
 /**
  * @author ：tsl
- * @date ：Created in 2020/3/1 17:10
+ * @date ：Created in 2020/3/2 15:52
  * @description：
  */
 
 @Data
 @Builder
 @AllArgsConstructor
-public class MachineV2StatusHourly {
+public class MachineV2StatusDaily {
     private String uid;
     private int completeMethod;
     private long createAt;

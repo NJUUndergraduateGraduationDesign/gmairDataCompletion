@@ -8,7 +8,7 @@ import java.util.List;
  * @description：machine status service
  */
 
-public interface MachineStatusService {
+public interface MachineStatusHandleService {
     /*
     将mongodb中的数据以小时和天为单位存入mysql
      */

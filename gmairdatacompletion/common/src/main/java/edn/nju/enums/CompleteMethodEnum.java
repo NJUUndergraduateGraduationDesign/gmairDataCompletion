@@ -25,4 +25,8 @@ public enum CompleteMethodEnum {
     public static List<Integer> getAllCompleteMethodCode(){
         return Lists.newArrayList(MEAN.getCode(),USE_PREVIOUS.getCode());
     }
+
+    public static List<Integer> getAllCode(){
+        return Lists.newArrayList(NONE.getCode(),MEAN.getCode(),USE_PREVIOUS.getCode());
+    }
 }

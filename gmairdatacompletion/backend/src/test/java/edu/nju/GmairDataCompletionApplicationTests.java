@@ -35,7 +35,7 @@ class GmairDataCompletionApplicationTests {
     @Resource
     UserService userService;
     @Resource
-    MachineStatusService machineStatusServiceImpl;
+    MachineStatusHandleService machineStatusHandleServiceImpl;
     @Resource
     MachineInfoService machineInfoService;
     @Resource
@@ -124,13 +124,18 @@ class GmairDataCompletionApplicationTests {
     @Test
     void testDataCompletion() {
         System.out.println("start time: " + new Date());
-        dataCompletion.v2Completion();
+        dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
         System.out.println("end time: " + new Date());
         try {
             System.in.read();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Test
+    void testAnalyze() {
+        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
     }
 
     @Test
@@ -160,11 +165,6 @@ class GmairDataCompletionApplicationTests {
             userService.update(user);
         }
         System.out.println("total: " + count);
-    }
-
-    @Test
-    void testAnalyze() {
-        machineStatusServiceImpl.handleAllData();
     }
 
     @Test
