@@ -1,7 +1,6 @@
 package edu.nju.method;
 
 import edu.nju.model.MachinePartialStatus;
-import edu.nju.model.MachineV1Status;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.MachineV3Status;
 

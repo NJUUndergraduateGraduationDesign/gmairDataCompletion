@@ -1,6 +1,5 @@
 package edu.nju.service;
 
-import edu.nju.model.MachineV2Status;
 import edu.nju.model.MachineV3Status;
 import org.springframework.data.domain.Page;
 
@@ -43,6 +42,8 @@ public interface MachineV3StatusService {
     根据uid返回该设备指定时间戳内的记录
     */
     List<MachineV3Status> fetchBatchByUid(String uid, long start, long end);
+
+    List<MachineV3Status> fetchBatchByUid(String uid, long startTime, long endTime, long timeInterval, long timeBias);
 
     /*
     批量插入

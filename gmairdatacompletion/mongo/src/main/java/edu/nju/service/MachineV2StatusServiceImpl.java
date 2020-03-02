@@ -1,5 +1,6 @@
 package edu.nju.service;
 
+import com.google.common.collect.Lists;
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -68,6 +69,18 @@ public class MachineV2StatusServiceImpl implements MachineV2StatusService {
     @Override
     public List<MachineV2Status> fetchBatchByUid(String uid, long start, long end) {
         return machineV2StatusRepository.findByUid(uid, start, end);
+    }
+
+    @Override
+    public List<MachineV2Status> fetchBatchByUid(String uid, long startTime, long endTime, long timeInterval, long timeBias) {
+        List<MachineV2Status> res = Lists.newArrayList();
+        for (long cur = startTime; cur <= endTime; cur = cur + timeInterval) {
+            long left = Math.max(startTime, cur - timeBias);
+            long right = Math.min(endTime, cur + timeBias);
+            List<MachineV2Status> subList = machineV2StatusRepository.findByUid(uid, left, right);
+            res.addAll(subList);
+        }
+        return res;
     }
 
     @Override

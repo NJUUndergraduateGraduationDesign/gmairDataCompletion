@@ -62,8 +62,10 @@ public interface MachineV2StatusService {
 
     Page<MachineV2Status> fetchBatchByUid(String uid, int pageIndex, int pageSize);
 
+    List<MachineV2Status> fetchBatchByUid(String uid, long startTime, long endTime, long timeInterval, long timeBias);
+
     /*
-    批量插入
-     */
+        批量插入
+         */
     void insertBatch(List<MachineV2Status> machineV2Statuses);
 }

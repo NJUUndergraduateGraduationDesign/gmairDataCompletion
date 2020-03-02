@@ -4,7 +4,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edu.nju.controller.MachineController;
-import edu.nju.dto.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
 import edu.nju.service.*;
@@ -68,11 +67,24 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void testFetchBatch2(){
+    void testFetchBatch2() {
         System.out.println("startTime:" + new Date());
         List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 1569780000000L, 1569945600000L);
         System.out.println("endTime:" + new Date());
         System.out.println(machineV2StatusList.get(0));
+    }
+
+    @Test
+    void testFetchBatch3() {
+        String uid = "F0FE6BAA617C";
+        long startTime = machineV2StatusServiceImpl.getStartTimeByUid(uid);
+        long endTime = machineV2StatusServiceImpl.getLatestTimeByUid(uid);
+        long timeInterval = 5 * 60 * 1000;
+        long timeBias = 10 * 1000;
+        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid(
+                uid, startTime, endTime, timeInterval, timeBias);
+        System.out.println(machineV2StatusList.size());
+        System.out.println(machineV2StatusList);
     }
 
     @Test
@@ -114,9 +126,9 @@ class GmairDataCompletionApplicationTests {
         System.out.println("start time: " + new Date());
         dataCompletion.v2Completion();
         System.out.println("end time: " + new Date());
-        try{
+        try {
             System.in.read();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -151,7 +163,7 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void testAnalyze(){
+    void testAnalyze() {
         machineStatusServiceImpl.handleAllData();
     }
 
