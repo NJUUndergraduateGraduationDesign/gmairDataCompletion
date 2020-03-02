@@ -4,6 +4,7 @@ import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.dao.Co2DailyDao;
 import edu.nju.model.status.Co2Daily;
 import edu.nju.service.Co2DailyService;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 
@@ -13,6 +14,7 @@ import javax.annotation.Resource;
  * @description：
  */
 
+@Service
 public class Co2DailyServiceImpl extends BaseDailyHourlyServiceImpl<Co2Daily> implements Co2DailyService {
     @Resource
     private Co2DailyDao co2DailyDaoImpl;
