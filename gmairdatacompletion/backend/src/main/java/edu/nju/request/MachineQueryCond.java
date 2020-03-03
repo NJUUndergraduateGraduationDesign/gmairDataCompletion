@@ -1,4 +1,4 @@
-package edu.nju.dto;
+package edu.nju.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

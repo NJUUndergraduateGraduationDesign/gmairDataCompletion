@@ -1,14 +1,10 @@
 package edu.nju.service.impl;
 
-import edn.nju.enums.MachineStatusTypeEnum;
-import edu.nju.dto.MachineBasicInfo;
-import edu.nju.model.MachineV2Status;
-import edu.nju.model.MachineV3Status;
 import edu.nju.model.User;
+import edu.nju.model.machine.MachineBasicInfo;
+import edu.nju.model.machine.MachineLatestStatus;
 import edu.nju.service.MachineInfoService;
-import edu.nju.service.MachineV2StatusService;
-import edu.nju.service.MachineV3StatusService;
-import edu.nju.service.UserService;
+import edu.nju.service.MachineLatestStatusService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -22,18 +18,13 @@ import javax.annotation.Resource;
 @Service
 public class MachineInfoImpl implements MachineInfoService {
     @Resource
-    private UserService userService;
-    @Resource
-    private MachineV2StatusService machineV2StatusService;
-    @Resource
-    private MachineV3StatusService machineV3StatusService;
+    private MachineLatestStatusService machineLatestStatusService;
 
     @Override
-    public MachineBasicInfo getMachineBasicInfoByUid(String uid) {
+    public MachineBasicInfo getMachineBasicInfoByUid(User user) {
         MachineBasicInfo res = new MachineBasicInfo();
 
-        User user = userService.findByUid(uid);
-        res.setUid(uid);
+        res.setUid(user.getUid());
         res.setBindTime(user.getBindTime());
         res.setCodeValue(user.getCodeValue());
         res.setCity(user.getCityId());
@@ -41,19 +32,12 @@ public class MachineInfoImpl implements MachineInfoService {
         // TODO insert overCount.
         res.setOverCount(0);
 
-        if (user.getDataType() == MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode()) {
-            MachineV2Status machineV2Status = machineV2StatusService.getLatestRecord(uid);
-            res.setHeat(machineV2Status.getHeat() > 0 ? 1 : 0);
-            res.setIsPower(machineV2Status.getPower());
-            res.setMode(machineV2Status.getMode());
+        MachineLatestStatus latestStatus = machineLatestStatusService.findByUid(user.getUid());
+        if (latestStatus != null) {
+            res.setHeat(latestStatus.getHeat() > 0 ? 1 : 0);
+            res.setIsPower(latestStatus.getPower());
+            res.setMode(latestStatus.getMode());
         }
-        else if (user.getDataType() == MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode()) {
-            MachineV3Status machineV3Status = machineV3StatusService.getLatestRecord(uid);
-            res.setHeat(machineV3Status.getHeat() > 0 ? 1 : 0);
-            res.setIsPower(machineV3Status.getStatus());
-            res.setMode(machineV3Status.getMode());
-        }
-        //该uid没有原始数据
         else {
             res.setHeat(-1);
             res.setIsPower(-1);

@@ -4,7 +4,9 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edu.nju.controller.MachineController;
-import edu.nju.dto.MachineQueryCond;
+import edu.nju.model.MachineV3Status;
+import edu.nju.model.machine.MachineLatestStatus;
+import edu.nju.request.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
 import edu.nju.service.*;
@@ -36,12 +38,69 @@ class GmairDataCompletionApplicationTests {
     @Resource
     MachineStatusHandleService machineStatusHandleServiceImpl;
     @Resource
-    MachineInfoService machineInfoService;
+    MachineLatestStatusService machineLatestStatusService;
     @Resource
     MachineController machineController;
 
+    /**
+     * 用于添加User表的dataType字段
+     */
     @Test
-    void contextLoads() {
+    void changeTableUser() {
+        List<String> allV2Uids = machineV2StatusServiceImpl.getAllUids();
+        int count = 0;
+        for (String oneId : allV2Uids) {
+            User user = userService.findByUid(oneId);
+            if (user == null) {
+                count++;
+                System.out.println("V2: " + oneId);
+                continue;
+            }
+            user.setDataType(MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode());
+            userService.update(user);
+        }
+
+        List<String> allV3Uids = machineV3StatusServiceImpl.getAllUids();
+        for (String oneId : allV3Uids) {
+            User user = userService.findByUid(oneId);
+            if (user == null) {
+                count++;
+                System.out.println("V3: " + oneId);
+                continue;
+            }
+            user.setDataType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
+            userService.update(user);
+        }
+        System.out.println("total: " + count);
+    }
+
+    /**
+     * 用于建立MachineLatestStatus表
+     */
+    @Test
+    void insertLatestStatus() {
+        List<User> res = userService.findAllValidUsers();
+        for (User one : res) {
+            if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode()) {
+                MachineV2Status status = machineV2StatusServiceImpl.getLatestRecord(one.getUid());
+                MachineLatestStatus latestStatus = new MachineLatestStatus(one.getUid(),
+                        status.getPower(),
+                        status.getHeat(),
+                        status.getMode());
+                if (!machineLatestStatusService.add(latestStatus))
+                    System.out.println("oops");
+            }
+            else if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode()) {
+                MachineV3Status status = machineV3StatusServiceImpl.getLatestRecord(one.getUid());
+                MachineLatestStatus latestStatus = new MachineLatestStatus(one.getUid(),
+                        status.getStatus(),
+                        status.getHeat(),
+                        status.getMode());
+                if (!machineLatestStatusService.add(latestStatus)) {
+                    System.out.println("oops");
+                }
+            }
+        }
     }
 
     @Test
@@ -138,44 +197,7 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void changeTableUser() {
-        List<String> allV2Uids = machineV2StatusServiceImpl.getAllUids();
-        int count = 0;
-        for (String oneId : allV2Uids) {
-            User user = userService.findByUid(oneId);
-            if (user == null) {
-                count++;
-                System.out.println("V2: " + oneId);
-                continue;
-            }
-            user.setDataType(MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode());
-            userService.update(user);
-        }
-
-        List<String> allV3Uids = machineV3StatusServiceImpl.getAllUids();
-        for (String oneId : allV3Uids) {
-            User user = userService.findByUid(oneId);
-            if (user == null) {
-                count++;
-                System.out.println("V3: " + oneId);
-                continue;
-            }
-            user.setDataType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
-            userService.update(user);
-        }
-        System.out.println("total: " + count);
-    }
-
-    @Test
     void testMethods() {
-        System.out.println("start time: " + new Date());
-        long start = machineV2StatusServiceImpl.getStartTimeByUid("98D8632CA3F9");
-        long end = machineV2StatusServiceImpl.getLatestTimeByUid("98D8632CA3F9");
-        System.out.println(start + " " + end);
-        System.out.println("mid time: " + new Date());
-        List<MachineV2Status> res = machineV2StatusServiceImpl.fetchBatchByUid("98D8632CA3F9", start, end, 300000, 20000);
-        System.out.println("end time: " + new Date());
-        System.out.println(res.size());
     }
 
     @Test
