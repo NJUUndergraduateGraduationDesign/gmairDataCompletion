@@ -20,4 +20,11 @@ public abstract class BaseDailyHourlyDaoImpl<T> extends BaseDaoImpl<T> implement
                 + " AND o.createAt BETWEEN ?2 AND ?3";
         return getListByHQL(hql, uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public long getLatestTime(String uid) {
+        String hql = "SELECT max(createAt) FROM " + clazz.getName()
+                + " WHERE uid= ?0";
+        return (long)getUniqueColumnByHQL(hql, uid);
+    }
 }

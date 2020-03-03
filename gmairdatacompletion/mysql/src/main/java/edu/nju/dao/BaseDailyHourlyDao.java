@@ -10,4 +10,6 @@ import java.util.List;
 
 public interface BaseDailyHourlyDao<T> extends BaseDao<T>{
     List<T> getByUidAndMethod(String uid, int methodCode, long startTime, long endTime);
+
+    long getLatestTime(String uid);
 }

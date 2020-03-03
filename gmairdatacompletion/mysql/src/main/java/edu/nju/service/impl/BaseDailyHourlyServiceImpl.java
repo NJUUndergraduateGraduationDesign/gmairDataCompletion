@@ -32,4 +32,9 @@ public abstract class BaseDailyHourlyServiceImpl<T> implements BaseDailyHourlySe
     public List<T> getByUidAndCompleteMethod(String uid, int completeMethod, long startTime, long endTime) {
         return dao.getByUidAndMethod(uid, completeMethod, startTime, endTime);
     }
+
+    @Override
+    public long getLatestTime(String uid) {
+        return dao.getLatestTime(uid);
+    }
 }

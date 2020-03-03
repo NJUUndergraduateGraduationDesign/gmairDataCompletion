@@ -43,6 +43,13 @@ public class TimeUtil {
         return cal.getTime().getTime();
     }
 
+    public static long endOfThisDay(long time) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date(startOfNextDay(time)));
+        cal.set(Calendar.MILLISECOND, -1);
+        return cal.getTime().getTime();
+    }
+
     public static long startOfNextDay(long time) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(time));

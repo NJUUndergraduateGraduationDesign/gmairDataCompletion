@@ -118,6 +118,21 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
     }
 
     /*
+    单个查询，注意hql使用类的属性名而不是表的字段名
+    */
+    @Override
+    public Object getUniqueColumnByHQL(String hql, Object... values) {
+        Query query = getSession().createQuery(hql);
+        if (values != null) {
+            int count = values.length;
+            for (int i = 0; i < count; i++) {
+                query.setParameter(i, values[i]);
+            }
+        }
+        return query.uniqueResult();
+    }
+
+    /*
     列表查询
      */
     @Override

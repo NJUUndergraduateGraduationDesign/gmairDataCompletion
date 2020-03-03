@@ -2,6 +2,7 @@ package edu.nju.service;
 
 import edu.nju.dto.NormalCompleteListDTO;
 import edu.nju.request.LastNDayRequest;
+import edu.nju.request.LastNHourRequest;
 
 /**
  * @author ：tsl
@@ -11,4 +12,6 @@ import edu.nju.request.LastNDayRequest;
 
 public interface MachineDataService {
     NormalCompleteListDTO getLastNDayCo2Daily(LastNDayRequest request);
+
+    NormalCompleteListDTO getOneDayCo2Hourly(LastNHourRequest request);
 }
