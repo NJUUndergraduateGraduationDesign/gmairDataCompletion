@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LastNDayRequest {
-    String uid;
-    int lastNDay;
-    int completeType;
+    private String uid;
+    private int lastNDay;
+    private int completeType;
 }

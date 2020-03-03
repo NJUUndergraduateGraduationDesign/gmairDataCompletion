@@ -15,22 +15,26 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 public enum CompleteMethodEnum {
-    NONE(0,"none"),
-    MEAN(1,"mean"),
-    USE_PREVIOUS(2,"usePrevious");//原始数据为0
+    NONE(0, "none"),
+    MEAN(1, "mean"),
+    USE_PREVIOUS(2, "usePrevious");//原始数据为0
 
     private int code;
     private String name;
 
-    public static List<Integer> getAllCompleteMethodCode(){
-        return Lists.newArrayList(MEAN.getCode(),USE_PREVIOUS.getCode());
+    public static List<Integer> getAllCompleteMethodCode() {
+        return Lists.newArrayList(MEAN.getCode(), USE_PREVIOUS.getCode());
     }
 
-    public static List<Integer> getAllCode(){
-        return Lists.newArrayList(NONE.getCode(),MEAN.getCode(),USE_PREVIOUS.getCode());
+    public static List<Integer> getAllCode() {
+        return Lists.newArrayList(NONE.getCode(), MEAN.getCode(), USE_PREVIOUS.getCode());
     }
 
-    public static boolean isValidCode(Integer code){
+    public static boolean isValidCode(Integer code) {
         return getAllCode().contains(code);
+    }
+
+    public static boolean isCompleteMethodCode(Integer code) {
+        return getAllCompleteMethodCode().contains(code);
     }
 }

@@ -1,5 +1,6 @@
 package edu.nju.service.impl;
 
+import com.google.common.collect.Lists;
 import edn.nju.enums.CompleteMethodEnum;
 import edn.nju.util.TimeUtil;
 import edu.nju.dto.NormalCompleteListDTO;
@@ -34,31 +35,39 @@ public class MachineDateServiceImpl implements MachineDataService {
 
     @Override
     public NormalCompleteListDTO getLastNDayCo2Daily(LastNDayRequest request) {
-        log.info("Co2LastNDayRequest:{}",request);
+        log.info("Co2LastNDayRequest:{}", request);
         long end = co2DailyService.getLatestTime(request.getUid());
-        long start = TimeUtil.getNDayBefore(end, request.getLastNDay()-1);
+        long start = TimeUtil.getNDayBefore(end, request.getLastNDay() - 1);
 
-        List<Co2Daily> completeList=
-                co2DailyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
-        List<Co2Daily> normalList=
-                co2DailyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(),start,end);
-        List<Map<String,Object>> complete = completeList.stream().map(Co2Daily::toDTOMap).collect(Collectors.toList());
-        List<Map<String,Object>> normal = normalList.stream().map(Co2Daily::toDTOMap).collect(Collectors.toList());
-        return new NormalCompleteListDTO(normal,complete);
+        List<Co2Daily> normalList =
+                co2DailyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<Map<String, Object>> normal = normalList.stream().map(Co2Daily::toDTOMap).collect(Collectors.toList());
+        List<Co2Daily> completeList = Lists.newArrayList();
+
+        if (CompleteMethodEnum.isCompleteMethodCode(request.getCompleteType())) {
+            completeList = co2DailyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+        }
+        List<Map<String, Object>> complete = completeList.stream().map(Co2Daily::toDTOMap).collect(Collectors.toList());
+
+        return new NormalCompleteListDTO(normal, complete);
     }
 
     @Override
     public NormalCompleteListDTO getOneDayCo2Hourly(LastNHourRequest request) {
-        log.info("Co2LastNHourRequest:{}",request);
+        log.info("Co2LastNHourRequest:{}", request);
         long start = request.getDate().getTime();
         long end = TimeUtil.endOfThisDay(start);
 
-        List<Co2Hourly> completeList=
-                co2HourlyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
-        List<Co2Hourly> normalList=
-                co2HourlyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(),start,end);
-        List<Map<String,Object>> complete = completeList.stream().map(Co2Hourly::toDTOMap).collect(Collectors.toList());
-        List<Map<String,Object>> normal = normalList.stream().map(Co2Hourly::toDTOMap).collect(Collectors.toList());
-        return new NormalCompleteListDTO(normal,complete);
+        List<Co2Hourly> normalList =
+                co2HourlyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<Map<String, Object>> normal = normalList.stream().map(Co2Hourly::toDTOMap).collect(Collectors.toList());
+
+        List<Co2Hourly> completeList = Lists.newArrayList();
+        if (CompleteMethodEnum.isCompleteMethodCode(request.getCompleteType())) {
+            completeList = co2HourlyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+        }
+        List<Map<String, Object>> complete = completeList.stream().map(Co2Hourly::toDTOMap).collect(Collectors.toList());
+
+        return new NormalCompleteListDTO(normal, complete);
     }
 }

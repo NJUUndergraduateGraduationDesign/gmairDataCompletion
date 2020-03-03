@@ -45,11 +45,15 @@ public class MachineDataController {
     }
 
     private boolean checkLastNDayRequestInvalid(LastNDayRequest request) {
-        return (request == null || StringUtils.isEmpty(request.getUid()) ||
-                request.getLastNDay() <= 0 || !CompleteMethodEnum.isValidCode(request.getCompleteType()));
+        return (request == null
+                || StringUtils.isEmpty(request.getUid())
+                || request.getLastNDay() < 0
+                || !CompleteMethodEnum.isValidCode(request.getCompleteType()));
     }
 
-    private boolean checkLastNHourRequestInvalid(LastNHourRequest request){
-        return false;
+    private boolean checkLastNHourRequestInvalid(LastNHourRequest request) {
+        return (request == null
+                || StringUtils.isEmpty(request.getUid())
+                || !CompleteMethodEnum.isValidCode(request.getCompleteType()));
     }
 }

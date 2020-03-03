@@ -1,5 +1,6 @@
 package edu.nju.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LastNHourRequest {
-    String uid;
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    Date date;
-    int completeType;
+    private String uid;
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date date;
+    private int completeType;
 }
