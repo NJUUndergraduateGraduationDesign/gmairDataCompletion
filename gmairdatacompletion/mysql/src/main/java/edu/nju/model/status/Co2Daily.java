@@ -1,11 +1,12 @@
 package edu.nju.model.status;
 
+import com.google.common.collect.ImmutableMap;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Map;
 
 /**
  * @author ：tsl
@@ -29,6 +30,8 @@ public class Co2Daily {
     private long createAt;
     private Integer completeMethod;
 
-
+    public Map<String, Object> toDTOMap() {
+        return ImmutableMap.of("createTime", createAt, "averageCo2", averageCo2);
+    }
 }
 

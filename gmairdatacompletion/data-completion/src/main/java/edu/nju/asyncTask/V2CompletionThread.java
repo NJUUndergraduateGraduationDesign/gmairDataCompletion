@@ -4,6 +4,7 @@ import edu.nju.method.Mean;
 import edu.nju.method.UsePrevious;
 import edu.nju.model.MachineV2Status;
 import edu.nju.service.MachineV2StatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.List;
  * @date 2020/2/27 11:35
  */
 
+@Slf4j
 @Service
 public class V2CompletionThread {
 
@@ -33,8 +35,7 @@ public class V2CompletionThread {
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
-//        System.out.println("当前线程池" + Thread.currentThread().getName());
-//        System.out.println("uid----" + uid + " start complete time: " + new Date());
+        log.info("current thread:{},uid{}" + Thread.currentThread().getName(),uid);
         //一个uid的所有缺失数据集合
         List<MachineV2Status> missingDataByMean = new ArrayList<>();
         List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
@@ -50,7 +51,6 @@ public class V2CompletionThread {
                 machineV2StatusService.fetchBatchByUid(uid, pageIndex, pageSize))
                 .hasContent()) {
             List<MachineV2Status> selectedDataContent = new ArrayList<>();
-
             //从第二组数据开始，每一组数据都要加上前一组数据的最后一条数据
             if (pageIndex > 0) {
                 selectedDataContent.add(lastDataInPage);
@@ -58,6 +58,7 @@ public class V2CompletionThread {
             selectedDataContent.addAll(selectedData.getContent());
             //将最后一条数据赋值给lastDataInPage，以供下一组数据使用
             lastDataInPage = selectedDataContent.get(selectedDataContent.size() - 1);
+            log.info("pageIndex:{},pageSize:{},contentSize:{}",pageIndex,pageSize,selectedDataContent.size());
 
             //这里调用所有补全方法，这边多遍历了一遍
             missingDataByMean.addAll(mean.v2Mean(selectedDataContent));
@@ -65,21 +66,16 @@ public class V2CompletionThread {
             pageIndex++;
         }
 
-        System.out.println("Missing data created by MEAN: " + missingDataByMean.size() +
-                "\nFirst missing data: " + missingDataByMean.get(0));
-
-        System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
-                "\nFirst missing data: " + missingDataByUsePrevious.get(0));
-        System.out.println("uid----" + uid + " end complete time: " + new Date());
+        log.info("missing data created by MEAN:{}",missingDataByMean.size());
+        log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
         //先不要存进数据库
-//        machineV2StatusService.insertBatch(missingDataByMean);
-//        machineV2StatusService.insertBatch(missingDataByUsePrevious);
+        machineV2StatusService.insertBatch(missingDataByMean);
+        machineV2StatusService.insertBatch(missingDataByUsePrevious);
     }
 
     @Async
     public void iterateAndComplete(String uid, long timePerBatch) {
-        System.out.println("当前线程池" + Thread.currentThread().getName());
-        System.out.println("uid----" + uid + " start complete time: " + new Date());
+        log.info("current thread:{},uid{}" + Thread.currentThread().getName(),uid);
         //一个uid的所有缺失数据集合
         List<MachineV2Status> missingDataByMean = new ArrayList<>();
         List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
@@ -100,12 +96,8 @@ public class V2CompletionThread {
             endTime   = startTime + timePerBatch;
         }
 
-        System.out.println("Missing data created by MEAN: " + missingDataByMean.size() +
-                "\nFirst missing data: " + missingDataByMean.get(0));
-
-        System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
-                "\nFirst missing data: " + missingDataByUsePrevious.get(0));
-        System.out.println("uid----" + uid + " end complete time: " + new Date());
+        log.info("missing data created by MEAN:{}",missingDataByMean.size());
+        log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
         //先不要存进数据库
 //        machineV2StatusService.insertBatch(missingDataByMean);
 //        machineV2StatusService.insertBatch(missingDataByUsePrevious);

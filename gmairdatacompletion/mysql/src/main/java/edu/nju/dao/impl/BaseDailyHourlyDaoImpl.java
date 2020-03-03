@@ -15,9 +15,9 @@ import java.util.List;
 public abstract class BaseDailyHourlyDaoImpl<T> extends BaseDaoImpl<T> implements BaseDailyHourlyDao<T> {
     @Override
     public List<T> getByUidAndMethod(String uid, int methodCode, long startTime, long endTime) {
-        String hql = "SELECT * FROM " + clazz.getName()
-                + " WHERE uid = ?0 AND completeMethod = ?1"
-                + " AND createAt BETWEEN ?2 AND ?3";
+        String hql = "SELECT o FROM " + clazz.getName() + " o"
+                + " WHERE o.uid = ?0 AND o.completeMethod = ?1"
+                + " AND o.createAt BETWEEN ?2 AND ?3";
         return getListByHQL(hql, uid, methodCode, startTime, endTime);
     }
 }

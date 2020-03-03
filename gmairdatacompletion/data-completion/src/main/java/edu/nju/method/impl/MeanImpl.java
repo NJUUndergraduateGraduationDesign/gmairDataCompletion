@@ -5,23 +5,25 @@ import edu.nju.method.Mean;
 import edu.nju.model.MachinePartialStatus;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.MachineV3Status;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @Service
 public class MeanImpl implements Mean {
 
     private static final double v2v3Interval = 30000.0;
-    private static final double v2v3Bias     = 10000.0;
+    private static final double v2v3Bias = 10000.0;
 
     @Override
     public List<MachinePartialStatus> partialMean(List<MachinePartialStatus> selectedData) {
         List<MachinePartialStatus> res = new ArrayList<>();
         for (int i = 0; i < selectedData.size() - 1; i++) {
             MachinePartialStatus current = selectedData.get(i);
-            MachinePartialStatus next    = selectedData.get(i + 1);
+            MachinePartialStatus next = selectedData.get(i + 1);
 
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
@@ -30,7 +32,7 @@ public class MeanImpl implements Mean {
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
+                createTime = createTime + insertInterval;
 
                 //需要手动调节的属性和blockFlag都不取平均值，直接取前一个数据的值
                 MachinePartialStatus createdData = new MachinePartialStatus(
@@ -52,17 +54,19 @@ public class MeanImpl implements Mean {
         List<MachineV2Status> res = new ArrayList<>();
         for (int i = 0; i < selectedData.size() - 1; i++) {
             MachineV2Status current = selectedData.get(i);
-            MachineV2Status next    = selectedData.get(i + 1);
-
+            MachineV2Status next = selectedData.get(i + 1);
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
             int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
+            if (missingCount > 0) {
+                log.debug("current:{},next:{},interval{},missingCount:{},insertInterval:{}",
+                        current, next, interval, missingCount, insertInterval);
+            }
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
-
+                createTime = createTime + insertInterval;
                 //需要手动调节的属性和blockFlag都不取平均值，直接取前一个数据的值
                 MachineV2Status createdData = new MachineV2Status(
                         current.getUid(),
@@ -80,6 +84,7 @@ public class MeanImpl implements Mean {
                         createTime,
                         CompleteMethodEnum.MEAN.getCode()
                 );
+                log.debug("createData:{}", createdData);
                 res.add(createdData);
             }
         }
@@ -91,7 +96,7 @@ public class MeanImpl implements Mean {
         List<MachineV3Status> res = new ArrayList<>();
         for (int i = 0; i < selectedData.size() - 1; i++) {
             MachineV3Status current = selectedData.get(i);
-            MachineV3Status next    = selectedData.get(i + 1);
+            MachineV3Status next = selectedData.get(i + 1);
 
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
@@ -100,7 +105,7 @@ public class MeanImpl implements Mean {
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
+                createTime = createTime + insertInterval;
 
                 MachineV3Status createdData = new MachineV3Status(
                         current.getUid(),

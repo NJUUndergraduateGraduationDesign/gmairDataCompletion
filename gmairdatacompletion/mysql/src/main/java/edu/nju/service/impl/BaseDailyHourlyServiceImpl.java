@@ -5,6 +5,7 @@ import edu.nju.dao.BaseDao;
 import edu.nju.service.BaseDailyHourlyService;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ import java.util.List;
  * @description：
  */
 
+@Transactional
 @Service
 public abstract class BaseDailyHourlyServiceImpl<T> implements BaseDailyHourlyService<T> {
 

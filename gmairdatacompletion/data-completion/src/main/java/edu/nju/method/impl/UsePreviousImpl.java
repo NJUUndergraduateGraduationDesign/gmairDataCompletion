@@ -30,7 +30,7 @@ public class UsePreviousImpl implements UsePrevious {
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
+                createTime = createTime + insertInterval;
 
                 MachinePartialStatus createdData = new MachinePartialStatus(
                         current.getUid(),
@@ -60,7 +60,7 @@ public class UsePreviousImpl implements UsePrevious {
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
+                createTime = createTime + insertInterval;
 
                 MachineV2Status createdData = new MachineV2Status(
                         current.getUid(),
@@ -98,7 +98,7 @@ public class UsePreviousImpl implements UsePrevious {
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;
             for (int j = 0; j < missingCount; j++) {
-                createTime = createTime + j * insertInterval;
+                createTime = createTime + insertInterval;
 
                 MachineV3Status createdData = new MachineV3Status(
                         current.getUid(),

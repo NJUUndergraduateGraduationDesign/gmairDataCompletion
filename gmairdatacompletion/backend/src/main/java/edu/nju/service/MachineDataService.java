@@ -1,9 +1,7 @@
 package edu.nju.service;
 
-import edu.nju.model.status.Co2Daily;
+import edu.nju.dto.NormalCompleteListDTO;
 import edu.nju.request.LastNDayRequest;
-
-import java.util.List;
 
 /**
  * @author ：tsl
@@ -12,5 +10,5 @@ import java.util.List;
  */
 
 public interface MachineDataService {
-    List<Co2Daily> getLastNDayCo2Daily(LastNDayRequest request);
+    NormalCompleteListDTO getLastNDayCo2Daily(LastNDayRequest request);
 }

@@ -7,6 +7,7 @@ import edu.nju.service.Co2DailyService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
 
 /**
  * @author ：tsl
@@ -14,6 +15,7 @@ import javax.annotation.Resource;
  * @description：
  */
 
+@Transactional
 @Service
 public class Co2DailyServiceImpl extends BaseDailyHourlyServiceImpl<Co2Daily> implements Co2DailyService {
     @Resource
