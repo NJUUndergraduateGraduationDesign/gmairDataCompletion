@@ -1,6 +1,7 @@
 package edu.nju.service;
 
-import edu.nju.dto.MachineBasicInfo;
+import edu.nju.model.User;
+import edu.nju.model.machine.MachineBasicInfo;
 
 /**
  * @author: Bright Chan
@@ -10,10 +11,10 @@ import edu.nju.dto.MachineBasicInfo;
 public interface MachineInfoService {
 
     /**
-     * 根据uid得到机器设备的基本信息
-     * @param uid 设备uid
+     * 得到机器设备的基本信息
+     * @param user 设备实例
      * @return 机器设备的基本信息
      */
-    MachineBasicInfo getMachineBasicInfoByUid(String uid);
+    MachineBasicInfo getMachineBasicInfoByUid(User user);
 
 }

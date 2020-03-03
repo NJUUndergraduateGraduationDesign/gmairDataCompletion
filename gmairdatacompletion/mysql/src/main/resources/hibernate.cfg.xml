@@ -14,5 +14,6 @@
     <property name="current_session_context_class">thread</property>
 
     <mapping class="edu.nju.model.User"/>
+    <mapping class="edu.nju.model.machine.MachineLatestStatus"/>
   </session-factory>
 </hibernate-configuration>

@@ -12,5 +12,7 @@ public interface UserService {
 
     List<User> findAllUsers();
 
+    List<User> findAllValidUsers();
+
     void update(User user);
 }

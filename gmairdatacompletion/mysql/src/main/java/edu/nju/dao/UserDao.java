@@ -9,4 +9,6 @@ public interface UserDao extends BaseDao<User>{
     User findByUid(String uid);
 
     List<User> findByQueryCond(Date createTimeGTE, Date createTimeLTE);
+
+    List<User> findAllValidUsers();
 }

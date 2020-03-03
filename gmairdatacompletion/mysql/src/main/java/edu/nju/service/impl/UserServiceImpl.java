@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllValidUsers() {
+        return userDao.findAllValidUsers();
+    }
+
+    @Override
     public void update(User user) {
         userDao.update(user);
     }

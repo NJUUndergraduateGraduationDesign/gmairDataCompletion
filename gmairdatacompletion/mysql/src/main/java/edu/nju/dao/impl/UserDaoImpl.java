@@ -20,4 +20,10 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
                 "unix_timestamp(u.bindTime) BETWEEN unix_timestamp(?0) AND unix_timestamp(?1)";
         return getListByHQL(hql, createTimeGTE, createTimeLTE);
     }
+
+    @Override
+    public List<User> findAllValidUsers() {
+        String hql = "SELECT u FROM User u WHERE u.dataType <> -1";
+        return getListByHQL(hql);
+    }
 }

@@ -1,4 +1,4 @@
-package edu.nju.dto;
+package edu.nju.model.machine;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,9 +8,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @author ：tsl
- * @date ：Created in 2020/2/26 14:45
- * @description： basicInfo of machine, dto Object
+ * @author: Bright Chan
+ * @date: 2020/3/3 14:50
+ * @description: TODO
  */
 
 @Data
