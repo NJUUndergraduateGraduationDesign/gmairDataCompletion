@@ -8,9 +8,11 @@ import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edn.nju.util.HttpDeal;
 import edu.nju.controller.MachineController;
+import edu.nju.controller.UserLocationController;
 import edu.nju.model.Location;
 import edu.nju.model.MachineV3Status;
 import edu.nju.model.machine.MachineLatestStatus;
+import edu.nju.model.statistic.UserLocation;
 import edu.nju.request.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
@@ -52,6 +54,8 @@ class GmairDataCompletionApplicationTests {
     MachineController machineController;
     @Resource
     LocationService locationService;
+    @Resource
+    UserLocationController userLocationController;
 
     /**
      * 用于添加User表的dataType字段
@@ -116,6 +120,7 @@ class GmairDataCompletionApplicationTests {
 
     /**
      * 用于向数据库存储行政区域的编码和名称
+     * 执行成功的话应该不会打印任何错误信息，如果有错误信息则有数据没有存进数据库，需要重新运行
      */
     @Test
     void insertCityAndProvinceInfo() {
@@ -125,26 +130,45 @@ class GmairDataCompletionApplicationTests {
             JSONArray data = response.getJSONArray("result");
             JSONArray provinces = data.getJSONArray(0);
             JSONArray cities = data.getJSONArray(1);
-            JSONObject province, city;
+            JSONArray districts = data.getJSONArray(2);
+            JSONObject province, city, district;
+            //省
             for (int i = 0; i < provinces.size(); i++) {
                 province = provinces.getJSONObject(i);
                 String provinceName = province.getString("fullname");
                 int start = province.getJSONArray("cidx").toJavaList(Integer.class).get(0);
                 int end = province.getJSONArray("cidx").toJavaList(Integer.class).get(1);
+                //市
                 for (int j = start; j <= end; j++) {
                     city = cities.getJSONObject(j);
                     String cityId = city.getString("id");
                     String cityName = city.getString("fullname");
+
                     Location location = new Location(cityId, cityName, provinceName);
                     if (!locationService.addOneLocation(location)){
                         System.out.println("ERROR AT: " + cityId + ": " + provinceName + " " + cityName);
                     }
+
+                    if (city.getJSONArray("cidx") != null) {
+                        int s = city.getJSONArray("cidx").toJavaList(Integer.class).get(0);
+                        int e = city.getJSONArray("cidx").toJavaList(Integer.class).get(1);
+                        //区
+                        for (int k = s; k <= e; k++) {
+                            district = districts.getJSONObject(k);
+                            String districtId = district.getString("id");
+                            Location l = new Location(districtId, cityName, provinceName);
+                            if (!locationService.addOneLocation(l)){
+                                System.out.println("ERROR AT: " + districtId + ": " + provinceName + " " + cityName);
+                            }
+                        }
+                    }
                 }
             }
         }
-        Location last = new Location("undefined","未知","未知");
-        if(locationService.addOneLocation(last)) {
-            System.out.println("Add the 'undefined' successfully!");
+        Location last1 = new Location("undefined","未知","未知");
+        Location last2 = new Location("null","未知","未知");
+        if(locationService.addOneLocation(last1) && locationService.addOneLocation(last2)) {
+            System.out.println("Add the 'undefined' and 'null' successfully!");
         }
     }
 
@@ -253,9 +277,23 @@ class GmairDataCompletionApplicationTests {
         queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 6));
         queryCond.setCreateTimeLTE(new Date());
         queryCond.setIsPower(1);
+        queryCond.setUid("F0FE6BAA761E");
         Map<String, List> machineBasicInfos =
                 (Map<String, List>) machineController.getList(queryCond).getData();
         System.out.println(machineBasicInfos.get("machineList").size() + " " +
                 machineBasicInfos.get("machineList").get(0));
     }
+
+    @Test
+    void testUserLocationController() {
+        List<UserLocation> res1 = userLocationController.nationalUserList();
+        List<UserLocation> res2 = userLocationController.provincialUserList("江苏省");
+        int count = 0;
+        for (UserLocation one : res1) {
+            System.out.println(one.getName() + ": " + one.getValue());
+            count += one.getValue();
+        }
+        System.out.println("total users: " + count);
+    }
+
 }

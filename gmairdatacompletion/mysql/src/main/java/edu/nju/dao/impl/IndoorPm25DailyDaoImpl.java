@@ -1,7 +1,6 @@
 package edu.nju.dao.impl;
 
 import edu.nju.dao.IndoorPm25DailyDao;
-import edu.nju.model.User;
 import edu.nju.model.status.IndoorPm25Daily;
 import org.springframework.stereotype.Repository;
 

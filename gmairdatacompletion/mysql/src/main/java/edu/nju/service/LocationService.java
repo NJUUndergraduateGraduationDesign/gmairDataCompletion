@@ -1,6 +1,9 @@
 package edu.nju.service;
 
 import edu.nju.model.Location;
+import edu.nju.model.statistic.UserLocation;
+
+import java.util.List;
 
 /**
  * @author: Bright Chan
@@ -12,5 +15,9 @@ public interface LocationService {
     boolean addOneLocation(Location location);
 
     Location findByCityId(String cityId);
+
+    List<UserLocation> getNationalUserLocation();
+
+    List<UserLocation> getProvincialUserLocation(String province);
 
 }
