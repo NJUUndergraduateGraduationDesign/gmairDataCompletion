@@ -56,15 +56,65 @@ public class MachineDateServiceImpl implements MachineDataService {
     ModeDailyService modeDailyService;
     @Resource
     ModeHourlyService modeHourlyService;
+    @Resource
+    IndoorPm25DailyService indoorPm25DailyService;
+    @Resource
+    IndoorPm25HourlyService indoorPm25HourlyService;
+    @Resource
+    InnerPm25DailyService innerPm25DailyService;
+    @Resource
+    InnerPm25HourlyService innerPm25HourlyService;
 
     @Override
     public NormalCompletePm25DTO getLastNDayPm25Daily(LastNDayRequest request) {
-        return null;
+        log.info("Pm25LastNDayRequest:{}", request);
+        long endIndoor = indoorPm25DailyService.getLatestTime(request.getUid());
+        long endInner = indoorPm25DailyService.getLatestTime(request.getUid());
+        long end = Math.max(endIndoor, endInner);
+        long start = TimeUtil.getNDayBefore(end, request.getLastNDay() - 1);
+
+        List<IndoorPm25Daily> normalIndoorList =
+                indoorPm25DailyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<InnerPm25Daily> normalInnerList =
+                innerPm25DailyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<Map<String, Object>> normalIndoor = normalIndoorList.stream().map(IndoorPm25Daily::toDTOMap).collect(Collectors.toList());
+        List<Map<String, Object>> normalInner = normalInnerList.stream().map(InnerPm25Daily::toDTOMap).collect(Collectors.toList());
+
+        List<IndoorPm25Daily> completeIndoorList = Lists.newArrayList();
+        List<InnerPm25Daily> completeInnerList = Lists.newArrayList();
+        if (CompleteMethodEnum.isCompleteMethodCode(request.getCompleteType())) {
+            completeIndoorList = indoorPm25DailyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+            completeInnerList = innerPm25DailyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+        }
+        List<Map<String, Object>> completeIndoor = completeIndoorList.stream().map(IndoorPm25Daily::toDTOMap).collect(Collectors.toList());
+        List<Map<String, Object>> completeInner = completeInnerList.stream().map(InnerPm25Daily::toDTOMap).collect(Collectors.toList());
+
+        return new NormalCompletePm25DTO(normalIndoor, normalInner, completeIndoor, completeInner);
     }
 
     @Override
     public NormalCompletePm25DTO getOneDayPm25Hourly(LastNHourRequest request) {
-        return null;
+        log.info("Pm25LastNHourRequest:{}", request);
+        long start = request.getDate().getTime();
+        long end = TimeUtil.endOfThisDay(start);
+
+        List<IndoorPm25Hourly> normalIndoorList =
+                indoorPm25HourlyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<InnerPm25Hourly> normalInnerList =
+                innerPm25HourlyService.getByUidAndCompleteMethod(request.getUid(), CompleteMethodEnum.NONE.getCode(), start, end);
+        List<Map<String, Object>> normalIndoor = normalIndoorList.stream().map(IndoorPm25Hourly::toDTOMap).collect(Collectors.toList());
+        List<Map<String, Object>> normalInner = normalInnerList.stream().map(InnerPm25Hourly::toDTOMap).collect(Collectors.toList());
+
+        List<IndoorPm25Hourly> completeIndoorList = Lists.newArrayList();
+        List<InnerPm25Hourly> completeInnerList = Lists.newArrayList();
+        if (CompleteMethodEnum.isCompleteMethodCode(request.getCompleteType())) {
+            completeIndoorList = indoorPm25HourlyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+            completeInnerList = innerPm25HourlyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
+        }
+        List<Map<String, Object>> completeIndoor = completeIndoorList.stream().map(IndoorPm25Hourly::toDTOMap).collect(Collectors.toList());
+        List<Map<String, Object>> completeInner = completeInnerList.stream().map(InnerPm25Hourly::toDTOMap).collect(Collectors.toList());
+
+        return new NormalCompletePm25DTO(normalIndoor, normalInner, completeIndoor, completeInner);
     }
 
     @Override
@@ -80,7 +130,7 @@ public class MachineDateServiceImpl implements MachineDataService {
         int normalAuto = normalList.stream().mapToInt(ModeDaily::getAutoMinute).sum();
         Map<String, Object> normalMap = ImmutableMap.of("sleepMinute", normalSleep,
                 "manualMinute", normalManual, "autoMinute", normalAuto);
-        
+
         List<ModeDaily> completeList = Lists.newArrayList();
         if (CompleteMethodEnum.isCompleteMethodCode(request.getCompleteType())) {
             completeList = modeDailyService.getByUidAndCompleteMethod(request.getUid(), request.getCompleteType(), start, end);
@@ -91,7 +141,7 @@ public class MachineDateServiceImpl implements MachineDataService {
         Map<String, Object> completeMap = ImmutableMap.of("sleepMinute", completeSleep,
                 "manualMinute", completeManual, "autoMinute", completeAuto);
 
-        return new NormalCompleteMapDTO(normalMap,completeMap);
+        return new NormalCompleteMapDTO(normalMap, completeMap);
     }
 
     @Override
@@ -118,7 +168,7 @@ public class MachineDateServiceImpl implements MachineDataService {
         Map<String, Object> completeMap = ImmutableMap.of("sleepMinute", completeSleep,
                 "manualMinute", completeManual, "autoMinute", completeAuto);
 
-        return new NormalCompleteMapDTO(normalMap,completeMap);
+        return new NormalCompleteMapDTO(normalMap, completeMap);
     }
 
     @Override
