@@ -7,13 +7,13 @@ import edn.nju.constant.Constant;
 import edn.nju.util.TimeUtil;
 import edu.nju.dto.NewTotalUserDTO;
 import edu.nju.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -24,20 +24,21 @@ import java.util.Map;
  * @description: TODO
  */
 
+@Slf4j
 @RestController
 @RequestMapping("/statistic/admin")
 public class AdminStatisticController {
     @Resource
     UserService userServiceImpl;
 
-    private static int MONTH_PER_YEAR = 12;
+    private static final int MONTH_PER_YEAR = 12;
 
 
     @GetMapping("/china/total")
     public ResponseDTO getNationalTotalAndNewUsers() {
         int totalCount = userServiceImpl.count();
         Date endTime = Constant.User.LATEST_USER_BIND_TIME;
-        Date startTime = TimeUtil.getNMonthBefore(endTime, 1);
+        Date startTime = TimeUtil.getStartOfThisMonth(endTime);
         int newCount = userServiceImpl.countByBindTime(startTime, endTime);
         NewTotalUserDTO dto = new NewTotalUserDTO(totalCount, newCount);
         return ResponseDTO.ofSuccess(dto);
@@ -47,7 +48,7 @@ public class AdminStatisticController {
     public ResponseDTO getProvincialTotalAndNewUsers(@RequestParam String province) {
         int totalCount = userServiceImpl.countByProvince(province);
         Date endTime = Constant.User.LATEST_USER_BIND_TIME;
-        Date startTime = TimeUtil.getNMonthBefore(endTime, 1);
+        Date startTime = TimeUtil.getStartOfThisMonth(endTime);
         int newCount = userServiceImpl.countByProvinceAndBindTime(province, startTime, endTime);
         NewTotalUserDTO dto = new NewTotalUserDTO(totalCount, newCount);
         return ResponseDTO.ofSuccess(dto);
@@ -55,20 +56,30 @@ public class AdminStatisticController {
 
     @GetMapping("/china/newNumberPerMonth")
     public ResponseDTO getNationalNumberPerMonthLastYear() {
-        List<Map<String,Object>> res= Lists.newArrayList();
+        List<Map<String, Object>> res = Lists.newArrayList();
         Date endTime = Constant.User.LATEST_USER_BIND_TIME;
-        for(int i = 0; i< MONTH_PER_YEAR; i++) {
-            Date start = TimeUtil.getNMonthBefore(endTime, i+1);
-            Date end = TimeUtil.getNMonthBefore(endTime,i);
+        Date start = TimeUtil.getStartOfThisMonth(endTime);
+        for (int i = 0; i < MONTH_PER_YEAR; i++) {
+            Date end = TimeUtil.getEndOfThisMonth(start);
             int count = userServiceImpl.countByBindTime(start, end);
-            res.add(ImmutableMap.of(start.toString(),count));
+            res.add(ImmutableMap.of("createTime", TimeUtil.dateToStrMonth(start), "number", count));
+            start = TimeUtil.getNMonthBefore(start, 1);
         }
         return ResponseDTO.ofSuccess(res);
     }
 
     @GetMapping("/province/newNumberPerMonth")
     public ResponseDTO getProvincialNumberPerMonthLastYear(@RequestParam String province) {
-        return ResponseDTO.ofSuccess();
+        List<Map<String, Object>> res = Lists.newArrayList();
+        Date endTime = Constant.User.LATEST_USER_BIND_TIME;
+        Date start = TimeUtil.getStartOfThisMonth(endTime);
+        for (int i = 0; i < MONTH_PER_YEAR; i++) {
+            Date end = TimeUtil.getEndOfThisMonth(start);
+            int count = userServiceImpl.countByProvinceAndBindTime(province, start, end);
+            res.add(ImmutableMap.of("createTime", TimeUtil.dateToStrMonth(start), "number", count));
+            start = TimeUtil.getNMonthBefore(start, 1);
+        }
+        return ResponseDTO.ofSuccess(res);
     }
 
     @GetMapping("/china/categoryEnvironment")
