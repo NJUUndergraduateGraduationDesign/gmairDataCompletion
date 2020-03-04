@@ -286,8 +286,9 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testUserLocationController() {
-        List<UserLocation> res1 = userLocationController.nationalUserList();
-        List<UserLocation> res2 = userLocationController.provincialUserList("江苏省");
+        List<UserLocation> res1 = (List<UserLocation>) userLocationController.nationalUserList().getData();
+        List<UserLocation> res2 =
+                (List<UserLocation>) userLocationController.provincialUserList("江苏省").getData();
         int count = 0;
         for (UserLocation one : res1) {
             System.out.println(one.getName() + ": " + one.getValue());

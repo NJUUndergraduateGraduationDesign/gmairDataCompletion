@@ -1,7 +1,6 @@
 package edu.nju.service.impl;
 
 import edu.nju.dao.BaseDailyHourlyDao;
-import edu.nju.dao.BaseDao;
 import edu.nju.service.BaseDailyHourlyService;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +35,10 @@ public abstract class BaseDailyHourlyServiceImpl<T> implements BaseDailyHourlySe
     @Override
     public long getLatestTime(String uid) {
         return dao.getLatestTime(uid);
+    }
+
+    @Override
+    public int getAverageData(String uid, String colName, int methodCode, long startTime, long endTime) {
+        return dao.getAverageData(uid, colName, methodCode, startTime, endTime);
     }
 }
