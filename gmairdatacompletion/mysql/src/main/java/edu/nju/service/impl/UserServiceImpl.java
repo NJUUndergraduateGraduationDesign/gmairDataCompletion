@@ -41,4 +41,26 @@ public class UserServiceImpl implements UserService {
     public void update(User user) {
         userDao.update(user);
     }
+
+    @Override
+    public int count() {
+        return userDao.count();
+    }
+
+    @Override
+    public int countByBindTime(Date startTime, Date endTime) {
+        return userDao.countByBindTime(startTime, endTime);
+    }
+
+    @Override
+    public int countByProvince(String province) {
+        return userDao.countByProvince(province);
+    }
+
+    @Override
+    public int countByProvinceAndBindTime(String province, Date startTime, Date endTime) {
+        return userDao.countByProvinceAndBindTime(province, startTime, endTime);
+    }
+
+
 }

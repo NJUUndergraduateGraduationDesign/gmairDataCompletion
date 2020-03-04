@@ -3,6 +3,7 @@ package edu.nju.dao;
 import edu.nju.model.Location;
 import edu.nju.model.statistic.UserLocation;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -15,5 +16,4 @@ public interface LocationDao extends BaseDao<Location> {
     List<UserLocation> getNationalUserLocation();
 
     List<UserLocation> getProvincialUserLocation(String province);
-
 }

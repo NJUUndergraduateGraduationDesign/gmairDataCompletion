@@ -15,4 +15,12 @@ public interface UserService {
     List<User> findAllValidUsers();
 
     void update(User user);
+
+    int count();
+
+    int countByBindTime(Date startTime, Date endTime);
+
+    int countByProvince(String province);
+
+    int countByProvinceAndBindTime(String province, Date startTime, Date endTime);
 }

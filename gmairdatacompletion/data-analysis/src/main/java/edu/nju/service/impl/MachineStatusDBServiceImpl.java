@@ -2,7 +2,7 @@ package edu.nju.service.impl;
 
 import edu.nju.bo.MachineV2StatusDaily;
 import edu.nju.bo.MachineV2StatusHourly;
-import edu.nju.dao.*;
+import edu.nju.dao.status.*;
 import edu.nju.model.status.*;
 import edu.nju.service.MachineStatusDBService;
 import org.springframework.beans.BeanUtils;

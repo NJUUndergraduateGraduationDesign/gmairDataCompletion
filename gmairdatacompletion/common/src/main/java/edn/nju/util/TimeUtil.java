@@ -1,5 +1,7 @@
 package edn.nju.util;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -61,11 +63,30 @@ public class TimeUtil {
         return cal.getTime().getTime();
     }
 
-    public static long getNDayBefore(long time,int n){
+    public static long getNDayBefore(long time, int n) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date(time));
         cal.add(Calendar.DAY_OF_YEAR, -n);
         return cal.getTime().getTime();
+    }
+
+    public static Date getNDayBefore(Date date, int n) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.DAY_OF_YEAR, -n);
+        return cal.getTime();
+    }
+
+    public static Date getNMonthBefore(Date date,int n){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.add(Calendar.MONTH, -n);
+        return cal.getTime();
+    }
+
+    public static Date strToDate(String str) throws ParseException {
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");//注意月份是MM
+        return simpleDateFormat.parse(str);
     }
 
     public static boolean isBetweenStartAndEnd(long cur, long start, long end) {

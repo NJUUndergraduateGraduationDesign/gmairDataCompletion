@@ -6,6 +6,7 @@ import edu.nju.model.statistic.UserLocation;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Date;
 import java.util.List;
 
 /**
