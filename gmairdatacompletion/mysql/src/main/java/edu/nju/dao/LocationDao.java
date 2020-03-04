@@ -3,7 +3,6 @@ package edu.nju.dao;
 import edu.nju.model.Location;
 import edu.nju.model.statistic.UserLocation;
 
-import java.util.Date;
 import java.util.List;
 
 /**

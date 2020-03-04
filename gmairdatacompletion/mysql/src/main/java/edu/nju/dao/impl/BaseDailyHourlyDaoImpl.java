@@ -27,4 +27,14 @@ public abstract class BaseDailyHourlyDaoImpl<T> extends BaseDaoImpl<T> implement
                 + " WHERE uid= ?0";
         return (long)getUniqueColumnByHQL(hql, uid);
     }
+
+    @Override
+    public int getAverageData(String uid, String colName,
+                                 int methodCode, long startTime, long endTime) {
+        String hql = "SELECT avg(o." + "?0" + ") FROM " + clazz.getName() + " o"
+                + " WHERE o.uid = ?1 AND o.completeMethod = ?2"
+                + " AND o.createAt BETWEEN ?3 AND ?4";
+        return (int)Math.round(
+                (double)getUniqueColumnByHQL(hql, colName, uid, methodCode, startTime, endTime));
+    }
 }
