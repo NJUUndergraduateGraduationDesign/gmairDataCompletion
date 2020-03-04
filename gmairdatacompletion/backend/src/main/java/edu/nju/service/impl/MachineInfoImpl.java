@@ -1,8 +1,10 @@
 package edu.nju.service.impl;
 
+import edu.nju.model.Location;
 import edu.nju.model.User;
 import edu.nju.model.machine.MachineBasicInfo;
 import edu.nju.model.machine.MachineLatestStatus;
+import edu.nju.service.LocationService;
 import edu.nju.service.MachineInfoService;
 import edu.nju.service.MachineLatestStatusService;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,8 @@ import javax.annotation.Resource;
 public class MachineInfoImpl implements MachineInfoService {
     @Resource
     private MachineLatestStatusService machineLatestStatusService;
+    @Resource
+    private LocationService locationService;
 
     @Override
     public MachineBasicInfo getMachineBasicInfoByUid(User user) {
@@ -27,7 +31,9 @@ public class MachineInfoImpl implements MachineInfoService {
         res.setUid(user.getUid());
         res.setBindTime(user.getBindTime());
         res.setCodeValue(user.getCodeValue());
-        res.setCity(user.getCityId());
+
+        Location location = locationService.findByCityId(user.getCityId());
+        res.setCity(location.getCityName());
 
         // TODO insert overCount.
         res.setOverCount(0);

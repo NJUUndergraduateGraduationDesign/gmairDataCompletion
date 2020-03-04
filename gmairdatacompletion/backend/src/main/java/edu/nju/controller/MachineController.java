@@ -94,6 +94,11 @@ public class MachineController {
             res = machineLatestStatusService.findByQueryCond(overCountGTE, overCountLTE,
                     offset, pageSize);
         }
+        else if (createTimeGTE == null && createTimeLTE == null &&
+                isPower == -1 &&
+                overCountGTE == 0 && overCountLTE == 0) {
+            res = machineLatestStatusService.findByQueryCond(offset, pageSize);
+        }
 
         map.put("machineList", res);
         return ResponseDTO.ofSuccess(map);

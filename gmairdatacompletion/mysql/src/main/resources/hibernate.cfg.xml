@@ -15,5 +15,6 @@
 
     <mapping class="edu.nju.model.User"/>
     <mapping class="edu.nju.model.machine.MachineLatestStatus"/>
+    <mapping class="edu.nju.model.Location"/>
   </session-factory>
 </hibernate-configuration>

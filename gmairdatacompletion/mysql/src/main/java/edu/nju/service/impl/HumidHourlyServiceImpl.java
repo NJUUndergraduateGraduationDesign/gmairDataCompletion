@@ -2,7 +2,7 @@ package edu.nju.service.impl;
 
 import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.dao.HumidHourlyDao;
-import edu.nju.model.status.HumidDaily;
+import edu.nju.model.status.HumidHourly;
 import edu.nju.service.HumidHourlyService;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +17,12 @@ import javax.transaction.Transactional;
 
 @Transactional
 @Service
-public class HumidHourlyServiceImpl extends BaseDailyHourlyServiceImpl<HumidDaily> implements HumidHourlyService {
+public class HumidHourlyServiceImpl extends BaseDailyHourlyServiceImpl<HumidHourly> implements HumidHourlyService {
     @Resource
     private HumidHourlyDao humidHourlyDaoImpl;
 
     @Resource
-    public void setDao(BaseDailyHourlyDao<HumidDaily> humidHourlyDao) {
+    public void setDao(BaseDailyHourlyDao<HumidHourly> humidHourlyDao) {
         super.setDao(humidHourlyDao);
     }
 }

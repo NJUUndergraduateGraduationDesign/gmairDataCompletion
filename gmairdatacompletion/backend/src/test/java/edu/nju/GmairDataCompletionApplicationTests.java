@@ -1,9 +1,14 @@
 package edu.nju;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import edn.nju.enums.MachineStatusTypeEnum;
+import edn.nju.util.HttpDeal;
 import edu.nju.controller.MachineController;
+import edu.nju.model.Location;
 import edu.nju.model.MachineV3Status;
 import edu.nju.model.machine.MachineLatestStatus;
 import edu.nju.request.MachineQueryCond;
@@ -16,6 +21,7 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.*;
@@ -24,6 +30,9 @@ import java.util.*;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = GmairDataCompletionApplication.class)
 class GmairDataCompletionApplicationTests {
+
+    private static final String DISTRICT = "http://apis.map.qq.com/ws/district/v1/list";
+    private static final String KEY = "LYEBZ-H6TCW-TOXRD-OSOKF-UBG25-53BFW";
 
     @Resource
     MachineV2StatusService machineV2StatusServiceImpl;
@@ -41,6 +50,8 @@ class GmairDataCompletionApplicationTests {
     MachineLatestStatusService machineLatestStatusService;
     @Resource
     MachineController machineController;
+    @Resource
+    LocationService locationService;
 
     /**
      * 用于添加User表的dataType字段
@@ -100,6 +111,40 @@ class GmairDataCompletionApplicationTests {
                     System.out.println("oops");
                 }
             }
+        }
+    }
+
+    /**
+     * 用于向数据库存储行政区域的编码和名称
+     */
+    @Test
+    void insertCityAndProvinceInfo() {
+        String url = DISTRICT + "?key=" + KEY;
+        JSONObject response = JSON.parseObject(HttpDeal.getResponse(url));
+        if (!StringUtils.isEmpty(response) && response.getInteger("status") == 0) {
+            JSONArray data = response.getJSONArray("result");
+            JSONArray provinces = data.getJSONArray(0);
+            JSONArray cities = data.getJSONArray(1);
+            JSONObject province, city;
+            for (int i = 0; i < provinces.size(); i++) {
+                province = provinces.getJSONObject(i);
+                String provinceName = province.getString("fullname");
+                int start = province.getJSONArray("cidx").toJavaList(Integer.class).get(0);
+                int end = province.getJSONArray("cidx").toJavaList(Integer.class).get(1);
+                for (int j = start; j <= end; j++) {
+                    city = cities.getJSONObject(j);
+                    String cityId = city.getString("id");
+                    String cityName = city.getString("fullname");
+                    Location location = new Location(cityId, cityName, provinceName);
+                    if (!locationService.addOneLocation(location)){
+                        System.out.println("ERROR AT: " + cityId + ": " + provinceName + " " + cityName);
+                    }
+                }
+            }
+        }
+        Location last = new Location("undefined","未知","未知");
+        if(locationService.addOneLocation(last)) {
+            System.out.println("Add the 'undefined' successfully!");
         }
     }
 
@@ -205,7 +250,7 @@ class GmairDataCompletionApplicationTests {
         MachineQueryCond queryCond = new MachineQueryCond();
         queryCond.setCurPage(1);
         queryCond.setPageSize(10);
-        queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 5));
+        queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 6));
         queryCond.setCreateTimeLTE(new Date());
         queryCond.setIsPower(1);
         Map<String, List> machineBasicInfos =

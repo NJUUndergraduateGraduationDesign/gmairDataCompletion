@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface MachineLatestStatusDao extends BaseDao<MachineLatestStatus> {
 
+    List<MachineBasicInfo> findByQueryCond(int offset, int pageSize);
+
     List<MachineBasicInfo> findByQueryCond(Date createTimeGTE, Date createTimeLTE,
                                            int offset, int pageSize);
 

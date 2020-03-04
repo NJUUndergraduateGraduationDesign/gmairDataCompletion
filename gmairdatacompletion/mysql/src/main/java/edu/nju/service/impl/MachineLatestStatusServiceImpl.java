@@ -35,6 +35,11 @@ public class MachineLatestStatusServiceImpl implements MachineLatestStatusServic
     }
 
     @Override
+    public List<MachineBasicInfo> findByQueryCond(int offset, int pageSize) {
+        return machineLatestStatusDao.findByQueryCond(offset, pageSize);
+    }
+
+    @Override
     public List<MachineBasicInfo> findByQueryCond(Date createTimeGTE, Date createTimeLTE,
                                                   int offset, int pageSize) {
         return machineLatestStatusDao.findByQueryCond(createTimeGTE, createTimeLTE, offset, pageSize);

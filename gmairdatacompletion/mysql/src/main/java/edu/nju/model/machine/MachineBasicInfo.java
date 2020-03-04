@@ -23,7 +23,7 @@ public class MachineBasicInfo implements Serializable {
      */
     private String codeValue;
     /**
-     * 设备所在的城市编码
+     * 设备所在的城市名称
      */
     private String city;
     /**

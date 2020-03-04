@@ -12,6 +12,8 @@ public interface MachineLatestStatusService {
 
     List<MachineLatestStatus> findAllLatestStatus();
 
+    List<MachineBasicInfo> findByQueryCond(int offset, int pageSize);
+
     List<MachineBasicInfo> findByQueryCond(Date createTimeGTE, Date createTimeLTE,
                                            int offset, int pageSize);
 

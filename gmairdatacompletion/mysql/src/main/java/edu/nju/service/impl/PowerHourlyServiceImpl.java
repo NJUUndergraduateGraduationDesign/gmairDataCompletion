@@ -2,7 +2,7 @@ package edu.nju.service.impl;
 
 import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.dao.PowerHourlyDao;
-import edu.nju.model.status.PowerDaily;
+import edu.nju.model.status.PowerHourly;
 import edu.nju.service.PowerHourlyService;
 import org.springframework.stereotype.Service;
 
@@ -17,12 +17,12 @@ import javax.transaction.Transactional;
 
 @Transactional
 @Service
-public class PowerHourlyServiceImpl extends BaseDailyHourlyServiceImpl<PowerDaily> implements PowerHourlyService {
+public class PowerHourlyServiceImpl extends BaseDailyHourlyServiceImpl<PowerHourly> implements PowerHourlyService {
     @Resource
     private PowerHourlyDao powerHourlyDaoImpl;
 
     @Resource
-    public void setDao(BaseDailyHourlyDao<PowerDaily> powerHourlyDao) {
+    public void setDao(BaseDailyHourlyDao<PowerHourly> powerHourlyDao) {
         super.setDao(powerHourlyDao);
     }
 }
