@@ -13,5 +13,5 @@ public interface BaseDailyHourlyDao<T> extends BaseDao<T>{
 
     long getLatestTime(String uid);
 
-    int getAverageData(String uid, String colName, int methodCode, long startTime, long endTime);
+    List<Double> getAverageList(String uid, String colName, int methodCode, long startTime, long endTime);
 }
