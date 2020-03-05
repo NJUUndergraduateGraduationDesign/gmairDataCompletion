@@ -1,18 +1,11 @@
 package edu.nju.service;
 
-import com.google.common.collect.Lists;
 import edu.nju.model.MachineV2Status;
 import edu.nju.repository.MachineV2StatusRepository;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * @author ：tsl
@@ -20,76 +13,15 @@ import java.util.Optional;
  * @description： service implement of machineStatus
  */
 
-@Slf4j
+
+@Transactional
 @Service
-public class MachineV2StatusServiceImpl implements MachineV2StatusService {
+public class MachineV2StatusServiceImpl extends MachineCommonServiceImpl<MachineV2Status> implements MachineV2StatusService {
     @Resource
-    private MongoTemplate mongoTemplate;
+    MachineV2StatusRepository repository;
+
     @Resource
-    private MachineV2StatusRepository machineV2StatusRepository;
-
-    @Override
-    public MachineV2Status findById(String id) {
-        Optional<MachineV2Status> machineV2StatusOptional = machineV2StatusRepository.findById(id);
-        return machineV2StatusOptional.isPresent() ? machineV2StatusOptional.get() : null;
-    }
-
-    @Override
-    public void create(MachineV2Status machineV2Status) {
-        machineV2StatusRepository.insert(machineV2Status);
-    }
-
-    @Override
-    public void saveOrUpdate(MachineV2Status machineV2Status) {
-        machineV2StatusRepository.save(machineV2Status);
-    }
-
-    @Override
-    public long getStartTimeByUid(String uid) {
-        MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAt(uid);
-        return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
-    }
-
-    @Override
-    public long getLatestTimeByUid(String uid) {
-        MachineV2Status machineV2Status = machineV2StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
-        return machineV2Status == null ? 0 : machineV2Status.getCreateAt();
-    }
-
-    @Override
-    public MachineV2Status getLatestRecord(String uid) {
-        return machineV2StatusRepository.findFirstByUidOrderByCreateAtDesc(uid);
-    }
-
-    @Override
-    public Page<MachineV2Status> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
-        return machineV2StatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
-    }
-
-    @Override
-    public List<MachineV2Status> fetchBatchByUid(String uid, long start, long end) {
-        return machineV2StatusRepository.findByUid(uid, start, end);
-    }
-
-    @Override
-    public List<MachineV2Status> fetchBatchByUid(String uid, long startTime, long endTime, long timeInterval, long timeBias) {
-        List<MachineV2Status> res = Lists.newArrayList();
-        for (long cur = startTime; cur <= endTime; cur = cur + timeInterval) {
-            long left = Math.max(startTime, cur - timeBias);
-            long right = Math.min(endTime, cur + timeBias);
-            List<MachineV2Status> subList = machineV2StatusRepository.findByUid(uid, left, right);
-            res.addAll(subList);
-        }
-        return res;
-    }
-
-    @Override
-    public void insertBatch(List<MachineV2Status> machineV2Statuses) {
-        machineV2StatusRepository.insert(machineV2Statuses);
-    }
-
-    @Override
-    public List<String> getAllUids() {
-        return mongoTemplate.query(MachineV2Status.class).distinct("uid").as(String.class).all();
+    void setMachineV2StatusRepository(MachineV2StatusRepository repository) {
+        super.setRepository(repository);
     }
 }

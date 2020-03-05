@@ -16,7 +16,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("machine_v2_status")
-public class MachineV2Status {
+public class MachineV2Status implements MachineCommonStatus{
     private String uid;
 
     private int pm2_5;

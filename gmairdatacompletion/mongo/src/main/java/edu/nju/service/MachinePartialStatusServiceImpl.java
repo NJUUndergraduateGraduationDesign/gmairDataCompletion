@@ -2,14 +2,10 @@ package edu.nju.service;
 
 import edu.nju.model.MachinePartialStatus;
 import edu.nju.repository.MachinePartialStatusRepository;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.List;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author ：tsl
@@ -17,30 +13,14 @@ import java.util.List;
  * @description：service implement of machinePartialStatus
  */
 
+@Transactional
 @Service
-public class MachinePartialStatusServiceImpl implements MachinePartialStatusService {
+public class MachinePartialStatusServiceImpl extends MachineCommonServiceImpl<MachinePartialStatus> implements MachinePartialStatusService {
     @Resource
-    MongoTemplate mongoTemplate;
+    MachinePartialStatusRepository repository;
+
     @Resource
-    MachinePartialStatusRepository machinePartialStatusRepository;
-
-    @Override
-    public List<String> getAllUids() {
-        return mongoTemplate.query(MachinePartialStatus.class).distinct("uid").as(String.class).all();
-    }
-
-    @Override
-    public Page<MachinePartialStatus> fetchBatchByUid(String uid, int pageIndex, int pageSize) {
-        return machinePartialStatusRepository.findByUid(uid, PageRequest.of(pageIndex, pageSize, Sort.by("createAt").ascending()));
-    }
-
-    @Override
-    public List<MachinePartialStatus> findByUid(String uid) {
-        return machinePartialStatusRepository.findByUid(uid);
-    }
-
-    @Override
-    public void insertBatch(List<MachinePartialStatus> machinePartialStatuses) {
-        machinePartialStatusRepository.insert(machinePartialStatuses);
+    void setMachinePartialStatusRepository(MachinePartialStatusRepository repository) {
+        super.setRepository(repository);
     }
 }

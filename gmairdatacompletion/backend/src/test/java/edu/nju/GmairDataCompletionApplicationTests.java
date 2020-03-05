@@ -173,18 +173,6 @@ class GmairDataCompletionApplicationTests {
     }
 
     @Test
-    void testLogs() {
-        log.info("testLog");
-    }
-
-    @Test
-    void testFindById() {
-        MachineV2Status machineV2Status = machineV2StatusServiceImpl.findById("5d9249a980a5f93e1e393d48");
-        System.out.println(machineV2Status);
-    }
-
-
-    @Test
     void testFetchBatch1() {
         System.out.println("startTime:" + new Date());
         Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 50);
@@ -248,6 +236,9 @@ class GmairDataCompletionApplicationTests {
         machineV2StatusServiceImpl.insertBatch(Lists.newArrayList(machineV2Status));
     }
 
+    /**
+     * 用于对一个uid进行原始数据补全
+     */
     @Test
     void testDataCompletion() {
         System.out.println("start time: " + new Date());
@@ -260,13 +251,12 @@ class GmairDataCompletionApplicationTests {
         }
     }
 
+    /**
+     * 用于对一个uid进行数据统计分析
+     */
     @Test
     void testAnalyze() {
         machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
-    }
-
-    @Test
-    void testMethods() {
     }
 
     @Test

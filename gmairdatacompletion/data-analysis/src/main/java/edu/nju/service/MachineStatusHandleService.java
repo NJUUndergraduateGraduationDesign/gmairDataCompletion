@@ -1,5 +1,6 @@
 package edu.nju.service;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**

@@ -4,7 +4,7 @@ import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.service.BaseDailyHourlyService;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 
 /**
@@ -21,10 +21,6 @@ public abstract class BaseDailyHourlyServiceImpl<T> implements BaseDailyHourlySe
 
     public void setDao(BaseDailyHourlyDao<T> dao) {
         this.dao = dao;
-    }
-
-    public BaseDailyHourlyDao<T> getDao() {
-        return dao;
     }
 
     @Override

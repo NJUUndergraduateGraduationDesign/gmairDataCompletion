@@ -9,6 +9,8 @@ import edu.nju.bo.MachineV2StatusHourly;
 import edu.nju.bo.MachineV3StatusDaily;
 import edu.nju.bo.MachineV3StatusHourly;
 import edu.nju.model.MachineV2Status;
+import edu.nju.model.status.InnerPm25Daily;
+import edu.nju.model.status.InnerPm25Hourly;
 import edu.nju.service.MachineStatusAnalyzeService;
 import edu.nju.service.MachineV2StatusService;
 import edu.nju.service.MachineV3StatusService;
@@ -91,6 +93,11 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
     }
 
     @Override
+    public List<InnerPm25Hourly> analyzePartial(String uid, long startTime) {
+        return null;
+    }
+
+    @Override
     public List<MachineV2StatusDaily> v2HourlyToDaily(List<MachineV2StatusHourly> hourlyList, long startTime) {
         List<MachineV2StatusDaily> res=Lists.newArrayList();
         for (Integer code : ALL_CODE_LIST) {
@@ -112,6 +119,11 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
 
     @Override
     public List<MachineV3StatusDaily> v3HourlyToDaily(List<MachineV3StatusHourly> hourlyList, long startTime) {
+        return null;
+    }
+
+    @Override
+    public List<InnerPm25Daily> partialHourlyToDaily(List<InnerPm25Hourly> hourlyList, long startTime) {
         return null;
     }
 

@@ -15,7 +15,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Document("machine_v3_status")
-public class MachineV3Status {
+public class MachineV3Status implements MachineCommonStatus{
     private String uid;
 
     private int pm2_5a;
@@ -45,4 +45,9 @@ public class MachineV3Status {
     private long createAt;
 
     private int completeCode;
+
+    @Override
+    public boolean isBlockFlag() {
+        return false;
+    }
 }
