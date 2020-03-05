@@ -3,6 +3,7 @@ package edu.nju.service.status.impl;
 import edn.nju.util.MyMath;
 import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.dao.status.IndoorPm25DailyDao;
+import edu.nju.model.statistic.AvgDataDaily;
 import edu.nju.model.status.IndoorPm25Daily;
 import edu.nju.service.impl.BaseDailyHourlyServiceImpl;
 import edu.nju.service.status.IndoorPm25DailyService;
@@ -33,5 +34,10 @@ public class IndoorPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<Indoo
     public int getAverageData(String uid, int methodCode, long startTime, long endTime) {
         List<Double> store = indoorPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
         return MyMath.getAvgWithWeight(store);
+    }
+
+    @Override
+    public List<AvgDataDaily> getAverageList(String uid, int methodCode, long startTime, long endTime) {
+        return indoorPm25DailyDao.getAvgListWithDate(uid, methodCode, startTime, endTime);
     }
 }

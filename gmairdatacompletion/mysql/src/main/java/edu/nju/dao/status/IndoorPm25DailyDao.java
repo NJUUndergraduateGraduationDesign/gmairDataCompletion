@@ -1,6 +1,7 @@
 package edu.nju.dao.status;
 
 import edu.nju.dao.BaseDailyHourlyDao;
+import edu.nju.model.statistic.AvgDataDaily;
 import edu.nju.model.status.IndoorPm25Daily;
 
 import java.util.List;
@@ -13,4 +14,6 @@ import java.util.List;
 
 public interface IndoorPm25DailyDao extends BaseDailyHourlyDao<IndoorPm25Daily> {
     List<Double> getAverageList(String uid, int methodCode, long startTime, long endTime);
+
+    List<AvgDataDaily> getAvgListWithDate(String uid, int methodCode, long startTime, long endTime);
 }

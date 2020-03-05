@@ -22,7 +22,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.StringUtils;
 
@@ -252,10 +251,32 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testUserStatisticsController() {
-        Map<String, Integer> res =
+        Map<String, Integer> res1 =
                 (Map<String, Integer>) userStatisticController.getUserDataRadar("F0FE6BAA617C").getData();
-        for (String key : res.keySet()) {
-            System.out.println(key + ": " + res.get(key));
+        for (String key : res1.keySet()) {
+            System.out.println(key + ": " + res1.get(key));
         }
+        System.out.println("==========");
+
+        Map<String, Integer> res2 = (Map<String, Integer>)
+                userStatisticController.getAvgMachineOpenTime("F0FE6BAA617C").getData();
+        for (String key : res2.keySet()) {
+            System.out.println(key + ": " + res2.get(key));
+        }
+        System.out.println("==========");
+
+        Map<String, Integer> res3 = (Map<String, Integer>)
+                userStatisticController.getAvgIndoorPm25PerDayThisYear("F0FE6BAA617C").getData();
+        for (String key : res3.keySet()) {
+            System.out.println(key + ": " + res3.get(key));
+        }
+        System.out.println("==========");
+
+        Map<String, Integer> res4 = (Map<String, Integer>)
+                userStatisticController.getAvgMachineOpenTimePerDayThisYear("F0FE6BAA617C").getData();
+        for (String key : res4.keySet()) {
+            System.out.println(key + ": " + res4.get(key));
+        }
+        System.out.println("==========");
     }
 }
