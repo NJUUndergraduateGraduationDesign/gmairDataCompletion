@@ -9,6 +9,7 @@ import edn.nju.enums.MachineStatusTypeEnum;
 import edn.nju.util.HttpDeal;
 import edu.nju.controller.MachineController;
 import edu.nju.controller.UserLocationController;
+import edu.nju.controller.UserStatisticController;
 import edu.nju.model.Location;
 import edu.nju.model.MachineV3Status;
 import edu.nju.model.machine.MachineLatestStatus;
@@ -56,6 +57,8 @@ class GmairDataCompletionApplicationTests {
     LocationService locationService;
     @Resource
     UserLocationController userLocationController;
+    @Resource
+    UserStatisticController userStatisticController;
 
     /**
      * 用于添加User表的dataType字段
@@ -287,4 +290,12 @@ class GmairDataCompletionApplicationTests {
         System.out.println("total users: " + count);
     }
 
+    @Test
+    void testUserStatisticsController() {
+        Map<String, Integer> res =
+                (Map<String, Integer>) userStatisticController.getUserDataRadar("F0FE6BAA617C").getData();
+        for (String key : res.keySet()) {
+            System.out.println(key + ": " + res.get(key));
+        }
+    }
 }

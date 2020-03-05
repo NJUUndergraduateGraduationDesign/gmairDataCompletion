@@ -24,8 +24,6 @@ public class UserStatisticController {
 
     private static final int lastMonth = 30;
     private static final int bestMethod = 1;
-    private static final String[] colName = {"average_pm25", "average_pm25", "average_co2",
-                                             "average_humid", "average_temp", "average_volume"};
 
     @Resource
     IndoorPm25DailyService indoorPm25DailyService;
@@ -43,28 +41,29 @@ public class UserStatisticController {
     @GetMapping("/radar")
     public ResponseDTO getUserDataRadar(@RequestParam String uid) {
         long end = indoorPm25DailyService.getLatestTime(uid);
-        long start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgIndoorPm25 = indoorPm25DailyService.getAverageData(uid, colName[0], bestMethod, start, end);
+        int avgIndoorPm25 = indoorPm25DailyService.getAverageData(uid, bestMethod,
+                TimeUtil.getNDayBefore(end, lastMonth), end);
 
         end = innerPm25DailyService.getLatestTime(uid);
-        start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgInnerPm25 = innerPm25DailyService.getAverageData(uid, colName[1], bestMethod, start, end);
+        long start = TimeUtil.getNDayBefore(end, lastMonth);
+        int avgInnerPm25 = innerPm25DailyService.getAverageData(uid, bestMethod,
+                start, end);
 
         end = co2DailyService.getLatestTime(uid);
-        start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgCo2 = co2DailyService.getAverageData(uid, colName[2], bestMethod, start, end);
+        int avgCo2 = co2DailyService.getAverageData(uid, bestMethod,
+                TimeUtil.getNDayBefore(end, lastMonth), end);
 
         end = humidDailyService.getLatestTime(uid);
-        start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgHumid = humidDailyService.getAverageData(uid, colName[3], bestMethod, start, end);
+        int avgHumid = humidDailyService.getAverageData(uid, bestMethod,
+                TimeUtil.getNDayBefore(end, lastMonth), end);
 
         end = tempDailyService.getLatestTime(uid);
-        start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgTemp = tempDailyService.getAverageData(uid, colName[4], bestMethod, start, end);
+        int avgTemp = tempDailyService.getAverageData(uid, bestMethod,
+                TimeUtil.getNDayBefore(end, lastMonth), end);
 
         end = volumeDailyService.getLatestTime(uid);
-        start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgVolume = volumeDailyService.getAverageData(uid, colName[5], bestMethod, start, end);
+        int avgVolume = volumeDailyService.getAverageData(uid, bestMethod,
+                TimeUtil.getNDayBefore(end, lastMonth), end);
 
         Map<String, Integer> res = new HashMap<>();
         res.put("indoorPm25", avgIndoorPm25);

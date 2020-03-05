@@ -11,4 +11,5 @@ import edu.nju.service.BaseDailyHourlyService;
  */
 
 public interface IndoorPm25DailyService extends BaseDailyHourlyService<IndoorPm25Daily> {
+    int getAverageData(String uid, int methodCode, long startTime, long endTime);
 }

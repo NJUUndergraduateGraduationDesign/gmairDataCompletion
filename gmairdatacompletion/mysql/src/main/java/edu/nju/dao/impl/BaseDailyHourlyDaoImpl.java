@@ -1,7 +1,6 @@
 package edu.nju.dao.impl;
 
 import edu.nju.dao.BaseDailyHourlyDao;
-import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,20 +26,5 @@ public abstract class BaseDailyHourlyDaoImpl<T> extends BaseDaoImpl<T> implement
         String hql = "SELECT max(createAt) FROM " + clazz.getName()
                 + " WHERE uid= ?0";
         return (long)getUniqueColumnByHQL(hql, uid);
-    }
-
-    @Override
-    public List<Double> getAverageList(String uid, String colName,
-                                 int methodCode, long startTime, long endTime) {
-        String hql = "SELECT " + "?1" + " FROM " + clazz.getName() + " o"
-                + " WHERE o.uid = ?2 AND o.completeMethod = ?3"
-                + " AND o.createAt BETWEEN ?4 AND ?5 order by o.createAt";
-        Query query = getSession().createQuery(hql);
-        query.setParameter(1, colName);
-        query.setParameter(2, uid);
-        query.setParameter(3, methodCode);
-        query.setParameter(4, startTime);
-        query.setParameter(5, endTime);
-        return query.list();
     }
 }

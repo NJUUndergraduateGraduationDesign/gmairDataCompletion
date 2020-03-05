@@ -10,4 +10,5 @@ import edu.nju.service.BaseDailyHourlyService;
  */
 
 public interface VolumeDailyService extends BaseDailyHourlyService<VolumeDaily> {
+    int getAverageData(String uid, int methodCode, long startTime, long endTime);
 }

@@ -1,5 +1,6 @@
 package edu.nju.service.status.impl;
 
+import edn.nju.util.MyMath;
 import edu.nju.dao.BaseDailyHourlyDao;
 import edu.nju.dao.status.IndoorPm25DailyDao;
 import edu.nju.model.status.IndoorPm25Daily;
@@ -9,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * @author ：tsl
@@ -20,7 +23,15 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IndoorPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<IndoorPm25Daily> implements IndoorPm25DailyService {
     @Resource
+    private IndoorPm25DailyDao indoorPm25DailyDao;
+    @Resource
     public void setDao(BaseDailyHourlyDao<IndoorPm25Daily> indoorPm25DailyDao) {
         super.setDao(indoorPm25DailyDao);
+    }
+
+    @Override
+    public int getAverageData(String uid, int methodCode, long startTime, long endTime) {
+        List<Double> store = indoorPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
+        return MyMath.getAvgWithWeight(store);
     }
 }

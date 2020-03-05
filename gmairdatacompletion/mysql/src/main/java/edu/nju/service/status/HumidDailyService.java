@@ -11,4 +11,5 @@ import edu.nju.service.BaseDailyHourlyService;
  */
 
 public interface HumidDailyService extends BaseDailyHourlyService<HumidDaily> {
+    int getAverageData(String uid, int methodCode, long startTime, long endTime);
 }
