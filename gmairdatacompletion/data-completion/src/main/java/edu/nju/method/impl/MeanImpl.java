@@ -15,6 +15,9 @@ import java.util.List;
 @Service
 public class MeanImpl implements Mean {
 
+    //单位是毫秒
+    private static final double partialInterval = 3600000.0;
+    private static final double partialBias = 30000.0;
     private static final double v2v3Interval = 30000.0;
     private static final double v2v3Bias = 10000.0;
 
@@ -27,7 +30,7 @@ public class MeanImpl implements Mean {
 
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
-            int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
+            int missingCount = (int) Math.ceil(interval / (partialInterval + partialBias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt() + insertInterval;

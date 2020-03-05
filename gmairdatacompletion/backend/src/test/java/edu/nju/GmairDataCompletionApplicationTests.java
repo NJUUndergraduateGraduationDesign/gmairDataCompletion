@@ -175,34 +175,27 @@ class GmairDataCompletionApplicationTests {
         }
     }
 
+    /**
+     * 用于对一个uid进行原始数据补全
+     */
     @Test
-    void testFetchBatch1() {
-        System.out.println("startTime:" + new Date());
-        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 50);
-        System.out.println("endTime:" + new Date());
-        System.out.println(machineV2StatusPage.getSize());
-        System.out.println(machineV2StatusPage.getContent());
+    void testDataCompletion() {
+        System.out.println("start time: " + new Date());
+        dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
+        System.out.println("end time: " + new Date());
+        try {
+            System.in.read();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * 用于对一个uid进行数据统计分析
+     */
     @Test
-    void testFetchBatch2() {
-        System.out.println("startTime:" + new Date());
-        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 1569780000000L, 1569945600000L);
-        System.out.println("endTime:" + new Date());
-        System.out.println(machineV2StatusList.get(0));
-    }
-
-    @Test
-    void testFetchBatch3() {
-        String uid = "F0FE6BAA617C";
-        long startTime = machineV2StatusServiceImpl.getStartTimeByUid(uid);
-        long endTime = machineV2StatusServiceImpl.getLatestTimeByUid(uid);
-        long timeInterval = 5 * 60 * 1000;
-        long timeBias = 10 * 1000;
-        List<MachineV2Status> machineV2StatusList = machineV2StatusServiceImpl.fetchBatchByUid(
-                uid, startTime, endTime, timeInterval, timeBias);
-        System.out.println(machineV2StatusList.size());
-        System.out.println(machineV2StatusList);
+    void testAnalyze() {
+        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
     }
 
     @Test
@@ -227,39 +220,6 @@ class GmairDataCompletionApplicationTests {
         System.out.println("v2partial:" + v2partialUidSet.size());
         System.out.println("v3partial:" + v3partialUidSet.size());
         System.out.println("v2v3partial:" + v2v3partialUidSet.size());
-    }
-
-    @Test
-    void testInsert() {
-        Page<MachineV2Status> machineV2StatusPage = machineV2StatusServiceImpl.fetchBatchByUid("F0FE6BC350A0", 0, 1);
-        MachineV2Status machineV2Status = machineV2StatusPage.getContent().get(0);
-        Date time = new Date(machineV2Status.getCreateAt() + 100000);
-        machineV2Status.setCreateAt(time.getTime());
-        log.info("toCreate:" + machineV2Status);
-        machineV2StatusServiceImpl.insertBatch(Lists.newArrayList(machineV2Status));
-    }
-
-    /**
-     * 用于对一个uid进行原始数据补全
-     */
-    @Test
-    void testDataCompletion() {
-        System.out.println("start time: " + new Date());
-        dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
-        System.out.println("end time: " + new Date());
-        try {
-            System.in.read();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * 用于对一个uid进行数据统计分析
-     */
-    @Test
-    void testAnalyze() {
-        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
     }
 
     @Test

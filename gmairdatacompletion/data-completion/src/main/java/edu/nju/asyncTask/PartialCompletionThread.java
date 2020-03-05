@@ -4,13 +4,13 @@ import edu.nju.method.Mean;
 import edu.nju.method.UsePrevious;
 import edu.nju.model.MachinePartialStatus;
 import edu.nju.service.MachinePartialStatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -19,6 +19,7 @@ import java.util.List;
  * @description: TODO
  */
 
+@Slf4j
 @Service
 public class PartialCompletionThread {
 
@@ -31,8 +32,7 @@ public class PartialCompletionThread {
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
-        System.out.println("当前线程池" + Thread.currentThread().getName());
-        System.out.println("uid----" + uid + " start complete time: " + new Date());
+        log.info("current thread:{},uid{}" + Thread.currentThread().getName(),uid);
         //一个uid的所有缺失数据集合
         List<MachinePartialStatus> missingDataByMean = new ArrayList<>();
         List<MachinePartialStatus> missingDataByUsePrevious = new ArrayList<>();
@@ -56,6 +56,7 @@ public class PartialCompletionThread {
             selectedDataContent.addAll(selectedData.getContent());
             //将最后一条数据赋值给lastDataInPage，以供下一组数据使用
             lastDataInPage = selectedDataContent.get(selectedDataContent.size() - 1);
+            log.info("pageIndex:{},pageSize:{},contentSize:{}",pageIndex,pageSize,selectedDataContent.size());
 
             //这里调用所有补全方法，这边多遍历了一遍
             missingDataByMean.addAll(mean.partialMean(selectedDataContent));
@@ -63,14 +64,10 @@ public class PartialCompletionThread {
             pageIndex++;
         }
 
-        System.out.println("Missing data created by MEAN: " + missingDataByMean.size() +
-                "\nFirst missing data: " + missingDataByMean.get(0));
-
-        System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
-                "\nFirst missing data: " + missingDataByUsePrevious.get(0));
-        System.out.println("uid----" + uid + " end complete time: " + new Date());
+        log.info("missing data created by MEAN:{}",missingDataByMean.size());
+        log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
         //先不要存进数据库
-//            machinePartialStatusService.insertBatch(missingDataByMean);
-//            machinePartialStatusService.insertBatch(missingDataByUsePrevious);
+            machinePartialStatusService.insertBatch(missingDataByMean);
+            machinePartialStatusService.insertBatch(missingDataByUsePrevious);
     }
 }
