@@ -1,5 +1,6 @@
 package edu.nju.bo;
 
+import edu.nju.model.MachineV3Status;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,4 +31,10 @@ public class MachineV3StatusHourly {
     private int sleepMinute;
     private int heatOffMinute;
     private int heatOnMinute;
+
+    public MachineV3StatusHourly(String uid, int completeMethod, long createAt) {
+        this.uid = uid;
+        this.completeMethod = completeMethod;
+        this.createAt = createAt;
+    }
 }

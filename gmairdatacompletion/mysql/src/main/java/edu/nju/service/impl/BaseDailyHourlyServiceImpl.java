@@ -19,7 +19,7 @@ public abstract class BaseDailyHourlyServiceImpl<T> implements BaseDailyHourlySe
 
     protected BaseDailyHourlyDao<T> dao;
 
-    public void setDao(BaseDailyHourlyDao<T> dao) {
+    protected void setDao(BaseDailyHourlyDao<T> dao) {
         this.dao = dao;
     }
 

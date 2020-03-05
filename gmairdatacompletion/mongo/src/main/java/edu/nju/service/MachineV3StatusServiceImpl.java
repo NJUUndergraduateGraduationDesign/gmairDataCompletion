@@ -17,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MachineV3StatusServiceImpl extends MachineCommonServiceImpl<MachineV3Status> implements MachineV3StatusService {
     @Resource
-    MachineV3StatusRepository repository;
-
-    @Resource
     void setMachineV3StatusRepository(MachineV3StatusRepository repository) {
         super.setRepository(repository);
     }

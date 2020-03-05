@@ -18,9 +18,6 @@ import javax.annotation.Resource;
 @Service
 public class MachineV2StatusServiceImpl extends MachineCommonServiceImpl<MachineV2Status> implements MachineV2StatusService {
     @Resource
-    MachineV2StatusRepository repository;
-
-    @Resource
     void setMachineV2StatusRepository(MachineV2StatusRepository repository) {
         super.setRepository(repository);
     }

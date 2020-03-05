@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ModeDailyServiceImpl extends BaseDailyHourlyServiceImpl<ModeDaily> implements ModeDailyService {
     @Resource
-    private ModeDailyDao modeDailyDaoImpl;
-
-    @Resource
     public void setDao(BaseDailyHourlyDao<ModeDaily> modeDailyDao) {
         super.setDao(modeDailyDao);
     }

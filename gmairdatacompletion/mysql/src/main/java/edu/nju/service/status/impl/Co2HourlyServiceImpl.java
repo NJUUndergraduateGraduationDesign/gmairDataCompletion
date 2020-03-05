@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class Co2HourlyServiceImpl extends BaseDailyHourlyServiceImpl<Co2Hourly> implements Co2HourlyService {
     @Resource
-    private Co2HourlyDao co2HourlyDaoImpl;
-
-    @Resource
     public void setDao(BaseDailyHourlyDao<Co2Hourly> co2HourlyDao) {
         super.setDao(co2HourlyDao);
     }

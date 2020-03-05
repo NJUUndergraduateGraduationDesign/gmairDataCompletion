@@ -30,4 +30,10 @@ public class MachineV3StatusDaily {
     private int sleepMinute;
     private int heatOffMinute;
     private int heatOnMinute;
+
+    public MachineV3StatusDaily(String uid, int completeMethod, long createAt) {
+        this.uid = uid;
+        this.completeMethod = completeMethod;
+        this.createAt = createAt;
+    }
 }

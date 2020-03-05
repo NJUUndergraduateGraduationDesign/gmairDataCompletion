@@ -31,4 +31,10 @@ public class MachineV2StatusHourly {
     private int sleepMinute;
     private int heatOffMinute;
     private int heatOnMinute;
+
+    public MachineV2StatusHourly(String uid, int completeMethod, long createAt) {
+        this.uid = uid;
+        this.completeMethod = completeMethod;
+        this.createAt = createAt;
+    }
 }

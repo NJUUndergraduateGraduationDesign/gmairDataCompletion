@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class VolumeHourlyServiceImpl extends BaseDailyHourlyServiceImpl<VolumeHourly> implements VolumeHourlyService {
     @Resource
-    private VolumeHourlyDao volumeHourlyDaoImpl;
-
-    @Resource
     public void setDao(BaseDailyHourlyDao<VolumeHourly> volumeHourlyDao) {
         super.setDao(volumeHourlyDao);
     }

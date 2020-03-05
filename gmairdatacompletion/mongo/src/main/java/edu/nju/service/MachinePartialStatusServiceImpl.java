@@ -17,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class MachinePartialStatusServiceImpl extends MachineCommonServiceImpl<MachinePartialStatus> implements MachinePartialStatusService {
     @Resource
-    MachinePartialStatusRepository repository;
-
-    @Resource
     void setMachinePartialStatusRepository(MachinePartialStatusRepository repository) {
         super.setRepository(repository);
     }

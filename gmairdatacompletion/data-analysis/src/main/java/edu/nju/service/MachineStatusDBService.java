@@ -6,6 +6,7 @@ import edu.nju.bo.MachineV3StatusDaily;
 import edu.nju.bo.MachineV3StatusHourly;
 import edu.nju.model.status.InnerPm25Daily;
 import edu.nju.model.status.InnerPm25Hourly;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ import java.util.List;
  * @description：
  */
 
+@Transactional
 public interface MachineStatusDBService {
     default void saveMachineV2StatusHourlyList(List<MachineV2StatusHourly> list){
         for (MachineV2StatusHourly status : list) {

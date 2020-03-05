@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class HumidDailyServiceImpl extends BaseDailyHourlyServiceImpl<HumidDaily> implements HumidDailyService {
     @Resource
-    private HumidDailyDao humidDailyDaoImpl;
-
-    @Resource
     public void setDao(BaseDailyHourlyDao<HumidDaily> humidDailyDao) {
         super.setDao(humidDailyDao);
     }

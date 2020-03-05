@@ -9,10 +9,9 @@ import edu.nju.model.status.*;
 import edu.nju.service.MachineStatusDBService;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import org.springframework.transaction.annotation.Transactional;
-import java.util.List;
 
 /**
  * @author ：tsl
@@ -59,7 +58,7 @@ public class MachineStatusDBServiceImpl implements MachineStatusDBService {
     TempDailyDao tempDailyDaoImpl;
     @Resource
     VolumeDailyDao volumeDailyDaoImpl;
-    
+
     @Override
     public void saveMachineV2StatusHourly(MachineV2StatusHourly status) {
         Co2Hourly co2Hourly = new Co2Hourly();
@@ -95,7 +94,7 @@ public class MachineStatusDBServiceImpl implements MachineStatusDBService {
         BeanUtils.copyProperties(status, volumeHourly);
         volumeHourlyDaoImpl.add(volumeHourly);
     }
-    
+
     @Override
     public void saveMachineV2StatusDaily(MachineV2StatusDaily status) {
         Co2Daily co2Daily = new Co2Daily();

@@ -24,7 +24,7 @@ public class MachineCommonServiceImpl<T extends MachineCommonStatus> implements 
 
     protected MachineCommonStatusRepository<T> repository;
 
-    public void setRepository(MachineCommonStatusRepository<T> repository) {
+    protected void setRepository(MachineCommonStatusRepository<T> repository) {
         this.repository = repository;
     }
 

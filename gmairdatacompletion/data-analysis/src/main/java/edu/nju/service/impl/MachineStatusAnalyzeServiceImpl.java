@@ -9,6 +9,7 @@ import edu.nju.bo.MachineV2StatusHourly;
 import edu.nju.bo.MachineV3StatusDaily;
 import edu.nju.bo.MachineV3StatusHourly;
 import edu.nju.model.MachineV2Status;
+import edu.nju.model.MachineV3Status;
 import edu.nju.model.status.InnerPm25Daily;
 import edu.nju.model.status.InnerPm25Hourly;
 import edu.nju.service.MachineStatusAnalyzeService;
@@ -62,12 +63,9 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
         log.info("originalSize:{}", machineV2StatusList.size());
         //如果当前小时没有原始数据也会存入一条全为0的记录
         if (originalDataList.isEmpty()) {
-            hourlyList.add(new MachineV2StatusHourly(uid, CompleteMethodEnum.NONE.getCode(), startTime,0,
-                    0, 0, 0, 0,
-                    0, 0, 0, 0,
-                    0, 0, 0));
+            hourlyList.add(new MachineV2StatusHourly(uid, CompleteMethodEnum.NONE.getCode(), startTime));
         } else {
-            MachineV2StatusHourly machineV2StatusHourly = toMachineStatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), startTime);
+            MachineV2StatusHourly machineV2StatusHourly = toMachineV2StatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), startTime);
             hourlyList.add(machineV2StatusHourly);
             log.info("originalHourly:{}", machineV2StatusHourly);
         }
@@ -80,7 +78,7 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
                 continue;
             }
             completeDataList.addAll(originalDataList);
-            MachineV2StatusHourly machineV2StatusHourly = toMachineStatusHourly(completeDataList, code, startTime);
+            MachineV2StatusHourly machineV2StatusHourly = toMachineV2StatusHourly(completeDataList, code, startTime);
             log.info("completeMethod:{},completeSize:{},completeHourly:{}", code, completeDataList.size(), machineV2StatusHourly);
             hourlyList.add(machineV2StatusHourly);
         }
@@ -89,7 +87,41 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
 
     @Override
     public List<MachineV3StatusHourly> analyzeV3(String uid, long startTime) {
-        return null;
+        //当前uid,当前小时
+        List<MachineV3StatusHourly> hourlyList = Lists.newArrayList();
+        long endTime = TimeUtil.startOfNextHour(startTime);
+        List<MachineV3Status> machineV3StatusList =
+                machineV3StatusServiceImpl.fetchBatchByUid(uid, startTime, endTime);
+        log.info("fetchSize:{}", machineV3StatusList.size());
+        //去除无效数据
+        machineV3StatusList.removeIf(MachineV3Status::isBlockFlag);
+        //筛选出原始数据
+        List<MachineV3Status> originalDataList = machineV3StatusList.stream()
+                .filter(e -> e.getCompleteCode() == CompleteMethodEnum.NONE.getCode())
+                .collect(Collectors.toList());
+        log.info("originalSize:{}", machineV3StatusList.size());
+        //如果当前小时没有原始数据也会存入一条全为0的记录
+        if (originalDataList.isEmpty()) {
+            hourlyList.add(new MachineV3StatusHourly(uid, CompleteMethodEnum.NONE.getCode(), startTime));
+        } else {
+            MachineV3StatusHourly machineV3StatusHourly = toMachineV3StatusHourly(originalDataList, CompleteMethodEnum.NONE.getCode(), startTime);
+            hourlyList.add(machineV3StatusHourly);
+            log.info("originalHourly:{}", machineV3StatusHourly);
+        }
+        for (Integer code : COMPLETE_METHOD_CODE_LIST) {
+            List<MachineV3Status> completeDataList = machineV3StatusList.stream()
+                    .filter(e -> e.getCompleteCode() == code)
+                    .collect(Collectors.toList());
+            //如果当前小时没有补全方法生成的数据,则不存
+            if (completeDataList.isEmpty()) {
+                continue;
+            }
+            completeDataList.addAll(originalDataList);
+            MachineV3StatusHourly machineV3StatusHourly = toMachineV3StatusHourly(completeDataList, code, startTime);
+            log.info("completeMethod:{},completeSize:{},completeHourly:{}", code, completeDataList.size(), machineV3StatusHourly);
+            hourlyList.add(machineV3StatusHourly);
+        }
+        return hourlyList;
     }
 
     @Override
@@ -99,18 +131,18 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
 
     @Override
     public List<MachineV2StatusDaily> v2HourlyToDaily(List<MachineV2StatusHourly> hourlyList, long startTime) {
-        List<MachineV2StatusDaily> res=Lists.newArrayList();
+        List<MachineV2StatusDaily> res = Lists.newArrayList();
         for (Integer code : ALL_CODE_LIST) {
             List<MachineV2StatusHourly> completeDataList = hourlyList.stream()
                     .filter(e -> e.getCompleteMethod() == code)
                     .collect(Collectors.toList());
             //如果原始数据没有hourly数据，抛出异常
-            Preconditions.checkArgument(!(code== CompleteMethodEnum.NONE.getCode()&&completeDataList.isEmpty()));
+            Preconditions.checkArgument(!(code == CompleteMethodEnum.NONE.getCode() && completeDataList.isEmpty()));
             //如果当天没有补全方法生成的hourly数据,则不存
             if (completeDataList.isEmpty()) {
                 continue;
             }
-            MachineV2StatusDaily machineV2StatusDaily = toMachineStatusDaily(completeDataList, code, startTime);
+            MachineV2StatusDaily machineV2StatusDaily = toMachineV2StatusDaily(completeDataList, code, startTime);
             log.info("completeMethod:{},completeDaily:{}", code, machineV2StatusDaily);
             res.add(machineV2StatusDaily);
         }
@@ -128,14 +160,14 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
     }
 
     /*
-    对v2同一个uid,一个小时,某种补全方法的数据统计
-    list不为空
+     对v2同一个uid,一个小时,某种补全方法的数据统计
+     list不为空
     */
-    private MachineV2StatusHourly toMachineStatusHourly(List<MachineV2Status> list, int completeCode, long createAt) {
+    private MachineV2StatusHourly toMachineV2StatusHourly(List<MachineV2Status> list, int completeCode, long createAt) {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
 
         int workingCount = (int) list.stream().filter(e -> e.getPower() == 1).count();
-        double averageCo2 = list.stream().mapToDouble(MachineV2Status::getHumid).average().getAsDouble();
+        double averageCo2 = list.stream().mapToDouble(MachineV2Status::getCo2).average().getAsDouble();
         double averagePm25 = workingCount > 0 ? list.stream().filter(e -> e.getPower() == 1).mapToDouble(MachineV2Status::getPm2_5).average().getAsDouble() : 0;
         double averageVolume = workingCount > 0 ? list.stream().mapToDouble(MachineV2Status::getVolume).average().getAsDouble() : 0;
         double averageHumid = list.stream().mapToDouble(MachineV2Status::getHumid).average().getAsDouble();
@@ -156,10 +188,10 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
     }
 
     /*
-         对v2同一个uid,一天,某种补全方法的数据统计
-         list不为空
-          */
-    private MachineV2StatusDaily toMachineStatusDaily(List<MachineV2StatusHourly> list, int completeCode, long createAt) {
+     对v2同一个uid,一天,某种补全方法的数据统计
+     list不为空
+    */
+    private MachineV2StatusDaily toMachineV2StatusDaily(List<MachineV2StatusHourly> list, int completeCode, long createAt) {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
 
         double averageCo2 = list.stream().mapToDouble(MachineV2StatusHourly::getAverageCo2).average().getAsDouble();
@@ -180,5 +212,44 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
                 .powerOffMinute(powerOffMinute).powerOnMinute(powerOnMinute).autoMinute(autoMinute)
                 .manualMinute(manualMinute).sleepMinute(sleepMinute).heatOffMinute(heatOffMinute)
                 .heatOnMinute(heatOnMinute).averageCo2(averageCo2).createAt(createAt).build();
+    }
+
+    /*
+     对v2同一个uid,一个小时,某种补全方法的数据统计
+     list不为空
+    */
+    private MachineV3StatusHourly toMachineV3StatusHourly(List<MachineV3Status> list, int completeCode, long createAt) {
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
+
+        return null;
+    }
+
+    /*
+     对v2同一个uid,一天,某种补全方法的数据统计
+     list不为空
+    */
+    private MachineV3StatusDaily toMachineV3StatusDaily(List<MachineV3StatusHourly> list, int completeCode, long createAt) {
+        Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
+
+        double averageCo2 = list.stream().mapToDouble(MachineV3StatusHourly::getAverageCo2).average().getAsDouble();
+        double averageIndoorPm25 = list.stream().mapToDouble(MachineV3StatusHourly::getAverageIndoorPm25).average().getAsDouble();
+        double averageInnerPm25 = list.stream().mapToDouble(MachineV3StatusHourly::getAverageInnerPm25).average().getAsDouble();
+        double averageVolume = list.stream().mapToDouble(MachineV3StatusHourly::getAverageVolume).average().getAsDouble();
+        double averageHumid = list.stream().mapToDouble(MachineV3StatusHourly::getAverageHumid).average().getAsDouble();
+        double averageTemp = list.stream().mapToDouble(MachineV3StatusHourly::getAverageTemp).average().getAsDouble();
+        int powerOffMinute = list.stream().mapToInt(MachineV3StatusHourly::getPowerOffMinute).sum();
+        int powerOnMinute = list.stream().mapToInt(MachineV3StatusHourly::getPowerOnMinute).sum();
+        int autoMinute = list.stream().mapToInt(MachineV3StatusHourly::getAutoMinute).sum();
+        int manualMinute = list.stream().mapToInt(MachineV3StatusHourly::getManualMinute).sum();
+        int sleepMinute = list.stream().mapToInt(MachineV3StatusHourly::getSleepMinute).sum();
+        int heatOffMinute = list.stream().mapToInt(MachineV3StatusHourly::getHeatOffMinute).sum();
+        int heatOnMinute = list.stream().mapToInt(MachineV3StatusHourly::getHeatOnMinute).sum();
+        String uid = list.get(0).getUid();
+        return MachineV3StatusDaily.builder().uid(uid).completeMethod(completeCode).createAt(createAt)
+                .averageVolume(averageVolume).averageHumid(averageHumid).averageTemp(averageTemp)
+                .averageIndoorPm25(averageIndoorPm25).averageInnerPm25(averageInnerPm25)
+                .powerOffMinute(powerOffMinute).powerOnMinute(powerOnMinute).autoMinute(autoMinute)
+                .manualMinute(manualMinute).sleepMinute(sleepMinute).heatOffMinute(heatOffMinute)
+                .heatOnMinute(heatOnMinute).averageCo2(averageCo2).build();
     }
 }

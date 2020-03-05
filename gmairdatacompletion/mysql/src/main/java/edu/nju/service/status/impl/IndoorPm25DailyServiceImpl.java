@@ -20,9 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class IndoorPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<IndoorPm25Daily> implements IndoorPm25DailyService {
     @Resource
-    private IndoorPm25DailyDao indoorPm25DailyDaoImpl;
-
-    @Resource
     public void setDao(BaseDailyHourlyDao<IndoorPm25Daily> indoorPm25DailyDao) {
         super.setDao(indoorPm25DailyDao);
     }
