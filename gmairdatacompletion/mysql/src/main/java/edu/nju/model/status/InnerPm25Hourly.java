@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
 import java.util.Map;
 
 /**
@@ -20,7 +19,7 @@ import java.util.Map;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InnerPm25Hourly{
+public class InnerPm25Hourly {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -33,5 +32,12 @@ public class InnerPm25Hourly{
 
     public Map<String, Object> toDTOMap() {
         return ImmutableMap.of("createTime", createAt, "averagePm25", averagePm25);
+    }
+
+    public InnerPm25Hourly(String uid, long createAt, Integer completeMethod, double averagePm25) {
+        this.uid = uid;
+        this.createAt = createAt;
+        this.completeMethod = completeMethod;
+        this.averagePm25 = averagePm25;
     }
 }

@@ -234,18 +234,19 @@ public class MachineStatusHandleHandleServiceImpl implements MachineStatusHandle
     /*
     对同个uid的所有hourly统计数据处理,得到daily数据
      */
-    private List<InnerPm25Daily> handlePartialDataDaily(List<InnerPm25Hourly> partialhourlyList) {
-        Preconditions.checkArgument(!partialhourlyList.isEmpty());
+    private List<InnerPm25Daily> handlePartialDataDaily(List<InnerPm25Hourly> partialHourlyList) {
+        Preconditions.checkArgument(!partialHourlyList.isEmpty());
+
         List<InnerPm25Daily> res = Lists.newArrayList();
-        long startTime = partialhourlyList.get(0).getCreateAt();
+        long startTime = partialHourlyList.get(0).getCreateAt();
         long start = TimeUtil.startOfThisDay(startTime);
-        long endTime = partialhourlyList.get(partialhourlyList.size() - 1).getCreateAt();
+        long endTime = partialHourlyList.get(partialHourlyList.size() - 1).getCreateAt();
         long end = TimeUtil.startOfThisDay(endTime);
         for (long cur = start; cur <= end; cur = TimeUtil.startOfNextDay(cur)) {
             long finalCur = cur;
             long finalCur1 = TimeUtil.startOfNextDay(cur);
             //得到一个uid一天的统计数据,包含原始统计数据和补全统计数据
-            List<InnerPm25Hourly> subList = partialhourlyList.stream()
+            List<InnerPm25Hourly> subList = partialHourlyList.stream()
                     .filter(e -> TimeUtil.isBetweenStartAndEnd(e.getCreateAt(), finalCur, finalCur1))
                     .collect(Collectors.toList());
             List<InnerPm25Daily> dailyList = machineStatusAnalyzeService.partialHourlyToDaily(subList, cur);

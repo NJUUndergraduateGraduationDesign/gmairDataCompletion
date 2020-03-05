@@ -34,4 +34,11 @@ public class InnerPm25Daily{
     public Map<String, Object> toDTOMap() {
         return ImmutableMap.of("createTime", createAt, "averagePm25", averagePm25);
     }
+
+    public InnerPm25Daily(String uid, long createAt, Integer completeMethod, double averagePm25) {
+        this.uid = uid;
+        this.createAt = createAt;
+        this.completeMethod = completeMethod;
+        this.averagePm25 = averagePm25;
+    }
 }
