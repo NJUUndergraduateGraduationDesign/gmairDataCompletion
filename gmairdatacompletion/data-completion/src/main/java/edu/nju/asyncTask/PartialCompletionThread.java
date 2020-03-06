@@ -67,7 +67,7 @@ public class PartialCompletionThread {
         log.info("missing data created by MEAN:{}",missingDataByMean.size());
         log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
         //先不要存进数据库
-            machinePartialStatusService.insertBatch(missingDataByMean);
-            machinePartialStatusService.insertBatch(missingDataByUsePrevious);
+        machinePartialStatusService.insertBatch(missingDataByMean);
+        machinePartialStatusService.insertBatch(missingDataByUsePrevious);
     }
 }

@@ -49,10 +49,10 @@ public class UserStatisticController {
         int avgIndoorPm25 = indoorPm25DailyService.getAverageData(uid, bestMethod,
                 TimeUtil.getNDayBefore(end, lastMonth), end);
 
-//        end = innerPm25DailyService.getLatestTime(uid);
-//        long start = TimeUtil.getNDayBefore(end, lastMonth);
-//        int avgInnerPm25 = innerPm25DailyService.getAverageData(uid, bestMethod,
-//                start, end);
+        end = innerPm25DailyService.getLatestTime(uid);
+        long start = TimeUtil.getNDayBefore(end, lastMonth);
+        int avgInnerPm25 = innerPm25DailyService.getAverageData(uid, bestMethod,
+                start, end);
 
         end = co2DailyService.getLatestTime(uid);
         int avgCo2 = co2DailyService.getAverageData(uid, bestMethod,
@@ -72,7 +72,7 @@ public class UserStatisticController {
 
         Map<String, Integer> res = new HashMap<>();
         res.put("indoorPm25", avgIndoorPm25);
-//        res.put("outdoorPm25", avgInnerPm25);
+        res.put("outdoorPm25", avgInnerPm25);
         res.put("co2", avgCo2);
         res.put("humid", avgHumid);
         res.put("temp", avgTemp);
