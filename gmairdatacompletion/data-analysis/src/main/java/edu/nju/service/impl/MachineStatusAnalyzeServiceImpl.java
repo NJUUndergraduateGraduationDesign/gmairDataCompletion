@@ -290,8 +290,8 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
 
         double averageCo2 = list.stream().mapToDouble(MachineV3Status::getCo2).average().getAsDouble();
-        double averageInnerPm25 =list.stream().mapToDouble(MachineV3Status::getPm2_5a).average().getAsDouble();
-        double averageIndoorPm25 = list.stream().mapToDouble(MachineV3Status::getPm2_5b).average().getAsDouble();
+        double averageInnerPm25 =list.stream().mapToDouble(MachineV3Status::getPm2_5b).average().getAsDouble();
+        double averageIndoorPm25 = list.stream().mapToDouble(MachineV3Status::getPm2_5a).average().getAsDouble();
         double averageVolume = list.stream().mapToDouble(MachineV3Status::getVolume).average().getAsDouble();
         double averageHumid = list.stream().mapToDouble(MachineV3Status::getHumidity).average().getAsDouble();
         double averageTemp = list.stream().mapToDouble(MachineV3Status::getTempIndoor).average().getAsDouble();

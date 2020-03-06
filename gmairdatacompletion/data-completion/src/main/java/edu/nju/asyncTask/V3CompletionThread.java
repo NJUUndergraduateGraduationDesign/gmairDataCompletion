@@ -56,7 +56,7 @@ public class V3CompletionThread {
         System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
                 "\nFirst missing data: " + missingDataByUsePrevious.get(0));
         //先不要存进数据库
-//            machineV3StatusService.insertBatch(missingDataByMean);
-//            machineV3StatusService.insertBatch(missingDataByUsePrevious);
+        machineV3StatusService.insertBatch(missingDataByMean);
+        machineV3StatusService.insertBatch(missingDataByUsePrevious);
     }
 }
