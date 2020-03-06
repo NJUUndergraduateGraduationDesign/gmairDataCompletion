@@ -31,7 +31,7 @@ public class UsePreviousImpl implements UsePrevious {
             int missingCount = (int) Math.ceil(interval / (partialInterval + partialBias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
 
@@ -61,7 +61,7 @@ public class UsePreviousImpl implements UsePrevious {
             int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
 
@@ -99,7 +99,7 @@ public class UsePreviousImpl implements UsePrevious {
             int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
 

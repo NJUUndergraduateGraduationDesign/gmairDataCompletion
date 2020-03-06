@@ -33,7 +33,7 @@ public class MeanImpl implements Mean {
             int missingCount = (int) Math.ceil(interval / (partialInterval + partialBias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
 
@@ -67,7 +67,7 @@ public class MeanImpl implements Mean {
                 log.debug("current:{},next:{},interval{},missingCount:{},insertInterval:{}",
                         current, next, interval, missingCount, insertInterval);
             }
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
                 //需要手动调节的属性和blockFlag都不取平均值，直接取前一个数据的值
@@ -106,7 +106,7 @@ public class MeanImpl implements Mean {
             int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
-            long createTime = current.getCreateAt() + insertInterval;
+            long createTime = current.getCreateAt();
             for (int j = 0; j < missingCount; j++) {
                 createTime = createTime + insertInterval;
 
