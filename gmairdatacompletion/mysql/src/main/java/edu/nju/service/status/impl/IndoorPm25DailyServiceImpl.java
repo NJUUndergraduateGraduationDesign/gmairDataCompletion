@@ -33,7 +33,7 @@ public class IndoorPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<Indoo
     @Override
     public int getAverageData(String uid, int methodCode, long startTime, long endTime) {
         List<Double> store = indoorPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
-        return MyMath.getAvgWithWeight(store);
+        return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
 
     @Override

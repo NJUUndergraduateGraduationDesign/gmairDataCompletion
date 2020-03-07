@@ -180,8 +180,8 @@ class GmairDataCompletionApplicationTests {
     @Test
     void testDataCompletion() {
         System.out.println("start time: " + new Date());
-        //dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
-        //dataCompletion.partialCompletion(Lists.newArrayList("F0FE6BAA617C"));
+        dataCompletion.partialCompletion(Lists.newArrayList("F0FE6BAA617C"));
+        dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
         dataCompletion.v3Completion(Lists.newArrayList("98D8639C3543"));
         System.out.println("end time: " + new Date());
         try {
@@ -196,8 +196,8 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testAnalyze() {
-        //machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
-        //machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
         machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
     }
 

@@ -1,5 +1,6 @@
 package edu.nju.method.impl;
 
+import edn.nju.constant.Constant;
 import edn.nju.enums.CompleteMethodEnum;
 import edu.nju.method.Mean;
 import edu.nju.model.MachinePartialStatus;
@@ -14,13 +15,6 @@ import java.util.List;
 @Slf4j
 @Service
 public class MeanImpl implements Mean {
-
-    //单位是毫秒
-    private static final double partialInterval = 3600000.0;
-    private static final double partialBias = 30000.0;
-    private static final double v2v3Interval = 30000.0;
-    private static final double v2v3Bias = 10000.0;
-
     @Override
     public List<MachinePartialStatus> partialMean(List<MachinePartialStatus> selectedData) {
         List<MachinePartialStatus> res = new ArrayList<>();
@@ -30,7 +24,8 @@ public class MeanImpl implements Mean {
 
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
-            int missingCount = (int) Math.ceil(interval / (partialInterval + partialBias)) - 1;
+            int missingCount = (int) Math.ceil(interval /
+                    (Constant.Completion.PARTIAL_INTERVAL + Constant.Completion.PARTIAL_BIAS)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt();
@@ -60,7 +55,8 @@ public class MeanImpl implements Mean {
             MachineV2Status next = selectedData.get(i + 1);
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
-            int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
+            int missingCount = (int) Math.ceil(interval /
+                    (Constant.Completion.V2V3_INTERVAL + Constant.Completion.V2V3_BIAS)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             if (missingCount > 0) {
@@ -103,7 +99,8 @@ public class MeanImpl implements Mean {
 
             long interval = next.getCreateAt() - current.getCreateAt();
             //计算两个时间点之前的时间间隔中可以插入多少数据
-            int missingCount = (int) Math.ceil(interval / (v2v3Interval + v2v3Bias)) - 1;
+            int missingCount = (int) Math.ceil(interval /
+                    (Constant.Completion.V2V3_INTERVAL + Constant.Completion.V2V3_BIAS)) - 1;
             //计算插入数据的时间点
             int insertInterval = missingCount > 0 ? (int) interval / (missingCount + 1) : 0;
             long createTime = current.getCreateAt();
