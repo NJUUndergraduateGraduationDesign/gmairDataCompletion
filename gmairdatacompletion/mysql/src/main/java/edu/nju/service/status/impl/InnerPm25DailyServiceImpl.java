@@ -32,6 +32,6 @@ public class InnerPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<InnerP
     @Override
     public int getAverageData(String uid, int methodCode, long startTime, long endTime) {
         List<Double> store = innerPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
-        return MyMath.getAvgWithWeight(store);
+        return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
 }

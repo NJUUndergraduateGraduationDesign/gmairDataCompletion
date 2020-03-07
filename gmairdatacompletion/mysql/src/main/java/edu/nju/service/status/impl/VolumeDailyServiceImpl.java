@@ -32,6 +32,6 @@ public class VolumeDailyServiceImpl extends BaseDailyHourlyServiceImpl<VolumeDai
     @Override
     public int getAverageData(String uid, int methodCode, long startTime, long endTime) {
         List<Double> store = volumeDailyDao.getAverageList(uid, methodCode, startTime, endTime);
-        return MyMath.getAvgWithWeight(store);
+        return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
 }

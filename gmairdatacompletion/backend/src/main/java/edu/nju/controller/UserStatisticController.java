@@ -1,8 +1,10 @@
 package edu.nju.controller;
 
 import edn.nju.ResponseDTO;
+import edn.nju.constant.Constant;
 import edn.nju.util.TimeUtil;
 import edu.nju.model.statistic.AvgDataDaily;
+import edu.nju.service.MachineDataRadarService;
 import edu.nju.service.status.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,51 +26,29 @@ import java.util.*;
 @RequestMapping("/statistic/user")
 public class UserStatisticController {
 
-    private static final int lastMonth = 29;
     private static final String firstDayInYear = "-01-01 00:00:00";
-    private static final int bestMethod = 1;
 
     @Resource
     private IndoorPm25DailyService indoorPm25DailyService;
     @Resource
-    private InnerPm25DailyService innerPm25DailyService;
-    @Resource
-    private Co2DailyService co2DailyService;
-    @Resource
-    private HumidDailyService humidDailyService;
-    @Resource
-    private TempDailyService tempDailyService;
-    @Resource
-    private VolumeDailyService volumeDailyService;
-    @Resource
     private PowerDailyService powerDailyService;
+    @Resource
+    private MachineDataRadarService machineDataRadarService;
 
     @GetMapping("/radar")
     public ResponseDTO getUserDataRadar(@RequestParam String uid) {
-        long end = indoorPm25DailyService.getLatestTime(uid);
-        int avgIndoorPm25 = indoorPm25DailyService.getAverageData(uid, bestMethod,
-                TimeUtil.getNDayBefore(end, lastMonth), end);
-
-        end = innerPm25DailyService.getLatestTime(uid);
-        long start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgInnerPm25 = innerPm25DailyService.getAverageData(uid, bestMethod,
-                start, end);
-
-        end = co2DailyService.getLatestTime(uid);
-        int avgCo2 = co2DailyService.getAverageData(uid, bestMethod,
-                TimeUtil.getNDayBefore(end, lastMonth), end);
-
-        end = humidDailyService.getLatestTime(uid);
-        int avgHumid = humidDailyService.getAverageData(uid, bestMethod,
-                TimeUtil.getNDayBefore(end, lastMonth), end);
-
-        end = tempDailyService.getLatestTime(uid);
-        int avgTemp = tempDailyService.getAverageData(uid, bestMethod,
-                TimeUtil.getNDayBefore(end, lastMonth), end);
-
-        end = volumeDailyService.getLatestTime(uid);
-        int avgVolume = volumeDailyService.getAverageData(uid, bestMethod,
-                TimeUtil.getNDayBefore(end, lastMonth), end);
+        int avgIndoorPm25 = machineDataRadarService.getAvgIndoorPm25Daily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
+        int avgInnerPm25 = machineDataRadarService.getAvgInnerPm25Daily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
+        int avgCo2 = machineDataRadarService.getAvgCo2Daily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
+        int avgHumid = machineDataRadarService.getAvgHumidDaily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
+        int avgTemp = machineDataRadarService.getAvgTempDaily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
+        int avgVolume = machineDataRadarService.getAvgVolumeDaily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
 
         Map<String, Integer> res = new HashMap<>();
         res.put("indoorPm25", avgIndoorPm25);
@@ -83,9 +63,8 @@ public class UserStatisticController {
 
     @GetMapping("/openTime")
     public ResponseDTO getAvgMachineOpenTime(@RequestParam String uid) {
-        long end = powerDailyService.getLatestTime(uid);
-        long start = TimeUtil.getNDayBefore(end, lastMonth);
-        int avgTime = powerDailyService.getAvgMachineOpenTime(uid, bestMethod, start, end);
+        int avgTime = machineDataRadarService.getAvgMachineOpenTimeDaily(uid,
+                Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
         Map<String, Integer> res = new HashMap<>();
         res.put("time", avgTime);
         return ResponseDTO.ofSuccess(res);
@@ -95,7 +74,8 @@ public class UserStatisticController {
     public ResponseDTO getAvgIndoorPm25PerDayThisYear(@RequestParam String uid) {
         long end = indoorPm25DailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
-        List<AvgDataDaily> store = indoorPm25DailyService.getAverageList(uid, bestMethod, start, end);
+        List<AvgDataDaily> store = indoorPm25DailyService.getAverageList(uid,
+                Constant.MachineData.BEST_METHOD, start, end);
         Map<String, Integer> res = new HashMap<>();
         for (AvgDataDaily one : store) {
             Date oneTime = new Date(one.getDate());
@@ -108,7 +88,8 @@ public class UserStatisticController {
     public ResponseDTO getAvgMachineOpenTimePerDayThisYear(@RequestParam String uid) {
         long end = powerDailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
-        List<AvgDataDaily> store = powerDailyService.getAverageList(uid, bestMethod, start, end);
+        List<AvgDataDaily> store = powerDailyService.getAverageList(uid,
+                Constant.MachineData.BEST_METHOD, start, end);
         Map<String, Integer> res = new HashMap<>();
         for (AvgDataDaily one : store) {
             Date oneTime = new Date(one.getDate());
