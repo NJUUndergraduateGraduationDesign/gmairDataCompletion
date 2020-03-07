@@ -1,8 +1,9 @@
 package edu.nju.service.status;
 
-import edu.nju.model.status.Co2Daily;
 import edu.nju.model.status.InnerPm25Daily;
 import edu.nju.service.BaseDailyHourlyService;
+
+import java.util.List;
 
 /**
  * @author ：tsl
@@ -12,4 +13,6 @@ import edu.nju.service.BaseDailyHourlyService;
 
 public interface InnerPm25DailyService extends BaseDailyHourlyService<InnerPm25Daily> {
     int getAverageData(String uid, int methodCode, long startTime, long endTime);
+
+    List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime);
 }

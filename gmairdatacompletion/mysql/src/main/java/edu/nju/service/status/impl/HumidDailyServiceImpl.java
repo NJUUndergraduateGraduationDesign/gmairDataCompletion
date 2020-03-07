@@ -34,4 +34,9 @@ public class HumidDailyServiceImpl extends BaseDailyHourlyServiceImpl<HumidDaily
         List<Double> store = humidDailyDao.getAverageList(uid, methodCode, startTime, endTime);
         return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
+
+    @Override
+    public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
+        return humidDailyDao.getAverageList(uid, methodCode, startTime, endTime);
+    }
 }

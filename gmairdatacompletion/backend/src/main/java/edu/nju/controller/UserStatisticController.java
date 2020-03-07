@@ -3,7 +3,9 @@ package edu.nju.controller;
 import edn.nju.ResponseDTO;
 import edn.nju.constant.Constant;
 import edn.nju.util.TimeUtil;
+import edu.nju.bo.MachineStatisticData;
 import edu.nju.model.statistic.AvgDataDaily;
+import edu.nju.service.MachineDataPredictService;
 import edu.nju.service.MachineDataRadarService;
 import edu.nju.service.status.*;
 import lombok.extern.slf4j.Slf4j;
@@ -34,6 +36,8 @@ public class UserStatisticController {
     private PowerDailyService powerDailyService;
     @Resource
     private MachineDataRadarService machineDataRadarService;
+    @Resource
+    private MachineDataPredictService machineDataPredictService;
 
     @GetMapping("/radar")
     public ResponseDTO getUserDataRadar(@RequestParam String uid) {
@@ -96,6 +100,19 @@ public class UserStatisticController {
             String oneTimeStr = TimeUtil.dateToStrDay(oneTime);
             res.put(oneTimeStr, (int) Math.round(one.getAvgData()));
         }
+        return ResponseDTO.ofSuccess(res);
+    }
+
+    @GetMapping("/forecastData")
+    public ResponseDTO getForecastData(@RequestParam String uid) {
+        Map<String, Integer> res = new HashMap<>();
+        MachineStatisticData predictData = machineDataPredictService.gradientPredict(uid);
+        res.put("indoorPm25", (int) Math.round(predictData.getIndoorPm25()));
+        res.put("outdoorPm25", (int) Math.round(predictData.getInnerPm25()));
+        res.put("co2", (int) Math.round(predictData.getCo2()));
+        res.put("humid", (int) Math.round(predictData.getHumid()));
+        res.put("temp", (int) Math.round(predictData.getTemp()));
+        res.put("volume", (int) Math.round(predictData.getVolume()));
         return ResponseDTO.ofSuccess(res);
     }
 

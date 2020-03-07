@@ -283,4 +283,13 @@ class GmairDataCompletionApplicationTests {
         }
         System.out.println("==========");
     }
+
+    @Test
+    void testPredict() {
+        Map<String, Integer> res1 =
+                (Map<String, Integer>) userStatisticController.getForecastData("F0FE6BAA617C").getData();
+        for (String key : res1.keySet()) {
+            System.out.println(key + ": " + res1.get(key));
+        }
+    }
 }

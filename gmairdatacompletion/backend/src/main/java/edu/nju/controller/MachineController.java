@@ -31,7 +31,7 @@ public class MachineController {
 
     @PostMapping("/getList")
     public ResponseDTO getList(@RequestBody MachineQueryCond queryCond) {
-        Map<String, List> map = new HashMap<>();
+        Map<String, List<MachineBasicInfo>> map = new HashMap<>();
         List<MachineBasicInfo> res = new ArrayList<>();
 
         int curPage = queryCond.getCurPage();
