@@ -34,4 +34,9 @@ public class Co2DailyServiceImpl extends BaseDailyHourlyServiceImpl<Co2Daily> im
         List<Double> store = co2DailyDao.getAverageList(uid, methodCode, startTime, endTime);
         return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
+
+    @Override
+    public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
+        return co2DailyDao.getAverageList(uid, methodCode, startTime, endTime);
+    }
 }

@@ -20,12 +20,12 @@ import java.util.stream.Collectors;
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/29 23:27
- * @description：get machine_xx_status from mongodb and translate to MachineStatusHourly business object
+ * @description： get machine_xx_status from mongodb and translate to MachineStatusHourly business object
  */
 
 @Slf4j
 @Service
-public class MachineStatusHandleHandleServiceImpl implements MachineStatusHandleService {
+public class MachineStatusHandleServiceImpl implements MachineStatusHandleService {
     @Resource
     MachineV2StatusService machineV2StatusServiceImpl;
     @Resource

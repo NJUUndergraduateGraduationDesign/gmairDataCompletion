@@ -34,4 +34,9 @@ public class TempDailyServiceImpl extends BaseDailyHourlyServiceImpl<TempDaily> 
         List<Double> store = tempDailyDao.getAverageList(uid, methodCode, startTime, endTime);
         return store == null ? 0 : MyMath.getAvgWithWeight(store);
     }
+
+    @Override
+    public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
+        return tempDailyDao.getAverageList(uid, methodCode, startTime, endTime);
+    }
 }

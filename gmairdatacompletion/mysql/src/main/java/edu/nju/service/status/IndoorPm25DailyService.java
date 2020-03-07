@@ -16,4 +16,6 @@ public interface IndoorPm25DailyService extends BaseDailyHourlyService<IndoorPm2
     int getAverageData(String uid, int methodCode, long startTime, long endTime);
 
     List<AvgDataDaily> getAverageList(String uid, int methodCode, long startTime, long endTime);
+
+    List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime);
 }
