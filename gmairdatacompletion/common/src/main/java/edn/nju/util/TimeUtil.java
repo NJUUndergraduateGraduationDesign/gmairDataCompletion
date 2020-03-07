@@ -112,6 +112,10 @@ public class TimeUtil {
         return simpleDateFormat.parse(str);
     }
 
+    public static int millisecondsToMinute(long milliseconds){
+        return (int)(milliseconds/(1000*60));
+    }
+
     public static String dateToStrMonth(Date date){
         return new SimpleDateFormat("yyyy-MM").format(date);
     }

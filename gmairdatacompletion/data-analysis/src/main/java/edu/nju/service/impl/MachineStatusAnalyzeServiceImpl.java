@@ -18,6 +18,7 @@ import edu.nju.service.MachineStatusAnalyzeService;
 import edu.nju.service.MachineV2StatusService;
 import edu.nju.service.MachineV3StatusService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -240,13 +241,46 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
         double averageVolume = workingCount > 0 ? list.stream().mapToDouble(MachineV2Status::getVolume).average().getAsDouble() : 0;
         double averageHumid = list.stream().mapToDouble(MachineV2Status::getHumid).average().getAsDouble();
         double averageTemp = list.stream().mapToDouble(MachineV2Status::getTemp).average().getAsDouble();
-        int powerOffMinute = (int) list.stream().filter(a -> a.getPower() == 0).count() / PACKET_PER_MINUTE;
-        int powerOnMinute = (int) list.stream().filter(a -> a.getPower() == 1).count() / PACKET_PER_MINUTE;
-        int autoMinute = workingCount > 0 ? (int) list.stream().filter(e -> e.getPower() == 1).filter(e -> e.getMode() == 0).count() / PACKET_PER_MINUTE : 0;
-        int manualMinute = workingCount > 0 ? (int) list.stream().filter(e -> e.getPower() == 1).filter(e -> e.getMode() == 1).count() / PACKET_PER_MINUTE : 0;
-        int sleepMinute = workingCount > 0 ? (int) list.stream().filter(e -> e.getPower() == 1).filter(e -> e.getMode() == 2).count() / PACKET_PER_MINUTE : 0;
-        int heatOffMinute = (int) list.stream().filter(a -> a.getHeat() == 0).count() / PACKET_PER_MINUTE;
-        int heatOnMinute = (int) list.stream().filter(a -> a.getHeat() == 1).count() / PACKET_PER_MINUTE;
+
+        long before = createAt;
+        long end = TimeUtil.startOfNextHour(createAt);
+        //在整点补最后一个用于统计
+        MachineV2Status last=new MachineV2Status();
+        BeanUtils.copyProperties(list.get(list.size()-1),last);
+        last.setCreateAt(end);
+        list.add(new MachineV2Status());
+        long powerOffTime = 0, powerOnTime = 0, autoTime = 0, manualTime = 0, sleepTime = 0, heatOffTime = 0, heatOnTime = 0;
+        for (MachineV2Status status : list) {
+            long cur = status.getCreateAt();
+            if (status.getHeat() == 1) {
+                heatOnTime += cur - before;
+            } else if (status.getHeat() == 0) {
+                heatOffTime += cur - before;
+            }
+            if (status.getPower() == 1) {
+                powerOnTime += cur - before;
+                if (status.getMode() == 0) {
+                    autoTime += cur - before;
+                }
+                if (status.getMode() == 1) {
+                    manualTime += cur - before;
+                }
+                if (status.getMode() == 2) {
+                    sleepTime += cur - before;
+                }
+            } else if (status.getPower() == 0) {
+                powerOffTime += cur - before;
+            }
+            before = status.getCreateAt();
+        }
+        int heatOnMinute = TimeUtil.millisecondsToMinute(heatOnTime);
+        int heatOffMinute = TimeUtil.millisecondsToMinute(heatOffTime);
+        int powerOnMinute = TimeUtil.millisecondsToMinute(powerOnTime);
+        int powerOffMinute = TimeUtil.millisecondsToMinute(powerOffTime);
+        int autoMinute = TimeUtil.millisecondsToMinute(autoTime);
+        int manualMinute = TimeUtil.millisecondsToMinute(manualTime);
+        int sleepMinute = TimeUtil.millisecondsToMinute(sleepTime);
+
         String uid = list.get(0).getUid();
         return MachineV2StatusHourly.builder().uid(uid).completeMethod(completeCode).averagePm25(averagePm25)
                 .averageVolume(averageVolume).averageHumid(averageHumid).averageTemp(averageTemp)
@@ -290,7 +324,7 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
 
         double averageCo2 = list.stream().mapToDouble(MachineV3Status::getCo2).average().getAsDouble();
-        double averageInnerPm25 =list.stream().mapToDouble(MachineV3Status::getPm2_5b).average().getAsDouble();
+        double averageInnerPm25 = list.stream().mapToDouble(MachineV3Status::getPm2_5b).average().getAsDouble();
         double averageIndoorPm25 = list.stream().mapToDouble(MachineV3Status::getPm2_5a).average().getAsDouble();
         double averageVolume = list.stream().mapToDouble(MachineV3Status::getVolume).average().getAsDouble();
         double averageHumid = list.stream().mapToDouble(MachineV3Status::getHumidity).average().getAsDouble();
@@ -350,9 +384,9 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
 
     private InnerPm25Daily toInnerPM25Daily(List<InnerPm25Hourly> completeDataList, Integer code, long startTime) {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(completeDataList));
-        
-        String uid=completeDataList.get(0).getUid();
-        double innerPm25=completeDataList.stream().mapToDouble(InnerPm25Hourly::getAveragePm25).average().getAsDouble();
-        return new InnerPm25Daily(uid,startTime,code,innerPm25);
+
+        String uid = completeDataList.get(0).getUid();
+        double innerPm25 = completeDataList.stream().mapToDouble(InnerPm25Hourly::getAveragePm25).average().getAsDouble();
+        return new InnerPm25Daily(uid, startTime, code, innerPm25);
     }
 }
