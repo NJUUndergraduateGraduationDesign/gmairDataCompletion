@@ -29,4 +29,6 @@ public class MachineLatestStatus {
     private int heat;
 
     private int mode;
+
+    private int overCount;
 }

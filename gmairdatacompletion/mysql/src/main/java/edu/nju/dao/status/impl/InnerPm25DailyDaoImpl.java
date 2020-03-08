@@ -28,4 +28,12 @@ public class InnerPm25DailyDaoImpl extends BaseDailyHourlyDaoImpl<InnerPm25Daily
         query.setParameter(4, endTime);
         return query.list();
     }
+
+    @Override
+    public int getOverCount(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT COUNT(o) FROM InnerPm25Daily o "
+                + " WHERE o.uid = ?0 AND o.completeMethod = ?1"
+                + " AND o.averagePm25 > 25 AND o.createAt BETWEEN ?2 AND ?3";
+        return (int) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+    }
 }

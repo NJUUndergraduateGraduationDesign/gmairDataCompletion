@@ -21,7 +21,7 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
     @Override
     public List<MachineBasicInfo> findByQueryCond(int offset, int pageSize) {
         String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
-                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, 0, m.heat) from " +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
                 "User u, MachineLatestStatus m, Location l " +
                 "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId";
         return executeHQL(hql, offset, pageSize);
@@ -31,7 +31,7 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
     public List<MachineBasicInfo> findByQueryCond(Date createTimeGTE, Date createTimeLTE,
                                                   int offset, int pageSize) {
         String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
-                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, 0, m.heat) from " +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
                 "User u, MachineLatestStatus m, Location l " +
                 "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId and " +
                 "unix_timestamp(u.bindTime) between unix_timestamp(?0) and unix_timestamp(?1)";
@@ -42,7 +42,7 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
     public List<MachineBasicInfo> findByQueryCond(int isPower,
                                                   int offset, int pageSize) {
         String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
-                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, 0, m.heat) from " +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
                 "User u, MachineLatestStatus m, Location l " +
                 "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId and m.power = ?0";
         return executeHQL(hql, offset, pageSize, isPower);
@@ -51,7 +51,12 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
     @Override
     public List<MachineBasicInfo> findByQueryCond(int overCountGTE, int overCountLTE,
                                                   int offset, int pageSize) {
-        return null;
+        String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
+                "User u, MachineLatestStatus m, Location l " +
+                "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId " +
+                "and m.overCount >= ?0 and m.overCount < ?1";
+        return executeHQL(hql, offset, pageSize, overCountGTE, overCountLTE);
     }
 
     @Override
@@ -59,7 +64,7 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
                                                   int isPower,
                                                   int offset, int pageSize) {
         String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
-                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, 0, m.heat) from " +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
                 "User u, MachineLatestStatus m, Location l " +
                 "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId and m.power = ?0 and " +
                 "unix_timestamp(u.bindTime) between unix_timestamp(?1) and unix_timestamp(?2)";
@@ -70,14 +75,26 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
     public List<MachineBasicInfo> findByQueryCond(Date createTimeGTE, Date createTimeLTE,
                                                   int overCountGTE, int overCountLTE,
                                                   int offset, int pageSize) {
-        return null;
+        String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
+                "User u, MachineLatestStatus m, Location l " +
+                "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId " +
+                "and m.overCount >= ?0 and m.overCount < ?1 and " +
+                "unix_timestamp(u.bindTime) between unix_timestamp(?2) and unix_timestamp(?3)";
+        return executeHQL(hql, offset, pageSize, overCountGTE, overCountLTE, createTimeGTE, createTimeLTE);
     }
 
     @Override
     public List<MachineBasicInfo> findByQueryCond(int overCountGTE, int overCountLTE,
                                                   int isPower,
                                                   int offset, int pageSize) {
-        return null;
+        String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
+                "User u, MachineLatestStatus m, Location l " +
+                "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId " +
+                "and m.overCount >= ?0 and m.overCount < ?1 and " +
+                "m.power = ?2";
+        return executeHQL(hql, offset, pageSize, overCountGTE, overCountLTE, isPower);
     }
 
     @Override
@@ -85,7 +102,14 @@ public class MachineLatestStatusDaoImpl extends BaseDaoImpl<MachineLatestStatus>
                                                   int isPower,
                                                   int overCountGTE, int overCountLTE,
                                                   int offset, int pageSize) {
-        return null;
+        String hql = "select new edu.nju.model.machine.MachineBasicInfo(" +
+                "u.uid, u.codeValue, l.cityName, m.power, m.mode, u.bindTime, m.overCount, m.heat) from " +
+                "User u, MachineLatestStatus m, Location l " +
+                "where u.dataType <> -1 and u.uid=m.uid and u.cityId=l.cityId " +
+                "and m.overCount >= ?0 and m.overCount < ?1 and m.power = ?2 and " +
+                "unix_timestamp(u.bindTime) between unix_timestamp(?3) and unix_timestamp(?4)";
+        return executeHQL(hql, offset, pageSize, overCountGTE, overCountLTE, isPower,
+                createTimeGTE, createTimeLTE);
     }
 
     private List<MachineBasicInfo> executeHQL(String hql, int offset, int pageSize, Object... values) {

@@ -13,4 +13,6 @@ import java.util.List;
 
 public interface InnerPm25DailyDao extends BaseDailyHourlyDao<InnerPm25Daily> {
     List<Double> getAverageList(String uid, int methodCode, long startTime, long endTime);
+
+    int getOverCount(String uid, int methodCode, long startTime, long endTime);
 }

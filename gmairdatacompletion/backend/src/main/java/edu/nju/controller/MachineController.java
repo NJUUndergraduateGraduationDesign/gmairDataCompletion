@@ -55,7 +55,7 @@ public class MachineController {
         //若果没有uid且必填项合理，按照筛选条件来进行筛选
         if (createTimeGTE != null && createTimeLTE != null &&
                 isPower != -1 &&
-                overCountGTE > 0 && overCountLTE > 0) {
+                overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE, isPower,
                     overCountGTE, overCountLTE, offset, pageSize);
         }
@@ -67,13 +67,13 @@ public class MachineController {
         }
         else if (createTimeGTE != null && createTimeLTE != null &&
                 isPower == -1 &&
-                overCountGTE > 0 && overCountLTE > 0) {
+                overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE, overCountGTE,
                     overCountLTE, offset, pageSize);
         }
         else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower != -1 &&
-                overCountGTE > 0 && overCountLTE > 0) {
+                overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(overCountGTE, overCountLTE, isPower,
                     offset, pageSize);
         }
@@ -90,7 +90,7 @@ public class MachineController {
         }
         else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower == -1 &&
-                overCountGTE > 0 && overCountLTE > 0) {
+                overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(overCountGTE, overCountLTE,
                     offset, pageSize);
         }

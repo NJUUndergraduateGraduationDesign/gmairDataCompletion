@@ -15,4 +15,6 @@ public interface InnerPm25DailyService extends BaseDailyHourlyService<InnerPm25D
     int getAverageData(String uid, int methodCode, long startTime, long endTime);
 
     List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime);
+
+    int getOverCount(String uid, int methodCode, long startTime, long endTime);
 }
