@@ -1,10 +1,11 @@
 package edu.nju.service.impl;
 
-import com.google.common.collect.Lists;
 import edn.nju.constant.Constant;
-import edn.nju.enums.ModeEnum;
 import edn.nju.util.TimeUtil;
 import edu.nju.dto.MonthlyReportDTO;
+import edu.nju.model.monthly.DefeatUserPercent;
+import edu.nju.model.monthly.MostOpenHour;
+import edu.nju.model.monthly.MostUseMode;
 import edu.nju.model.status.PowerDaily;
 import edu.nju.service.UserReportService;
 import edu.nju.service.status.IndoorPm25DailyService;
@@ -16,7 +17,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.Date;
-import java.util.List;
 
 /**
  * @author ：tsl
@@ -49,43 +49,25 @@ public class UserReportServiceImpl implements UserReportService {
     private MonthlyReportDTO getMonthlyReport(String uid, long startTime, long endTime) {
         int openDaysCount = powerDailyServiceImpl.getOpenCount(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
         PowerDaily powerDaily = powerDailyServiceImpl.getMostOpenDay(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
-        Date mostOpenDay = new Date(powerDaily.getCreateAt());
-        double mostOpenDayHoursCount = TimeUtil.minuteToHour(powerDaily.getPowerOnMinute());
+        Date mostOpenDay = null;
+        double mostOpenDayHoursCount = 0;
+        if (powerDaily != null) {
+            mostOpenDay = new Date(powerDaily.getCreateAt());
+            mostOpenDayHoursCount = TimeUtil.minuteToHour(powerDaily.getPowerOnMinute());
+        }
 
-        int sleepMinutes = modeDailyServiceImpl.getSleepMinutes(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
-        int autoMinutes = modeDailyServiceImpl.getAutoMinutes(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
-        int manualMinutes = modeDailyServiceImpl.getManualMinutes(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
-        int maxMinutes = Math.max(sleepMinutes, Math.max(autoMinutes, manualMinutes));
-        String mostUseMode = "";
-        if (sleepMinutes == maxMinutes) {
-            mostUseMode = ModeEnum.SLEEP.getCName();
-        } else if (autoMinutes == maxMinutes) {
-            mostUseMode = ModeEnum.AUTO.getCName();
-        } else if (manualMinutes == maxMinutes) {
-            mostUseMode = ModeEnum.MANUAL.getCName();
-        }
-        double mostUseModeHoursCount = TimeUtil.minuteToHour(maxMinutes);
+        MostUseMode mostUseMode = modeDailyServiceImpl.getMostUseMode(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
 
-        double averagePm25 = indoorPm25DailyServiceImpl.getAverage(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
-        List<String> uidList = indoorPm25DailyServiceImpl.getAllUids(Constant.MachineData.BEST_METHOD, startTime, endTime);
-        List<Double> pm25List= Lists.newArrayList();
-        for(String str:uidList){
-            double pm25=indoorPm25DailyServiceImpl.getAverage(str, Constant.MachineData.BEST_METHOD, startTime, endTime);
-            pm25List.add(pm25);
-        }
-        double defeatUserPercent=0;
-        int smallThan= (int) pm25List.stream().filter(e->e<averagePm25).count();
-        int allBesideMe = pm25List.size()-1;
-        if(allBesideMe==0){
-            defeatUserPercent=100;
-        }else {
-            defeatUserPercent = (1 - (double) smallThan / allBesideMe) * 100;
-        }
-        log.info("smallThan:{},allBesideMe:{},defeatUserPercent:{}",smallThan,allBesideMe,defeatUserPercent);
+        DefeatUserPercent defeatUserPercent = indoorPm25DailyServiceImpl.getDefeatUserPercent(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
+
+        MostOpenHour mostOpenHour = powerHourlyServiceImpl.getMostOpenHour(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
+
         return MonthlyReportDTO.builder()
                 .openDaysCount(openDaysCount).mostOpenDay(mostOpenDay).mostOpenDayHoursCount(mostOpenDayHoursCount)
-                .mostUseMode(mostUseMode).mostUseModeHoursCount(mostUseModeHoursCount)
-                .pm25Average(averagePm25).defeatUserPercent(defeatUserPercent)
+                .mostUseMode(mostUseMode.getMostUseMode()).mostUseModeHoursCount(mostUseMode.getMostUseModeHoursCount())
+                .pm25Average(defeatUserPercent.getPm25Average()).defeatUserPercent(defeatUserPercent.getDefeatUserPercent())
+                .mostOpenHourGTE(mostOpenHour.getMostOpenHourGTE()).mostOpenHourLTE(mostOpenHour.getMostOpenHourLTE())
+                .mostOpenHourMinutesCount(mostOpenHour.getMostOpenHourMinutesCount())
                 .build();
     }
 }

@@ -16,4 +16,6 @@ public interface ModeDailyService extends BaseDailyHourlyService<ModeDaily> {
     int getSleepMinutes(String uid, int methodCode, long startTime, long endTime);
 
     int getManualMinutes(String uid, int methodCode, long startTime, long endTime);
+
+    MostUseMode getMostUseMode(String uid, int methodCode, long startTime, long endTime);
 }

@@ -1,5 +1,6 @@
 package edu.nju.service.status;
 
+import edu.nju.model.monthly.MostOpenHour;
 import edu.nju.model.status.PowerHourly;
 import edu.nju.service.BaseDailyHourlyService;
 
@@ -10,4 +11,5 @@ import edu.nju.service.BaseDailyHourlyService;
  */
 
 public interface PowerHourlyService extends BaseDailyHourlyService<PowerHourly> {
+    MostOpenHour getMostOpenHour(String uid, int methodCode, long startTime, long endTime);
 }

@@ -1,5 +1,6 @@
 package edu.nju.service.status;
 
+import edu.nju.model.monthly.DefeatUserPercent;
 import edu.nju.model.statistic.AvgDataDaily;
 import edu.nju.model.status.IndoorPm25Daily;
 import edu.nju.service.BaseDailyHourlyService;
@@ -22,4 +23,6 @@ public interface IndoorPm25DailyService extends BaseDailyHourlyService<IndoorPm2
     List<String> getAllUids(int methodCode, long startTime, long endTime);
 
     double getAverage(String uid, int methodCode, long startTime, long endTime);
+
+    DefeatUserPercent getDefeatUserPercent(String uid, int methodCode, long startTime, long endTime);
 }

@@ -10,4 +10,5 @@ import edu.nju.model.status.PowerHourly;
  */
 
 public interface PowerHourlyDao extends BaseDailyHourlyDao<PowerHourly> {
+
 }

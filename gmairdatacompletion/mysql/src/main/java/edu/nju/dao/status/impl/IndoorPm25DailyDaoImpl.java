@@ -62,6 +62,7 @@ public class IndoorPm25DailyDaoImpl extends BaseDailyHourlyDaoImpl<IndoorPm25Dai
         String hql = "SELECT AVG(o.averagePm25) FROM IndoorPm25Daily o " +
                 "WHERE o.uid = ?0 AND o.completeMethod = ?1 AND " +
                 "o.createAt BETWEEN ?2 AND ?3";
-        return (double)getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        Object obj = getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        return obj == null ? 0 : (double) obj;
     }
 }

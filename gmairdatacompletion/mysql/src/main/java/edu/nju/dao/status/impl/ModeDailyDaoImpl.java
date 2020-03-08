@@ -18,7 +18,8 @@ public class ModeDailyDaoImpl extends BaseDailyHourlyDaoImpl<ModeDaily> implemen
         String hql = "SELECT sum(m.autoMinute) FROM ModeDaily m " +
                 "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
                 "AND m.createAt between ?2 and ?3";
-        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override
@@ -26,7 +27,8 @@ public class ModeDailyDaoImpl extends BaseDailyHourlyDaoImpl<ModeDaily> implemen
         String hql = "SELECT sum(m.sleepMinute) FROM ModeDaily m " +
                 "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
                 "AND m.createAt between ?2 and ?3";
-        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override
@@ -34,6 +36,7 @@ public class ModeDailyDaoImpl extends BaseDailyHourlyDaoImpl<ModeDaily> implemen
         String hql = "SELECT sum(m.manualMinute) FROM ModeDaily m " +
                 "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
                 "AND m.createAt between ?2 and ?3";
-        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 }

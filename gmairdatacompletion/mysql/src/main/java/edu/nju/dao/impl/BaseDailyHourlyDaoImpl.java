@@ -25,6 +25,7 @@ public abstract class BaseDailyHourlyDaoImpl<T> extends BaseDaoImpl<T> implement
     public long getLatestTime(String uid) {
         String hql = "SELECT max(createAt) FROM " + clazz.getName()
                 + " WHERE uid= ?0";
-        return (long)getUniqueColumnByHQL(hql, uid);
+        Object obj = getUniqueColumnByHQL(hql, uid);
+        return obj == null ? 0 : (long) obj;
     }
 }

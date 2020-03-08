@@ -70,6 +70,12 @@ public class TimeUtil {
         return cal.getTime().getTime();
     }
 
+    public static int getHourOfTime(long time){
+        Calendar cal= Calendar.getInstance();
+        cal.setTime(new Date(time));
+        return cal.get(Calendar.HOUR);
+    }
+
     public static Date getNDayBefore(Date date, int n) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -114,6 +120,10 @@ public class TimeUtil {
 
     public static int millisecondsToMinute(long milliseconds) {
         return (int) (milliseconds / (1000 * 60));
+    }
+
+    public static int millisecondsToDay(long milliseconds) {
+        return (int) (milliseconds / (1000 * 60 * 60 * 24));
     }
 
     public static double minuteToHour(int minute) {
