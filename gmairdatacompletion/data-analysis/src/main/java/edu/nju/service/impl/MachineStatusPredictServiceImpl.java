@@ -16,12 +16,24 @@ public class MachineStatusPredictServiceImpl implements MachineStatusPredictServ
     public MachineStatisticData gradientPredict(MachineStatisticData lastTwo,
                                                       MachineStatisticData lastOne) {
         MachineStatisticData res = new MachineStatisticData();
-        res.setIndoorPm25(lastOne.getIndoorPm25() * 2 - lastTwo.getIndoorPm25());
-        res.setInnerPm25(lastOne.getInnerPm25() * 2 - lastTwo.getInnerPm25());
-        res.setCo2(lastOne.getCo2() * 2 - lastTwo.getCo2());
-        res.setHumid(lastOne.getHumid() * 2 - lastTwo.getHumid());
-        res.setTemp(lastOne.getTemp() * 2 - lastTwo.getTemp());
-        res.setVolume(lastOne.getVolume() * 2 - lastTwo.getVolume());
+
+        double nextIndoorPm25 = lastOne.getIndoorPm25() * 2 - lastTwo.getIndoorPm25();
+        res.setIndoorPm25(nextIndoorPm25 < 0 ? 0 : nextIndoorPm25);
+
+        double nextInnerPm25 = lastOne.getInnerPm25() * 2 - lastTwo.getInnerPm25();
+        res.setInnerPm25(nextInnerPm25 < 0 ? 0 : nextInnerPm25);
+
+        double nextCo2 = lastOne.getCo2() * 2 - lastTwo.getCo2();
+        res.setCo2(nextCo2 < 0 ? 0 : nextCo2);
+
+        double nextHumid = lastOne.getHumid() * 2 - lastTwo.getHumid();
+        res.setHumid(nextHumid < 0 ? 0 : nextHumid);
+
+        double nextTemp = lastOne.getTemp() * 2 - lastTwo.getTemp();
+        res.setTemp(nextTemp < 0 ? 0 : nextTemp);
+
+        double nextVolume = lastOne.getVolume() * 2 - lastTwo.getVolume();
+        res.setVolume(nextVolume < 0 ? 0 : nextVolume);
         return res;
     }
 
