@@ -183,10 +183,9 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
     private MachineV2StatusHourly toMachineV2StatusHourly(List<MachineV2Status> list, int completeCode, long createAt) {
         Preconditions.checkArgument(!CollectionUtils.isEmpty(list));
 
-        int workingCount = (int) list.stream().filter(e -> e.getPower() == 1).count();
         double averageCo2 = list.stream().mapToDouble(MachineV2Status::getCo2).average().getAsDouble();
-        double averagePm25 = workingCount > 0 ? list.stream().filter(e -> e.getPower() == 1).mapToDouble(MachineV2Status::getPm2_5).average().getAsDouble() : 0;
-        double averageVolume = workingCount > 0 ? list.stream().mapToDouble(MachineV2Status::getVolume).average().getAsDouble() : 0;
+        double averagePm25 = list.stream().mapToDouble(MachineV2Status::getPm2_5).average().getAsDouble();
+        double averageVolume = list.stream().mapToDouble(MachineV2Status::getVolume).average().getAsDouble();
         double averageHumid = list.stream().mapToDouble(MachineV2Status::getHumid).average().getAsDouble();
         double averageTemp = list.stream().mapToDouble(MachineV2Status::getTemp).average().getAsDouble();
 

@@ -60,13 +60,13 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
     @Override
     public void handleAllV3Data() {
         List<String> uidList = machineV3StatusServiceImpl.getAllUids();
-        handleV2Data(uidList);
+        handleV3Data(uidList);
     }
 
     @Override
     public void handleAllPartialData() {
         List<String> uidList = machinePartialStatusServiceImpl.getAllUids();
-        handleV2Data(uidList);
+        handlePartialData(uidList);
     }
 
 
