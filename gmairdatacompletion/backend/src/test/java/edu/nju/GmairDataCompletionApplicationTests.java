@@ -5,19 +5,23 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import edn.nju.constant.Constant;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edn.nju.util.HttpDeal;
+import edn.nju.util.TimeUtil;
 import edu.nju.controller.MachineController;
 import edu.nju.controller.UserLocationController;
 import edu.nju.controller.UserStatisticController;
 import edu.nju.model.Location;
 import edu.nju.model.MachineV3Status;
+import edu.nju.model.machine.MachineBasicInfo;
 import edu.nju.model.machine.MachineLatestStatus;
 import edu.nju.model.statistic.UserLocation;
 import edu.nju.request.MachineQueryCond;
 import edu.nju.model.MachineV2Status;
 import edu.nju.model.User;
 import edu.nju.service.*;
+import edu.nju.service.status.InnerPm25DailyService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +62,8 @@ class GmairDataCompletionApplicationTests {
     UserLocationController userLocationController;
     @Resource
     UserStatisticController userStatisticController;
+    @Resource
+    InnerPm25DailyService innerPm25DailyService;
 
     /**
      * 用于添加User表的dataType字段
@@ -98,12 +104,22 @@ class GmairDataCompletionApplicationTests {
     void insertLatestStatus() {
         List<User> res = userService.findAllValidUsers();
         for (User one : res) {
+            int overCount = 0;
+            try{
+                long end = innerPm25DailyService.getLatestTime(one.getUid());
+                long start = TimeUtil.getNDayBefore(end, Constant.MachineData.LAST_MONTH);
+                overCount = innerPm25DailyService.getOverCount
+                        (one.getUid(), Constant.MachineData.BEST_METHOD, start, end);
+            }catch (Exception e) {
+
+            }
             if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode()) {
                 MachineV2Status status = machineV2StatusServiceImpl.getLatestRecord(one.getUid());
                 MachineLatestStatus latestStatus = new MachineLatestStatus(one.getUid(),
                         status.getPower(),
                         status.getHeat(),
-                        status.getMode());
+                        status.getMode(),
+                        overCount);
                 if (!machineLatestStatusService.add(latestStatus))
                     System.out.println("oops");
             }
@@ -112,7 +128,8 @@ class GmairDataCompletionApplicationTests {
                 MachineLatestStatus latestStatus = new MachineLatestStatus(one.getUid(),
                         status.getStatus(),
                         status.getHeat(),
-                        status.getMode());
+                        status.getMode(),
+                        overCount);
                 if (!machineLatestStatusService.add(latestStatus)) {
                     System.out.println("oops");
                 }
@@ -196,10 +213,9 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testAnalyze() {
-        //machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
-        //machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
-        //machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
-        machineStatusHandleServiceImpl.handleAllPartialData();
+        machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
     }
 
     @Test
@@ -234,11 +250,14 @@ class GmairDataCompletionApplicationTests {
         queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 6));
         queryCond.setCreateTimeLTE(new Date());
         queryCond.setIsPower(1);
-        queryCond.setUid("F0FE6BAA761E");
-        Map<String, List> machineBasicInfos =
-                (Map<String, List>) machineController.getList(queryCond).getData();
-        System.out.println(machineBasicInfos.get("machineList").size() + " " +
-                machineBasicInfos.get("machineList").get(0));
+        queryCond.setOverCountGTE(0);
+        queryCond.setOverCountLTE(2);
+        Map<String, List<MachineBasicInfo>> machineBasicInfos =
+                (Map<String, List<MachineBasicInfo>>) machineController.getList(queryCond).getData();
+        List<MachineBasicInfo> res = machineBasicInfos.get("machineList");
+        if (res != null && res.size() > 0)
+            System.out.println(machineBasicInfos.get("machineList").size() + " " +
+                    machineBasicInfos.get("machineList").get(0));
     }
 
     @Test

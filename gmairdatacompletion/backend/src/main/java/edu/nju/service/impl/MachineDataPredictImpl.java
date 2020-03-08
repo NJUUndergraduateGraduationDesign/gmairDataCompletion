@@ -49,7 +49,6 @@ public class MachineDataPredictImpl implements MachineDataPredictService {
 
         end = innerPm25DailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
-        System.out.println(start + " " + end);
         lastData = innerPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         lastOne.setInnerPm25(lastData.get(lastData.size() - 1));

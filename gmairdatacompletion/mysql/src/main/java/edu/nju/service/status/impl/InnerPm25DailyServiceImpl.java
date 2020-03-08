@@ -39,4 +39,9 @@ public class InnerPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<InnerP
     public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
         return innerPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public int getOverCount(String uid, int methodCode, long startTime, long endTime) {
+        return innerPm25DailyDao.getOverCount(uid, methodCode, startTime, endTime);
+    }
 }
