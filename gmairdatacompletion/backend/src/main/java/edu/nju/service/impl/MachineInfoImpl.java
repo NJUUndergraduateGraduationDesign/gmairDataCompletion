@@ -35,19 +35,18 @@ public class MachineInfoImpl implements MachineInfoService {
         Location location = locationService.findByCityId(user.getCityId());
         res.setCity(location.getCityName());
 
-        // TODO insert overCount.
-        res.setOverCount(0);
-
         MachineLatestStatus latestStatus = machineLatestStatusService.findByUid(user.getUid());
         if (latestStatus != null) {
             res.setHeat(latestStatus.getHeat() > 0 ? 1 : 0);
             res.setIsPower(latestStatus.getPower());
             res.setMode(latestStatus.getMode());
+            res.setOverCount(latestStatus.getOverCount());
         }
         else {
             res.setHeat(-1);
             res.setIsPower(-1);
             res.setMode(-1);
+            res.setOverCount(-1);
         }
 
         return res;
