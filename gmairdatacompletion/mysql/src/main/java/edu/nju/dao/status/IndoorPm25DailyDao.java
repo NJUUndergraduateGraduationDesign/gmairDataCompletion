@@ -16,4 +16,8 @@ public interface IndoorPm25DailyDao extends BaseDailyHourlyDao<IndoorPm25Daily> 
     List<Double> getAverageList(String uid, int methodCode, long startTime, long endTime);
 
     List<AvgDataDaily> getAvgListWithDate(String uid, int methodCode, long startTime, long endTime);
+
+    List<String> getAllUids(int methodCode, long startTime, long endTime);
+
+    double getAverage(String uid, int methodCode, long startTime, long endTime);
 }

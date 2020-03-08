@@ -13,4 +13,27 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ModeDailyDaoImpl extends BaseDailyHourlyDaoImpl<ModeDaily> implements ModeDailyDao {
+    @Override
+    public int getAutoMinutes(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT sum(m.autoMinute) FROM ModeDaily m " +
+                "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
+                "AND m.createAt between ?2 and ?3";
+        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+    }
+
+    @Override
+    public int getSleepMinutes(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT sum(m.sleepMinute) FROM ModeDaily m " +
+                "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
+                "AND m.createAt between ?2 and ?3";
+        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+    }
+
+    @Override
+    public int getManualMinutes(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT sum(m.manualMinute) FROM ModeDaily m " +
+                "WHERE m.uid= ?0 AND m.completeMethod =?1 " +
+                "AND m.createAt between ?2 and ?3";
+        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+    }
 }

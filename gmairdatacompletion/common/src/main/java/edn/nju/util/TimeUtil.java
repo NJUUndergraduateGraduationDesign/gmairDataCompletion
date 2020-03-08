@@ -95,14 +95,14 @@ public class TimeUtil {
         return cal.getTime();
     }
 
-    public static Date getEndOfThisMonth(Date date){
+    public static Date getEndOfThisMonth(Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MINUTE, 0);
         cal.set(Calendar.HOUR_OF_DAY, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
-        cal.add(Calendar.MONTH,1);
+        cal.add(Calendar.MONTH, 1);
         cal.add(Calendar.MILLISECOND, -1);
         return cal.getTime();
     }
@@ -112,19 +112,23 @@ public class TimeUtil {
         return simpleDateFormat.parse(str);
     }
 
-    public static int millisecondsToMinute(long milliseconds){
-        return (int)(milliseconds/(1000*60));
+    public static int millisecondsToMinute(long milliseconds) {
+        return (int) (milliseconds / (1000 * 60));
     }
 
-    public static String dateToStrMonth(Date date){
+    public static double minuteToHour(int minute) {
+        return minute / 60.0;
+    }
+
+    public static String dateToStrMonth(Date date) {
         return new SimpleDateFormat("yyyy-MM").format(date);
     }
 
-    public static String dateToStrDay(Date date){
+    public static String dateToStrDay(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd").format(date);
     }
 
-    public static String dateToStrTime(Date date){
+    public static String dateToStrTime(Date date) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
     }
 

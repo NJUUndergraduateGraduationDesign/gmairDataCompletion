@@ -1,6 +1,7 @@
 package edu.nju.dao.status;
 
 import edu.nju.dao.BaseDailyHourlyDao;
+import edu.nju.model.monthly.MostUseMode;
 import edu.nju.model.status.ModeDaily;
 
 /**
@@ -10,4 +11,9 @@ import edu.nju.model.status.ModeDaily;
  */
 
 public interface ModeDailyDao extends BaseDailyHourlyDao<ModeDaily> {
+    int getAutoMinutes(String uid, int methodCode, long startTime, long endTime);
+
+    int getSleepMinutes(String uid, int methodCode, long startTime, long endTime);
+
+    int getManualMinutes(String uid, int methodCode, long startTime, long endTime);
 }

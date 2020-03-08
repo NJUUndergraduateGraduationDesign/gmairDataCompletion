@@ -16,4 +16,8 @@ public interface PowerDailyService extends BaseDailyHourlyService<PowerDaily> {
     int getAvgMachineOpenTime(String uid, int methodCode, long startTime, long endTime);
 
     List<AvgDataDaily> getAverageList(String uid, int methodCode, long startTime, long endTime);
+
+    int getOpenCount(String uid, int methodCode, long startTime, long endTime);
+
+    PowerDaily getMostOpenDay(String uid, int methodCode, long startTime, long endTime);
 }

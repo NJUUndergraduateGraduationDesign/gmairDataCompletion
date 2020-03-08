@@ -38,4 +38,25 @@ public class PowerDailyDaoImpl extends BaseDailyHourlyDaoImpl<PowerDaily> implem
         query.setParameter(4, endTime);
         return query.list();
     }
+
+    @Override
+    public int getOpenCount(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT count(*) FROM PowerDaily p " +
+                "WHERE p.uid = ?0 AND p.completeMethod = ?1 " +
+                "AND p.createAt BETWEEN ?2 AND ?3 " +
+                "AND p.powerOnMinute>0";
+        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+    }
+
+    @Override
+    public PowerDaily getMostOpenDay(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT p1 FROM PowerDaily p1 " +
+                "WHERE p1.uid = ?0 AND p1.completeMethod=?1 " +
+                "AND p1.createAt BETWEEN ?2 AND ?3 " +
+                "AND p1.powerOnMinute = ( " +
+                "SELECT max(p2.powerOnMinute) FROM PowerDaily p2 " +
+                "WHERE p2.uid= ?0 AND p2.completeMethod=?1 " +
+                "AND p2.createAt BETWEEN ?2 AND ?3)";
+        return getUniqueResultByHQL(hql, uid, methodCode, startTime, endTime);
+    }
 }

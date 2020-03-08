@@ -45,4 +45,16 @@ public class IndoorPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<Indoo
     public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
         return indoorPm25DailyDao.getAverageList(uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public List<String> getAllUids(int methodCode, long startTime, long endTime) {
+        return indoorPm25DailyDao.getAllUids(methodCode,startTime,endTime);
+    }
+
+    @Override
+    public double getAverage(String uid, int methodCode, long startTime, long endTime) {
+        return indoorPm25DailyDao.getAverage(uid,methodCode,startTime,endTime);
+    }
+
+
 }

@@ -16,4 +16,8 @@ public interface PowerDailyDao extends BaseDailyHourlyDao<PowerDaily> {
     double getAvgMachineOpenTime(String uid, int methodCode, long startTime, long endTime);
 
     List<AvgDataDaily> getAvgListWithDate(String uid, int methodCode, long startTime, long endTime);
+
+    int getOpenCount(String uid,int methodCode, long startTime, long endTime);
+
+    PowerDaily getMostOpenDay(String uid, int methodCode, long startTime, long endTime);
 }

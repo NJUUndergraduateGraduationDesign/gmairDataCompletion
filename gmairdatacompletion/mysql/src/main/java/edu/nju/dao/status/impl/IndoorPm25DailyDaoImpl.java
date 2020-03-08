@@ -44,4 +44,24 @@ public class IndoorPm25DailyDaoImpl extends BaseDailyHourlyDaoImpl<IndoorPm25Dai
         query.setParameter(4, endTime);
         return query.list();
     }
+
+    @Override
+    public List<String> getAllUids(int methodCode, long startTime, long endTime) {
+        String hql = "SELECT distinct o.uid FROM IndoorPm25Daily o " +
+                "WHERE o.completeMethod = ?1 AND " +
+                "o.createAt BETWEEN ?2 AND ?3";
+        Query query = getSession().createQuery(hql);
+        query.setParameter(1, methodCode);
+        query.setParameter(2, startTime);
+        query.setParameter(3, endTime);
+        return query.list();
+    }
+
+    @Override
+    public double getAverage(String uid, int methodCode, long startTime, long endTime) {
+        String hql = "SELECT AVG(o.averagePm25) FROM IndoorPm25Daily o " +
+                "WHERE o.uid = ?0 AND o.completeMethod = ?1 AND " +
+                "o.createAt BETWEEN ?2 AND ?3";
+        return (double)getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+    }
 }
