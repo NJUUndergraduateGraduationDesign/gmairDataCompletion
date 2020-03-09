@@ -15,4 +15,6 @@ public interface Co2DailyService extends BaseDailyHourlyService<Co2Daily> {
     int getAverageData(String uid, int methodCode, long startTime, long endTime);
 
     List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime);
+
+    List<String> getUserIds();
 }

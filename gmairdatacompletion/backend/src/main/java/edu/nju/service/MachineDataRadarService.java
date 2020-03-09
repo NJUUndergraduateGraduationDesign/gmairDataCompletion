@@ -1,9 +1,5 @@
 package edu.nju.service;
 
-import edu.nju.model.MachineAvgDailyData;
-
-import java.util.List;
-
 /**
  * @author: Bright Chan
  * @date: 2020/3/7 10:18
@@ -27,5 +23,5 @@ public interface MachineDataRadarService {
 
     int getAvgMachineOpenTimeDaily(String uid, int bestMethod, int duringTime);
 
-    List<MachineAvgDailyData> getAvgDailyData(int bestMethod, int duringTime);
+    void getAvgDailyData(int bestMethod, int duringTime);
 }

@@ -1,8 +1,9 @@
 package edu.nju.service.impl;
 
 import edn.nju.util.TimeUtil;
-import edu.nju.model.MachineAvgDailyData;
+import edu.nju.model.machine.MachineAvgDailyData;
 import edu.nju.model.User;
+import edu.nju.service.AvgDailyDataService;
 import edu.nju.service.MachineDataRadarService;
 import edu.nju.service.UserService;
 import edu.nju.service.status.*;
@@ -37,6 +38,8 @@ public class MachineDataRadarImpl implements MachineDataRadarService {
     private PowerDailyService powerDailyService;
     @Resource
     private UserService userService;
+    @Resource
+    private AvgDailyDataService avgDailyDataService;
 
     @Override
     public int getAvgIndoorPm25Daily(String uid, int bestMethod, int duringTime) {
@@ -88,17 +91,17 @@ public class MachineDataRadarImpl implements MachineDataRadarService {
     }
 
     @Override
-    public List<MachineAvgDailyData> getAvgDailyData(int bestMethod, int duringTime) {
+    public void getAvgDailyData(int bestMethod, int duringTime) {
         List<MachineAvgDailyData> res = new ArrayList<>();
-        List<User> allUsers = userService.findAllValidUsers();
-        for (User one : allUsers) {
-            String uid = one.getUid();
+        List<String> allUsers = co2DailyService.getUserIds();
+        for (String uid : allUsers) {
             MachineAvgDailyData oneRes = new MachineAvgDailyData();
+            oneRes.setUid(uid);
             oneRes.setAvgIndoorPm25(getAvgIndoorPm25Daily(uid, bestMethod, duringTime));
             oneRes.setAvgInnerPm25(getAvgInnerPm25Daily(uid, bestMethod, duringTime));
             oneRes.setAvgCo2(getAvgCo2Daily(uid, bestMethod, duringTime));
             res.add(oneRes);
         }
-        return res;
+        avgDailyDataService.insertBatch(res);
     }
 }

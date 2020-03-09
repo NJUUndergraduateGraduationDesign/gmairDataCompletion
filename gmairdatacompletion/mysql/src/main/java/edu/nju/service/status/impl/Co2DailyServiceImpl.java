@@ -39,4 +39,9 @@ public class Co2DailyServiceImpl extends BaseDailyHourlyServiceImpl<Co2Daily> im
     public List<Double> getAvgList(String uid, int methodCode, long startTime, long endTime) {
         return co2DailyDao.getAverageList(uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public List<String> getUserIds() {
+        return co2DailyDao.getUserIds();
+    }
 }
