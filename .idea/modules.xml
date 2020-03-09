@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/backend/backend.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/backend/backend.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/common/common.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/data-analysis/data-analysis.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/data-analysis/data-analysis.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/data-completion/data-completion.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/data-completion/data-completion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/gmairDataCompletion.iml" filepath="$PROJECT_DIR$/.idea/gmairDataCompletion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/gmairdatacompletion.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/gmairdatacompletion.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/mongo/mongo.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/mongo/mongo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gmairdatacompletion/mysql/mysql.iml" filepath="$PROJECT_DIR$/gmairdatacompletion/mysql/mysql.iml" />
+    </modules>
+  </component>
+</project>

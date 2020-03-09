@@ -215,7 +215,7 @@ class GmairDataCompletionApplicationTests {
     void testAnalyze() {
         machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
         machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
-        //machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
+        machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
     }
 
     @Test

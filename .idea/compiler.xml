@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="backend" />
+        <module name="common" />
+        <module name="mongo" />
+        <module name="data-analysis" />
+        <module name="mysql" />
+        <module name="data-completion" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="backend" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="data-analysis" target="1.8" />
+      <module name="data-completion" target="1.8" />
+      <module name="gmairdatacompletion" target="1.8" />
+      <module name="mongo" target="1.8" />
+      <module name="mysql" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="backend" options="-parameters" />
+      <module name="common" options="-parameters" />
+      <module name="data-analysis" options="-parameters" />
+      <module name="data-completion" options="-parameters" />
+      <module name="gmairdatacompletion" options="-parameters" />
+      <module name="mongo" options="-parameters" />
+      <module name="mysql" options="-parameters" />
+    </option>
+  </component>
+</project>
