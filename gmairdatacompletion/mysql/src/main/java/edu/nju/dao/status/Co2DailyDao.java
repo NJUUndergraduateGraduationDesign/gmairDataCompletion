@@ -13,4 +13,6 @@ import java.util.List;
 
 public interface Co2DailyDao extends BaseDailyHourlyDao<Co2Daily> {
     List<Double> getAverageList(String uid, int methodCode, long startTime, long endTime);
+
+    List<String> getUserIds();
 }

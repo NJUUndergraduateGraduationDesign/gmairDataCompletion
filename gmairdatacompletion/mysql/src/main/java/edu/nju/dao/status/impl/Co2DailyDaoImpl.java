@@ -28,4 +28,11 @@ public class Co2DailyDaoImpl extends BaseDailyHourlyDaoImpl<Co2Daily> implements
         query.setParameter(4, endTime);
         return query.list();
     }
+
+    @Override
+    public List<String> getUserIds() {
+        String hql = "select c.uid from Co2Daily c group by c.uid";
+        Query query = getSession().createQuery(hql);
+        return (List<String>) query.list();
+    }
 }

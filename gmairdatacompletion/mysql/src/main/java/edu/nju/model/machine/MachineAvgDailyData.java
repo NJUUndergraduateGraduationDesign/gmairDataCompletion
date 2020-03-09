@@ -1,8 +1,10 @@
-package edu.nju.model;
+package edu.nju.model.machine;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
 
 /**
  * @author: Bright Chan
@@ -10,10 +12,16 @@ import lombok.NoArgsConstructor;
  * @description: TODO
  */
 
+@Entity
+@Table
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class MachineAvgDailyData {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
     private String uid;
 

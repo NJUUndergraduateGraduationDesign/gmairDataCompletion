@@ -27,9 +27,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void partialCompletion() {
-        List<User> allUsers = userService.findAllV2Users();
-        for (User one : allUsers) {
-            partialCompletionThread.iterateAndComplete(one.getUid(), pageSize);
+        List<String> allUsers = userService.findAllV2Uids();
+        for (String one : allUsers) {
+            partialCompletionThread.iterateAndComplete(one, pageSize);
         }
     }
 
@@ -42,9 +42,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void v2Completion() {
-        List<User> allUsers = userService.findAllV2Users();
-        for (User one : allUsers) {
-            v2CompletionThread.iterateAndComplete(one.getUid(), pageSize);
+        List<String> allUsers = userService.findAllV2Uids();
+        for (String one : allUsers) {
+            v2CompletionThread.iterateAndComplete(one, pageSize);
         }
     }
 
@@ -57,9 +57,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void v3Completion() {
-        List<User> allUsers = userService.findAllV3Users();
-        for (User one : allUsers) {
-            v3CompletionThread.iterateAndComplete(one.getUid(), pageSize);
+        List<String> allUsers = userService.findAllV3Uids();
+        for (String one : allUsers) {
+            v3CompletionThread.iterateAndComplete(one, pageSize);
         }
     }
 
