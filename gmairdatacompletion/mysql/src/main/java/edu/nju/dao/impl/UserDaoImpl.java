@@ -28,15 +28,15 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
-    public List<User> findAllV2Users() {
-        String hql = "SELECT u FROM User u WHERE u.dataType = 2";
-        return getListByHQL(hql);
+    public List<User> findAllUsersByDataType(int code) {
+        String hql = "SELECT u FROM User u WHERE u.dataType = ?0";
+        return getListByHQL(hql,code);
     }
 
     @Override
-    public List<User> findAllV3Users() {
-        String hql = "SELECT u FROM User u WHERE u.dataType = 3";
-        return getListByHQL(hql);
+    public List<String> findAllUidsByDateType(int code) {
+        String hql = "SELECT u.uid FROM User u WHERE u.dataType = ?0";
+        return getObjListByHQL(hql,code);
     }
 
     @Override

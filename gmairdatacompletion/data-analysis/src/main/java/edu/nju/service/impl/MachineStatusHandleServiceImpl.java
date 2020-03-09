@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 @Service
 public class MachineStatusHandleServiceImpl implements MachineStatusHandleService {
     @Resource
+    UserService userServiceImpl;
+    @Resource
     MachineV2StatusService machineV2StatusServiceImpl;
     @Resource
     MachineV3StatusService machineV3StatusServiceImpl;
@@ -53,19 +55,19 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
     @Override
     public void handleAllV2Data() {
         //得到所有v2的uid
-        List<String> uidList = machineV2StatusServiceImpl.getAllUids();
+        List<String> uidList = userServiceImpl.findAllV2Uids();
         handleV2Data(uidList);
     }
 
     @Override
     public void handleAllV3Data() {
-        List<String> uidList = machineV3StatusServiceImpl.getAllUids();
+        List<String> uidList = userServiceImpl.findAllV3Uids();
         handleV3Data(uidList);
     }
 
     @Override
     public void handleAllPartialData() {
-        List<String> uidList = machinePartialStatusServiceImpl.getAllUids();
+        List<String> uidList = userServiceImpl.findAllV2Uids();
         handlePartialData(uidList);
     }
 
@@ -78,6 +80,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<MachineV2StatusDaily> v2DailyList = handleV2DataDaily(v2HourlyList);
             machineStatusDBServiceImpl.saveMachineV2StatusHourlyList(v2HourlyList);
             machineStatusDBServiceImpl.saveMachineV2StatusDailyList(v2DailyList);
+            log.info("handleV2Data finished,uid:{}", uid);
         }
     }
 
@@ -89,6 +92,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<MachineV3StatusDaily> v3DailyList = handleV3DataDaily(v3HourlyList);
             machineStatusDBServiceImpl.saveMachineV3StatusHourlyList(v3HourlyList);
             machineStatusDBServiceImpl.saveMachineV3StatusDailyList(v3DailyList);
+            log.info("handleV3Data finished,uid:{}", uid);
         }
     }
 
@@ -99,6 +103,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<InnerPm25Daily> partialDailyList = handlePartialDataDaily(partialHourlyList);
             machineStatusDBServiceImpl.saveMachinePartialStatusHourlyList(partialHourlyList);
             machineStatusDBServiceImpl.saveMachinePartialStatusDailyList(partialDailyList);
+            log.info("handlePartialData finished,uid:{}", uid);
         }
     }
 
@@ -106,7 +111,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
     对同个uid所有原始数据处理,得到hourly数据
      */
     private List<MachineV2StatusHourly> handleV2DataHourly(String uid) {
-        log.info("uid:{}", uid);
+        log.debug("uid:{}", uid);
 
         //当前uid以小时为单位的统计数据
         List<MachineV2StatusHourly> hourlyList = Lists.newArrayList();
@@ -115,7 +120,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
         long start = TimeUtil.startOfThisHour(startTime);
         long endTime = machineV2StatusServiceImpl.getLatestTimeByUid(uid);
         long end = TimeUtil.startOfThisHour(endTime);
-        log.info("startTime:{},endTime:{}", start, end);
+        log.debug("startTime:{},endTime:{}", start, end);
 
         //对当前uid按小时获取记录,直到最后一个小时
         for (long cur = start; cur <= end; cur = TimeUtil.startOfNextHour(cur)) {
@@ -124,7 +129,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             //当前uid,所有小时
             hourlyList.addAll(subList);
         }
-        log.info("uid:{},hourlyListSize:{}", uid, hourlyList.size());
+        log.debug("uid:{},hourlyListSize:{}", uid, hourlyList.size());
         //一个uid批量保存一次;
         return hourlyList;
     }
@@ -149,7 +154,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<MachineV2StatusDaily> dailyList = machineStatusAnalyzeService.v2HourlyToDaily(subList, cur);
             res.addAll(dailyList);
         }
-        log.info("dailyListSize:{}", res.size());
+        log.debug("dailyListSize:{}", res.size());
         return res;
     }
 
@@ -157,7 +162,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
     对同个uid所有原始数据处理,得到hourly数据
      */
     private List<MachineV3StatusHourly> handleV3DataHourly(String uid) {
-        log.info("uid:{}", uid);
+        log.debug("uid:{}", uid);
 
         //当前uid以小时为单位的统计数据
         List<MachineV3StatusHourly> hourlyList = Lists.newArrayList();
@@ -166,7 +171,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
         long start = TimeUtil.startOfThisHour(startTime);
         long endTime = machineV3StatusServiceImpl.getLatestTimeByUid(uid);
         long end = TimeUtil.startOfThisHour(endTime);
-        log.info("startTime:{},endTime:{}", start, end);
+        log.debug("startTime:{},endTime:{}", start, end);
 
         //对当前uid按小时获取记录,直到最后一个小时
         for (long cur = start; cur <= end; cur = TimeUtil.startOfNextHour(cur)) {
@@ -175,7 +180,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             //当前uid,所有小时
             hourlyList.addAll(subList);
         }
-        log.info("uid:{},hourlyListSize:{}", uid, hourlyList.size());
+        log.debug("uid:{},hourlyListSize:{}", uid, hourlyList.size());
         //一个uid批量保存一次;
         return hourlyList;
     }
@@ -200,7 +205,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<MachineV3StatusDaily> dailyList = machineStatusAnalyzeService.v3HourlyToDaily(subList, cur);
             res.addAll(dailyList);
         }
-        log.info("dailyListSize:{}", res.size());
+        log.debug("dailyListSize:{}", res.size());
         return res;
     }
 
@@ -208,7 +213,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
     对同个uid所有原始数据处理,得到hourly数据
      */
     private List<InnerPm25Hourly> handlePartialDataHourly(String uid) {
-        log.info("uid:{}", uid);
+        log.debug("uid:{}", uid);
 
         //当前uid以小时为单位的统计数据
         List<InnerPm25Hourly> hourlyList = Lists.newArrayList();
@@ -217,7 +222,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
         long start = TimeUtil.startOfThisHour(startTime);
         long endTime = machinePartialStatusServiceImpl.getLatestTimeByUid(uid);
         long end = TimeUtil.startOfThisHour(endTime);
-        log.info("startTime:{},endTime:{}", start, end);
+        log.debug("startTime:{},endTime:{}", start, end);
 
         //对当前uid按小时获取记录,直到最后一个小时
         for (long cur = start; cur <= end; cur = TimeUtil.startOfNextHour(cur)) {
@@ -226,7 +231,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             //当前uid,所有小时
             hourlyList.addAll(subList);
         }
-        log.info("uid:{},hourlyListSize:{}", uid, hourlyList.size());
+        log.debug("uid:{},hourlyListSize:{}", uid, hourlyList.size());
         //一个uid批量保存一次;
         return hourlyList;
     }
@@ -252,7 +257,7 @@ public class MachineStatusHandleServiceImpl implements MachineStatusHandleServic
             List<InnerPm25Daily> dailyList = machineStatusAnalyzeService.partialHourlyToDaily(subList, cur);
             res.addAll(dailyList);
         }
-        log.info("dailyListSize:{}", res.size());
+        log.debug("dailyListSize:{}", res.size());
         return res;
     }
 }

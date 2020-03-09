@@ -18,6 +18,10 @@ public interface UserService {
 
     List<User> findAllV3Users();
 
+    List<String> findAllV2Uids();
+
+    List<String> findAllV3Uids();
+
     void update(User user);
 
     int count();
