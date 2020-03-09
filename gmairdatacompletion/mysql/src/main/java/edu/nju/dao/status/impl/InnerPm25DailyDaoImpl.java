@@ -36,4 +36,12 @@ public class InnerPm25DailyDaoImpl extends BaseDailyHourlyDaoImpl<InnerPm25Daily
                 + " AND o.averagePm25 > 25 AND o.createAt BETWEEN ?2 AND ?3";
         return (int) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public long getLatestTime(String uid) {
+        String hql = "SELECT max(a.createAt) FROM InnerPm25Daily a, IndoorPm25Daily b"
+                + " WHERE a.uid= ?0 and a.uid = b.uid and a.createAt = b.createAt";
+        Object obj = getUniqueColumnByHQL(hql, uid);
+        return obj == null ? 0 : (long) obj;
+    }
 }

@@ -44,4 +44,9 @@ public class InnerPm25DailyServiceImpl extends BaseDailyHourlyServiceImpl<InnerP
     public int getOverCount(String uid, int methodCode, long startTime, long endTime) {
         return innerPm25DailyDao.getOverCount(uid, methodCode, startTime, endTime);
     }
+
+    @Override
+    public long getLatestTime(String uid) {
+        return innerPm25DailyDao.getLatestTime(uid);
+    }
 }

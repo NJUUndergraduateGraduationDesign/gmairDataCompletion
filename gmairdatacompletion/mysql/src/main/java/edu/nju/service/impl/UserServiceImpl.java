@@ -1,5 +1,6 @@
 package edu.nju.service.impl;
 
+import edn.nju.enums.MachineStatusTypeEnum;
 import edu.nju.dao.UserDao;
 import edu.nju.model.User;
 import edu.nju.service.UserService;
@@ -35,6 +36,26 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllValidUsers() {
         return userDao.findAllValidUsers();
+    }
+
+    @Override
+    public List<User> findAllV2Users() {
+        return userDao.findAllUsersByDataType(MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode());
+    }
+
+    @Override
+    public List<User> findAllV3Users() {
+        return userDao.findAllUsersByDataType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
+    }
+
+    @Override
+    public List<String> findAllV2Uids(){
+        return userDao.findAllUidsByDateType(MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode());
+    }
+
+    @Override
+    public List<String> findAllV3Uids(){
+        return userDao.findAllUidsByDateType(MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode());
     }
 
     @Override

@@ -147,6 +147,21 @@ public abstract class BaseDaoImpl<T> implements BaseDao<T> {
         return query.list();
     }
 
+    /*
+    列表查询
+    */
+    @Override
+    public List getObjListByHQL(String hql, Object... values) {
+        Query query = getSession().createQuery(hql);
+        if (values != null) {
+            int count = values.length;
+            for (int i = 0; i < count; i++) {
+                query.setParameter(i, values[i]);
+            }
+        }
+        return query.list();
+    }
+
     @Override
     public List<T> getLimitResultByHQL(String hql, int offset, int pageSize, Object... values) {
         Query query = getSession().createQuery(hql);

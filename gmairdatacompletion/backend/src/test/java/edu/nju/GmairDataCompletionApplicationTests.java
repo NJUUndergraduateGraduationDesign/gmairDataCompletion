@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import edn.nju.constant.Constant;
 import edn.nju.enums.MachineStatusTypeEnum;
 import edn.nju.util.HttpDeal;
@@ -44,8 +43,6 @@ class GmairDataCompletionApplicationTests {
     MachineV2StatusService machineV2StatusServiceImpl;
     @Resource
     MachineV3StatusService machineV3StatusServiceImpl;
-    @Resource
-    MachinePartialStatusService machinePartialStatusServiceImpl;
     @Resource
     DataCompletion dataCompletion;
     @Resource
@@ -213,33 +210,10 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testAnalyze() {
-        machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
-        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
-        machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
-    }
-
-    @Test
-    void testGetStartTimeByUid() {
-        long startTime = machineV2StatusServiceImpl.getStartTimeByUid("F0FE6BC350A0");
-        System.out.println("startTime:" + startTime);
-    }
-
-    @Test
-    void testGetAllUids() {
-        List<String> v2UidList = machineV2StatusServiceImpl.getAllUids();
-        List<String> v3UidList = machineV3StatusServiceImpl.getAllUids();
-        List<String> partialUidList = machinePartialStatusServiceImpl.getAllUids();
-        System.out.println("v2UidList:" + v2UidList.size());
-        System.out.println("v3UidList:" + v3UidList.size());
-        System.out.println("partialUidList:" + partialUidList.size());
-        Set<String> v2v3UidSet = Sets.intersection(Sets.newHashSet(v2UidList), Sets.newHashSet(v3UidList));
-        Set<String> v2partialUidSet = Sets.intersection(Sets.newHashSet(v2UidList), Sets.newHashSet(partialUidList));
-        Set<String> v3partialUidSet = Sets.intersection(Sets.newHashSet(v3UidList), Sets.newHashSet(partialUidList));
-        Set<String> v2v3partialUidSet = Sets.intersection(v2v3UidSet, Sets.newHashSet(partialUidList));
-        System.out.println("v2v3:" + v2v3UidSet.size());
-        System.out.println("v2partial:" + v2partialUidSet.size());
-        System.out.println("v3partial:" + v3partialUidSet.size());
-        System.out.println("v2v3partial:" + v2v3partialUidSet.size());
+        List<String> uidList=userService.findAllV2Uids().subList(0,50);
+        machineStatusHandleServiceImpl.handlePartialData(uidList);
+        machineStatusHandleServiceImpl.handleV2Data(uidList);
+        //machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
     }
 
     @Test

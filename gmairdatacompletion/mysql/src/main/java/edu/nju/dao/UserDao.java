@@ -12,6 +12,8 @@ public interface UserDao extends BaseDao<User> {
 
     List<User> findAllValidUsers();
 
+    List<User> findAllUsersByDataType(int code);
+
     int count();
 
     int countByBindTime(Date startTime, Date endTime);
@@ -19,4 +21,6 @@ public interface UserDao extends BaseDao<User> {
     int countByProvince(String province);
 
     int countByProvinceAndBindTime(String province, Date startTime, Date endTime);
+
+    List<String> findAllUidsByDateType(int code);
 }

@@ -28,6 +28,18 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     }
 
     @Override
+    public List<User> findAllUsersByDataType(int code) {
+        String hql = "SELECT u FROM User u WHERE u.dataType = ?0";
+        return getListByHQL(hql,code);
+    }
+
+    @Override
+    public List<String> findAllUidsByDateType(int code) {
+        String hql = "SELECT u.uid FROM User u WHERE u.dataType = ?0";
+        return getObjListByHQL(hql,code);
+    }
+
+    @Override
     public int count(){
         String hql = "select count(*) from User";
         return ((Long)getUniqueColumnByHQL(hql)).intValue();
