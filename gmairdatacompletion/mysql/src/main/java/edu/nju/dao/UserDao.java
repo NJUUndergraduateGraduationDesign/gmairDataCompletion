@@ -12,6 +12,10 @@ public interface UserDao extends BaseDao<User> {
 
     List<User> findAllValidUsers();
 
+    List<User> findAllV2Users();
+
+    List<User> findAllV3Users();
+
     int count();
 
     int countByBindTime(Date startTime, Date endTime);

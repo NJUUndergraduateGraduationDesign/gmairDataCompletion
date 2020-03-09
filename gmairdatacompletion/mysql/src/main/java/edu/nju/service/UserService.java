@@ -14,6 +14,10 @@ public interface UserService {
 
     List<User> findAllValidUsers();
 
+    List<User> findAllV2Users();
+
+    List<User> findAllV3Users();
+
     void update(User user);
 
     int count();

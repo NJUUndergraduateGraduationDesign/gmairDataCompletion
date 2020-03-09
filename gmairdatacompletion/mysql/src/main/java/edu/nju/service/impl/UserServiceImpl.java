@@ -38,6 +38,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<User> findAllV2Users() {
+        return userDao.findAllV2Users();
+    }
+
+    @Override
+    public List<User> findAllV3Users() {
+        return userDao.findAllV3Users();
+    }
+
+    @Override
     public void update(User user) {
         userDao.update(user);
     }

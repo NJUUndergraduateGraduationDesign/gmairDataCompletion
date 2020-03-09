@@ -3,6 +3,7 @@ package edu.nju.service;
 import edu.nju.asyncTask.PartialCompletionThread;
 import edu.nju.asyncTask.V2CompletionThread;
 import edu.nju.asyncTask.V3CompletionThread;
+import edu.nju.model.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -15,11 +16,7 @@ public class DataCompletionImpl implements DataCompletion {
     private static final long timePerBatch = 10;
 
     @Resource
-    private MachinePartialStatusService machinePartialStatusService;
-    @Resource
-    private MachineV2StatusService machineV2StatusService;
-    @Resource
-    private MachineV3StatusService machineV3StatusService;
+    private UserService userService;
 
     @Resource
     private PartialCompletionThread partialCompletionThread;
@@ -30,13 +27,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void partialCompletion() {
-        //将所有设备数据进行补全
-        //这边可以开多线程，多个uid同时进行补全
-        List<String> allUids = machinePartialStatusService.getAllUids();
-        for (String oneUid : allUids) {
-            partialCompletionThread.iterateAndComplete(oneUid, pageSize);
-            //需要测试此类的时候可以在此处加上break语句，只跑一个uid，节省时间
-            break;
+        List<User> allUsers = userService.findAllV2Users();
+        for (User one : allUsers) {
+            partialCompletionThread.iterateAndComplete(one.getUid(), pageSize);
         }
     }
 
@@ -49,13 +42,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void v2Completion() {
-        //将所有设备数据进行补全
-        //这边可以开多线程，多个uid同时进行补全
-        List<String> allUids = machineV2StatusService.getAllUids();
-        for (String oneUid : allUids) {
-            v2CompletionThread.iterateAndComplete(oneUid, pageSize);
-            //需要测试此类的时候可以在此处加上break语句，只跑一个uid，节省时间
-            break;
+        List<User> allUsers = userService.findAllV2Users();
+        for (User one : allUsers) {
+            v2CompletionThread.iterateAndComplete(one.getUid(), pageSize);
         }
     }
 
@@ -68,13 +57,9 @@ public class DataCompletionImpl implements DataCompletion {
 
     @Override
     public void v3Completion() {
-        //将所有设备数据进行补全
-        //这边可以开多线程，多个uid同时进行补全
-        List<String> allUids = machineV3StatusService.getAllUids();
-        for (String oneUid : allUids) {
-            v3CompletionThread.iterateAndComplete(oneUid, pageSize);
-            //需要测试此类的时候可以在此处加上break语句，只跑一个uid，节省时间
-            break;
+        List<User> allUsers = userService.findAllV3Users();
+        for (User one : allUsers) {
+            v3CompletionThread.iterateAndComplete(one.getUid(), pageSize);
         }
     }
 
