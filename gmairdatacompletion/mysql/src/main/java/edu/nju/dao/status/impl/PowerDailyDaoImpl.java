@@ -22,7 +22,8 @@ public class PowerDailyDaoImpl extends BaseDailyHourlyDaoImpl<PowerDaily> implem
         String hql = "SELECT avg(o.powerOnMinute) FROM PowerDaily o "
                 + " WHERE o.uid = ?0 AND o.completeMethod = ?1"
                 + " AND o.createAt BETWEEN ?2 AND ?3 order by o.createAt";
-        return (double) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        Object obj = getUniqueColumnByHQL(hql,uid,methodCode,startTime,endTime);
+        return obj == null ? 0 : (double)obj;
     }
 
     @Override
@@ -45,7 +46,8 @@ public class PowerDailyDaoImpl extends BaseDailyHourlyDaoImpl<PowerDaily> implem
                 "WHERE p.uid = ?0 AND p.completeMethod = ?1 " +
                 "AND p.createAt BETWEEN ?2 AND ?3 " +
                 "AND p.powerOnMinute>0";
-        return ((Long) getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, uid, methodCode, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override

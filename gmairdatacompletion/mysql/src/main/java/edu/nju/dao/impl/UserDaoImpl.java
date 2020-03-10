@@ -30,33 +30,36 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
     @Override
     public List<User> findAllUsersByDataType(int code) {
         String hql = "SELECT u FROM User u WHERE u.dataType = ?0";
-        return getListByHQL(hql,code);
+        return getListByHQL(hql, code);
     }
 
     @Override
     public List<String> findAllUidsByDateType(int code) {
         String hql = "SELECT u.uid FROM User u WHERE u.dataType = ?0";
-        return getObjListByHQL(hql,code);
+        return getObjListByHQL(hql, code);
     }
 
     @Override
-    public int count(){
+    public int count() {
         String hql = "select count(*) from User";
-        return ((Long)getUniqueColumnByHQL(hql)).intValue();
+        Object obj = getUniqueColumnByHQL(hql);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override
     public int countByBindTime(Date startTime, Date endTime) {
         String hql = "select count(*) from User u where " +
                 "unix_timestamp(u.bindTime) BETWEEN unix_timestamp(?0) AND unix_timestamp(?1)";
-        return ((Long)getUniqueColumnByHQL(hql,startTime,endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override
     public int countByProvince(String province) {
         String hql = "select count(*) from User u, Location l where " +
                 "u.cityId = l.cityId and l.provinceName= ?0";
-        return ((Long)getUniqueColumnByHQL(hql,province)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, province);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 
     @Override
@@ -64,6 +67,7 @@ public class UserDaoImpl extends BaseDaoImpl<User> implements UserDao {
         String hql = "select count(*) from User u, Location l where " +
                 "u.cityId = l.cityId and l.provinceName= ?0 and " +
                 "unix_timestamp(u.bindTime) BETWEEN unix_timestamp(?1) AND unix_timestamp(?2)";
-        return ((Long)getUniqueColumnByHQL(hql,province,startTime,endTime)).intValue();
+        Object obj = getUniqueColumnByHQL(hql, province, startTime, endTime);
+        return obj == null ? 0 : ((Long) obj).intValue();
     }
 }
