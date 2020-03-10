@@ -7,6 +7,7 @@ import edu.nju.model.monthly.DefeatUserPercent;
 import edu.nju.model.monthly.MostOpenHour;
 import edu.nju.model.monthly.MostUseMode;
 import edu.nju.model.status.PowerDaily;
+import edu.nju.service.CategoryService;
 import edu.nju.service.UserReportService;
 import edu.nju.service.status.IndoorPm25DailyService;
 import edu.nju.service.status.ModeDailyService;
@@ -35,6 +36,8 @@ public class UserReportServiceImpl implements UserReportService {
     PowerDailyService powerDailyServiceImpl;
     @Resource
     PowerHourlyService powerHourlyServiceImpl;
+    @Resource
+    CategoryService categoryServiceImpl;
 
     @Override
     public MonthlyReportDTO getMonthlyReport(String uid) {
@@ -62,12 +65,15 @@ public class UserReportServiceImpl implements UserReportService {
 
         MostOpenHour mostOpenHour = powerHourlyServiceImpl.getMostOpenHour(uid, Constant.MachineData.BEST_METHOD, startTime, endTime);
 
+        int category = categoryServiceImpl.getCategoryByUid(uid).getEnvironment();
+
         return MonthlyReportDTO.builder()
                 .openDaysCount(openDaysCount).mostOpenDay(mostOpenDay).mostOpenDayHoursCount(mostOpenDayHoursCount)
                 .mostUseMode(mostUseMode.getMostUseMode()).mostUseModeHoursCount(mostUseMode.getMostUseModeHoursCount())
                 .pm25Average(defeatUserPercent.getPm25Average()).defeatUserPercent(defeatUserPercent.getDefeatUserPercent())
                 .mostOpenHourGTE(mostOpenHour.getMostOpenHourGTE()).mostOpenHourLTE(mostOpenHour.getMostOpenHourLTE())
                 .mostOpenHourMinutesCount(mostOpenHour.getMostOpenHourMinutesCount())
+                .categoryEnvironment(category)
                 .build();
     }
 }

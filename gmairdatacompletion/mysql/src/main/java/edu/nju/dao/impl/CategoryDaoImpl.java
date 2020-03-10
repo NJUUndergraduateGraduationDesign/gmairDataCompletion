@@ -20,10 +20,7 @@ public class CategoryDaoImpl extends BaseDaoImpl<Category> implements CategoryDa
 
     @Override
     public Category getCategoryByUid(String uid) {
-        String hql = "SELECT * FROM " + clazz.getName()
-                + " WHERE uid= ?0";
-        Object obj = getUniqueColumnByHQL(hql, uid);
-        return obj == null ? null : (Category) obj;
+        return get(uid);
     }
 
     @Override
