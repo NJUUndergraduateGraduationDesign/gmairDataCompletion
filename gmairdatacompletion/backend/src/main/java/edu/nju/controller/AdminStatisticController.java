@@ -6,6 +6,9 @@ import edn.nju.ResponseDTO;
 import edn.nju.constant.Constant;
 import edn.nju.util.TimeUtil;
 import edu.nju.dto.NewTotalUserDTO;
+import edu.nju.model.statistic.Category;
+import edu.nju.model.statistic.CategoryNumber;
+import edu.nju.service.CategoryService;
 import edu.nju.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,6 +34,9 @@ import java.util.Map;
 public class AdminStatisticController {
     @Resource
     UserService userServiceImpl;
+
+    @Resource
+    CategoryService categoryService;
 
     private static final int MONTH_PER_YEAR = 12;
 
@@ -84,21 +91,41 @@ public class AdminStatisticController {
 
     @GetMapping("/china/categoryEnvironment")
     public ResponseDTO getNationalCategoryEnvironment() {
-        return ResponseDTO.ofSuccess();
+        Map<Integer,Long> res=new HashMap<>();
+        List<CategoryNumber> result=categoryService.getAllCategoryEnvironment("china");
+        for (CategoryNumber c:result){
+            res.put(c.getType(),c.getNumber());
+        }
+        return ResponseDTO.ofSuccess(res);
     }
 
     @GetMapping("/province/categoryEnvironment")
     public ResponseDTO getProvincialCategoryEnvironment(@RequestParam String province) {
-        return ResponseDTO.ofSuccess();
+        Map<Integer,Long> res=new HashMap<>();
+        List<CategoryNumber> result=categoryService.getAllCategoryEnvironment(province);
+        for (CategoryNumber c:result){
+            res.put(c.getType(),c.getNumber());
+        }
+        return ResponseDTO.ofSuccess(res);
     }
 
     @GetMapping("/china/categoryEffect")
     public ResponseDTO getNationalCategoryEffect() {
-        return ResponseDTO.ofSuccess();
+        Map<Integer,Long> res=new HashMap<>();
+        List<CategoryNumber> result=categoryService.getAllCategoryEffect("china");
+        for (CategoryNumber c:result){
+            res.put(c.getType(),c.getNumber());
+        }
+        return ResponseDTO.ofSuccess(res);
     }
 
     @GetMapping("/province/categoryEffect")
     public ResponseDTO getProvincialCategoryEffect(@RequestParam String province) {
-        return ResponseDTO.ofSuccess();
+        Map<Integer,Long> res=new HashMap<>();
+        List<CategoryNumber> result=categoryService.getAllCategoryEffect(province);
+        for (CategoryNumber c:result){
+            res.put(c.getType(),c.getNumber());
+        }
+        return ResponseDTO.ofSuccess(res);
     }
 }
