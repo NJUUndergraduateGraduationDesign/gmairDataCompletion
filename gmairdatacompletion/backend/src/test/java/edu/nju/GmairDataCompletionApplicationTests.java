@@ -229,9 +229,18 @@ class GmairDataCompletionApplicationTests {
         Map<String, List<MachineBasicInfo>> machineBasicInfos =
                 (Map<String, List<MachineBasicInfo>>) machineController.getList(queryCond).getData();
         List<MachineBasicInfo> res = machineBasicInfos.get("machineList");
-        if (res != null && res.size() > 0)
-            System.out.println(machineBasicInfos.get("machineList").size() + " " +
-                    machineBasicInfos.get("machineList").get(0));
+        if (res != null) {
+            if (res.size() > 0) {
+                System.out.println(machineBasicInfos.get("machineList").size() + " " +
+                        machineBasicInfos.get("machineList").get(0));
+            }
+            else {
+                System.out.println("res 的大小为：" + res.size());
+            }
+        }
+        else{
+            System.out.println("res 为空");
+        }
     }
 
     @Test
