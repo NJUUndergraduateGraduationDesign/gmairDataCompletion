@@ -2,10 +2,8 @@ package edu.nju.service.impl;
 
 import edn.nju.util.TimeUtil;
 import edu.nju.model.machine.MachineAvgDailyData;
-import edu.nju.model.User;
 import edu.nju.service.AvgDailyDataService;
 import edu.nju.service.MachineDataRadarService;
-import edu.nju.service.UserService;
 import edu.nju.service.status.*;
 import org.springframework.stereotype.Service;
 
@@ -36,8 +34,6 @@ public class MachineDataRadarImpl implements MachineDataRadarService {
     private VolumeDailyService volumeDailyService;
     @Resource
     private PowerDailyService powerDailyService;
-    @Resource
-    private UserService userService;
     @Resource
     private AvgDailyDataService avgDailyDataService;
 

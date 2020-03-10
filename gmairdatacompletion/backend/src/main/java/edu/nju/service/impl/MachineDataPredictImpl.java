@@ -44,43 +44,55 @@ public class MachineDataPredictImpl implements MachineDataPredictService {
         long start = TimeUtil.getNDayBefore(end, 1);
         List<Double> lastData = indoorPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setIndoorPm25(lastData.get(lastData.size() - 1));
-        lastTwo.setIndoorPm25(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setIndoorPm25(lastData.get(lastData.size() - 1));
+            lastTwo.setIndoorPm25(lastData.get(lastData.size() - 2));
+        }
 
         end = innerPm25DailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
         lastData = innerPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setInnerPm25(lastData.get(lastData.size() - 1));
-        lastTwo.setInnerPm25(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setInnerPm25(lastData.get(lastData.size() - 1));
+            lastTwo.setInnerPm25(lastData.get(lastData.size() - 2));
+        }
 
         end = co2DailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
         lastData = co2DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setCo2(lastData.get(lastData.size() - 1));
-        lastTwo.setCo2(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setCo2(lastData.get(lastData.size() - 1));
+            lastTwo.setCo2(lastData.get(lastData.size() - 2));
+        }
 
         end = humidDailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
         lastData = humidDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setHumid(lastData.get(lastData.size() - 1));
-        lastTwo.setHumid(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setHumid(lastData.get(lastData.size() - 1));
+            lastTwo.setHumid(lastData.get(lastData.size() - 2));
+        }
 
         end = tempDailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
         lastData = tempDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setTemp(lastData.get(lastData.size() - 1));
-        lastTwo.setTemp(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setTemp(lastData.get(lastData.size() - 1));
+            lastTwo.setTemp(lastData.get(lastData.size() - 2));
+        }
 
         end = volumeDailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, 1);
         lastData = volumeDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
-        lastOne.setVolume(lastData.get(lastData.size() - 1));
-        lastTwo.setVolume(lastData.get(lastData.size() - 2));
+        if (lastData != null && lastData.size() > 1) {
+            lastOne.setVolume(lastData.get(lastData.size() - 1));
+            lastTwo.setVolume(lastData.get(lastData.size() - 2));
+        }
         return machineStatusPredictService.gradientPredict(lastTwo, lastOne);
     }
 
@@ -91,32 +103,44 @@ public class MachineDataPredictImpl implements MachineDataPredictService {
         long lastTime = indoorPm25DailyService.getLatestTime(uid);
         List<Double> lastData = indoorPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setIndoorPm25(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setIndoorPm25(lastData.get(lastData.size() - 1));
+        }
 
         lastTime = innerPm25DailyService.getLatestTime(uid);
         lastData = innerPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setInnerPm25(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setInnerPm25(lastData.get(lastData.size() - 1));
+        }
 
         lastTime = co2DailyService.getLatestTime(uid);
         lastData = co2DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setCo2(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setCo2(lastData.get(lastData.size() - 1));
+        }
 
         lastTime = humidDailyService.getLatestTime(uid);
         lastData = humidDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setHumid(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setHumid(lastData.get(lastData.size() - 1));
+        }
 
         lastTime = tempDailyService.getLatestTime(uid);
         lastData = tempDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setTemp(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setTemp(lastData.get(lastData.size() - 1));
+        }
 
         lastTime = volumeDailyService.getLatestTime(uid);
         lastData = volumeDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, lastTime, lastTime);
-        last.setVolume(lastData.get(lastData.size() - 1));
+        if (lastData != null && lastData.size() > 0) {
+            last.setVolume(lastData.get(lastData.size() - 1));
+        }
         return machineStatusPredictService.usePreviousPredict(last);
     }
 }

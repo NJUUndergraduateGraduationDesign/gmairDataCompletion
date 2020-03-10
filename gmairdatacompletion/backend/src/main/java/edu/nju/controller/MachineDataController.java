@@ -57,6 +57,7 @@ public class MachineDataController {
 
     @PostMapping("/mode/lastNHour")
     public ResponseDTO getLastNHourMode(@RequestBody LastNHourRequest request) {
+        System.out.println(request.getDate());
         if (checkLastNHourRequestInvalid(request)) {
             return ResponseDTO.ofParamError();
         }
