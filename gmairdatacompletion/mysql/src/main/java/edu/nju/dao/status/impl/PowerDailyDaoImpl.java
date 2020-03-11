@@ -59,6 +59,7 @@ public class PowerDailyDaoImpl extends BaseDailyHourlyDaoImpl<PowerDaily> implem
                 "SELECT max(p2.powerOnMinute) FROM PowerDaily p2 " +
                 "WHERE p2.uid= ?0 AND p2.completeMethod=?1 " +
                 "AND p2.createAt BETWEEN ?2 AND ?3)";
-        return getUniqueResultByHQL(hql, uid, methodCode, startTime, endTime);
+        List<PowerDaily> res = getListByHQL(hql, uid, methodCode, startTime, endTime);
+        return (res != null && res.size() > 0) ? res.get(0) : null;
     }
 }
