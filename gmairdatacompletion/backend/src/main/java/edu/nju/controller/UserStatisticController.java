@@ -8,7 +8,10 @@ import edu.nju.model.statistic.AvgDataDaily;
 import edu.nju.service.MachineDataPredictService;
 import edu.nju.service.MachineDataRadarService;
 import edu.nju.service.status.*;
+import edu.nju.shiro.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +29,7 @@ import java.util.*;
 @Slf4j
 @RestController
 @RequestMapping("/statistic/user")
+@RequiresRoles("user")
 public class UserStatisticController {
 
     private static final String firstDayInYear = "-01-01 00:00:00";
@@ -41,6 +45,9 @@ public class UserStatisticController {
 
     @GetMapping("/radar")
     public ResponseDTO getUserDataRadar(@RequestParam String uid) {
+        if(checkUidInValid(uid)){
+            return ResponseDTO.ofParamError();
+        }
         int avgIndoorPm25 = machineDataRadarService.getAvgIndoorPm25Daily(uid,
                 Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
         int avgInnerPm25 = machineDataRadarService.getAvgInnerPm25Daily(uid,
@@ -67,6 +74,9 @@ public class UserStatisticController {
 
     @GetMapping("/openTime")
     public ResponseDTO getAvgMachineOpenTime(@RequestParam String uid) {
+        if(checkUidInValid(uid)){
+            return ResponseDTO.ofParamError();
+        }
         int avgTime = machineDataRadarService.getAvgMachineOpenTimeDaily(uid,
                 Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
         Map<String, Integer> res = new HashMap<>();
@@ -76,6 +86,9 @@ public class UserStatisticController {
 
     @GetMapping("/calendar/pm25")
     public ResponseDTO getAvgIndoorPm25PerDayThisYear(@RequestParam String uid) {
+        if(checkUidInValid(uid)){
+            return ResponseDTO.ofParamError();
+        }
         long end = indoorPm25DailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
         List<AvgDataDaily> store = indoorPm25DailyService.getAverageList(uid,
@@ -90,6 +103,9 @@ public class UserStatisticController {
 
     @GetMapping("/calendar/openTime")
     public ResponseDTO getAvgMachineOpenTimePerDayThisYear(@RequestParam String uid) {
+        if(checkUidInValid(uid)){
+            return ResponseDTO.ofParamError();
+        }
         long end = powerDailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
         List<AvgDataDaily> store = powerDailyService.getAverageList(uid,
@@ -105,6 +121,9 @@ public class UserStatisticController {
 
     @GetMapping("/forecastData")
     public ResponseDTO getForecastData(@RequestParam String uid) {
+        if(checkUidInValid(uid)){
+            return ResponseDTO.ofParamError();
+        }
         Map<String, Integer> res = new HashMap<>();
         MachineStatisticData predictData = machineDataPredictService.gradientPredict(uid);
         res.put("indoorPm25", (int) Math.round(predictData.getIndoorPm25()));
@@ -129,4 +148,8 @@ public class UserStatisticController {
         return start;
     }
 
+    //判断uid是否为已登陆用户
+    private boolean checkUidInValid(String uid){
+        return (StringUtils.isEmpty(uid)) || (!uid.equals(ShiroUtil.getCurrentUid()));
+    }
 }

@@ -8,6 +8,9 @@ import edu.nju.dto.NormalCompletePm25DTO;
 import edu.nju.request.LastNDayRequest;
 import edu.nju.request.LastNHourRequest;
 import edu.nju.service.MachineDataService;
+import edu.nju.shiro.ShiroUtil;
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,6 +27,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/machine/data")
+@RequiresRoles(value={"admin","user"},logical= Logical.OR)
 public class MachineDataController {
     @Resource
     MachineDataService machineDataServiceImpl;
@@ -174,14 +178,19 @@ public class MachineDataController {
 
     private boolean checkLastNDayRequestInvalid(LastNDayRequest request) {
         return (request == null
-                || StringUtils.isEmpty(request.getUid())
+                || checkUidInValid(request.getUid())
                 || request.getLastNDay() < 0
                 || !CompleteMethodEnum.isValidCode(request.getCompleteType()));
     }
 
     private boolean checkLastNHourRequestInvalid(LastNHourRequest request) {
         return (request == null
-                || StringUtils.isEmpty(request.getUid())
+                || checkUidInValid(request.getUid())
                 || !CompleteMethodEnum.isValidCode(request.getCompleteType()));
+    }
+
+    //判断uid是否为已登陆用户或admin
+    private boolean checkUidInValid(String uid){
+        return (StringUtils.isEmpty(uid)) || (!uid.equals(ShiroUtil.getCurrentUid()) && !ShiroUtil.isAdmin(uid));
     }
 }

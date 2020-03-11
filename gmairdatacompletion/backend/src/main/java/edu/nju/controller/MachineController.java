@@ -6,6 +6,7 @@ import edu.nju.request.MachineQueryCond;
 import edu.nju.service.MachineInfoService;
 import edu.nju.service.MachineLatestStatusService;
 import edu.nju.service.UserService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ public class MachineController {
     @Resource
     private MachineLatestStatusService machineLatestStatusService;
 
+    @RequiresRoles("admin")
     @PostMapping("/getList")
     public ResponseDTO getList(@RequestBody MachineQueryCond queryCond) {
         Map<String, List<MachineBasicInfo>> map = new HashMap<>();
@@ -104,6 +106,7 @@ public class MachineController {
         return ResponseDTO.ofSuccess(map);
     }
 
+    @RequiresRoles("user")
     @GetMapping("/getUIDInf")
     public ResponseDTO getUidInfo(@RequestParam String uid) {
         return ResponseDTO.ofSuccess(

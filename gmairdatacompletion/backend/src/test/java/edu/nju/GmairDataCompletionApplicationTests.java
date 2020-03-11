@@ -210,7 +210,8 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testAnalyze() {
-        List<String> uidList=userService.findAllV2Uids().subList(0,50);
+        //List<String> uidList=userService.findAllV2Uids().subList(0,50);
+        List<String> uidList=Lists.newArrayList("F0FE6BAA617C");
         machineStatusHandleServiceImpl.handlePartialData(uidList);
         machineStatusHandleServiceImpl.handleV2Data(uidList);
         //machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));

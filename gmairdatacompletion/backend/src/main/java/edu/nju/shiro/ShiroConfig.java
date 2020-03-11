@@ -36,7 +36,7 @@ public class ShiroConfig {
         filterMap.put("/test/**", "anon");
         filterMap.put("/login", "anon");
         // 其他未配置的所有路径都需要通过验证，否则跳转到登录页
-        //filterMap.put("/**", "authc");
+        filterMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
         return shiroFilterFactoryBean;
     }

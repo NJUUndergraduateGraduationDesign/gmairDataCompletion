@@ -3,6 +3,7 @@ package edu.nju.controller;
 import edn.nju.ResponseDTO;
 import edu.nju.service.UserReportService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import javax.annotation.Resource;
 @Slf4j
 @RestController
 @RequestMapping("/report")
+@RequiresRoles("user")
 public class ReportController {
     @Resource
     UserReportService userReportServiceImpl;

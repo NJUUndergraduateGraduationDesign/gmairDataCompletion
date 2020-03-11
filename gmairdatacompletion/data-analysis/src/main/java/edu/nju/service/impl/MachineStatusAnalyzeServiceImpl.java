@@ -43,9 +43,9 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
     @Resource
     MachinePartialStatusService machinePartialStatusServiceImpl;
 
-    //private static final List<Integer> ALL_CODE_LIST = CompleteMethodEnum.getAllCode();
+    private static final List<Integer> ALL_CODE_LIST = CompleteMethodEnum.getAllCode();
 
-    private static final List<Integer> ALL_CODE_LIST = Lists.newArrayList(CompleteMethodEnum.NONE.getCode());
+    //private static final List<Integer> ALL_CODE_LIST = Lists.newArrayList(CompleteMethodEnum.NONE.getCode());
 
     //60分钟取一次数据
     private static final long TIME_INTERVAL = 60 * 60 * 1000L;

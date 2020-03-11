@@ -2,6 +2,7 @@ package edu.nju.controller;
 
 import edn.nju.ResponseDTO;
 import edu.nju.service.LocationService;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import javax.annotation.Resource;
 
 @RestController
 @RequestMapping("/location")
+@RequiresRoles("admin")
 public class UserLocationController {
 
     @Resource

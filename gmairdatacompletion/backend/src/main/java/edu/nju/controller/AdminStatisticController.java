@@ -11,6 +11,7 @@ import edu.nju.model.statistic.CategoryNumber;
 import edu.nju.service.CategoryService;
 import edu.nju.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +32,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/statistic/admin")
+@RequiresRoles("admin")
 public class AdminStatisticController {
     @Resource
     UserService userServiceImpl;
@@ -39,7 +41,6 @@ public class AdminStatisticController {
     CategoryService categoryService;
 
     private static final int MONTH_PER_YEAR = 12;
-
 
     @GetMapping("/china/total")
     public ResponseDTO getNationalTotalAndNewUsers() {
