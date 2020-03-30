@@ -11,17 +11,19 @@ import edn.nju.util.TimeUtil;
 import edu.nju.controller.MachineController;
 import edu.nju.controller.UserLocationController;
 import edu.nju.controller.UserStatisticController;
-import edu.nju.model.Location;
-import edu.nju.model.MachineV3Status;
+import edu.nju.dto.MonthlyReportDTO;
+import edu.nju.method.KNN;
+import edu.nju.method.Mean;
+import edu.nju.method.UsePrevious;
+import edu.nju.model.*;
 import edu.nju.model.machine.MachineBasicInfo;
 import edu.nju.model.machine.MachineLatestStatus;
 import edu.nju.model.statistic.UserLocation;
 import edu.nju.request.MachineQueryCond;
-import edu.nju.model.MachineV2Status;
-import edu.nju.model.User;
 import edu.nju.service.*;
 import edu.nju.service.status.InnerPm25DailyService;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -61,6 +63,14 @@ class GmairDataCompletionApplicationTests {
     UserStatisticController userStatisticController;
     @Resource
     InnerPm25DailyService innerPm25DailyService;
+    @Resource
+    Mean mean;
+    @Resource
+    UsePrevious usePrevious;
+    @Resource
+    KNN knn;
+    @Resource
+    UserReportService userReportService;
 
     /**
      * 用于添加User表的dataType字段
@@ -193,11 +203,9 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testDataCompletion() {
-        System.out.println("start time: " + new Date());
         dataCompletion.partialCompletion(Lists.newArrayList("F0FE6BAA617C"));
         dataCompletion.v2Completion(Lists.newArrayList("F0FE6BAA617C"));
         dataCompletion.v3Completion(Lists.newArrayList("98D8639C3543"));
-        System.out.println("end time: " + new Date());
         try {
             System.in.read();
         } catch (Exception e) {
@@ -210,10 +218,9 @@ class GmairDataCompletionApplicationTests {
      */
     @Test
     void testAnalyze() {
-        List<String> uidList=userService.findAllV2Uids().subList(0,50);
-        machineStatusHandleServiceImpl.handlePartialData(uidList);
-        machineStatusHandleServiceImpl.handleV2Data(uidList);
-        //machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
+        machineStatusHandleServiceImpl.handlePartialData(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handleV2Data(Lists.newArrayList("F0FE6BAA617C"));
+        machineStatusHandleServiceImpl.handleV3Data(Lists.newArrayList("98D8639C3543"));
     }
 
     @Test
@@ -221,6 +228,7 @@ class GmairDataCompletionApplicationTests {
         MachineQueryCond queryCond = new MachineQueryCond();
         queryCond.setCurPage(1);
         queryCond.setPageSize(10);
+        //2018-09-06
         queryCond.setCreateTimeGTE(new Date(118, Calendar.SEPTEMBER, 6));
         queryCond.setCreateTimeLTE(new Date());
         queryCond.setIsPower(1);
@@ -229,18 +237,10 @@ class GmairDataCompletionApplicationTests {
         Map<String, List<MachineBasicInfo>> machineBasicInfos =
                 (Map<String, List<MachineBasicInfo>>) machineController.getList(queryCond).getData();
         List<MachineBasicInfo> res = machineBasicInfos.get("machineList");
-        if (res != null) {
-            if (res.size() > 0) {
-                System.out.println(machineBasicInfos.get("machineList").size() + " " +
-                        machineBasicInfos.get("machineList").get(0));
-            }
-            else {
-                System.out.println("res 的大小为：" + res.size());
-            }
-        }
-        else{
-            System.out.println("res 为空");
-        }
+        Assert.assertNotNull(res);
+        Assert.assertEquals(10, res.size());
+        Assert.assertEquals("MachineBasicInfo(uid=F0FE6BAA611B, codeValue=42A188A207410, city=闵行区," +
+                " isPower=1, mode=1, bindTime=2018-09-13 11:58:25.0, overCount=0, heat=0)", res.get(0).toString());
     }
 
     @Test
@@ -294,5 +294,56 @@ class GmairDataCompletionApplicationTests {
         for (String key : res1.keySet()) {
             System.out.println(key + ": " + res1.get(key));
         }
+    }
+
+    @Test
+    void testCompletionMethods() {
+        MachinePartialStatus one = new MachinePartialStatus("uid","name",1,
+                false,0,0);
+        MachinePartialStatus two = new MachinePartialStatus("uid","name",2,
+                false,(long)Constant.Completion.PARTIAL_INTERVAL,0);
+        MachinePartialStatus three = new MachinePartialStatus("uid","name",3,
+                false,(long)Constant.Completion.PARTIAL_INTERVAL * 2,0);
+        MachinePartialStatus four = new MachinePartialStatus("uid","name",4,
+                false,(long)Constant.Completion.PARTIAL_INTERVAL * 4,0);
+        MachinePartialStatus five = new MachinePartialStatus("uid","name",5,
+                false,(long)Constant.Completion.PARTIAL_INTERVAL * 5,0);
+        MachinePartialStatus six = new MachinePartialStatus("uid","name",6,
+                false,(long)Constant.Completion.PARTIAL_INTERVAL * 6,0);
+        List<MachinePartialStatus> store = new ArrayList<>();
+        store.add(one);
+        store.add(two);
+        store.add(three);
+        store.add(four);
+        store.add(five);
+        store.add(six);
+
+        List<MachinePartialStatus> resByMean = mean.partialMean(store);
+        List<MachinePartialStatus> resByUsePrevious = usePrevious.partialUsePrevious(store);
+        List<MachinePartialStatus> resByKNN = knn.partialKNN(store);
+        //补全的数据量应该均为1
+        Assert.assertNotNull(resByMean);
+        Assert.assertNotNull(resByUsePrevious);
+        Assert.assertNotNull(resByKNN);
+        Assert.assertEquals(1, resByMean.size());
+        Assert.assertEquals(1, resByUsePrevious.size());
+        Assert.assertEquals(1, resByKNN.size());
+        //补全的缺失数据应如下
+        Assert.assertEquals("MachinePartialStatus(uid=uid, name=name, data=3, blockFlag=false," +
+                " createAt=10800000, completeCode=1)", resByMean.get(0).toString());
+        Assert.assertEquals("MachinePartialStatus(uid=uid, name=name, data=3, blockFlag=false," +
+                " createAt=10800000, completeCode=2)", resByUsePrevious.get(0).toString());
+        Assert.assertEquals("MachinePartialStatus(uid=uid, name=name, data=4, blockFlag=false," +
+                " createAt=10800000, completeCode=3)", resByKNN.get(0).toString());
+    }
+
+    @Test
+    void testUserReport() {
+        MonthlyReportDTO res = userReportService.getMonthlyReport("F0FE6BAA617C");
+        Assert.assertNotNull(res);
+        Assert.assertEquals("MonthlyReportDTO(openDaysCount=6, mostOpenDay=Tue Oct 01 00:00:00 CST 2019," +
+                " mostOpenDayHoursCount=23.983333333333334, mostOpenHourGTE=8, mostOpenHourLTE=9," +
+                " mostOpenHourMinutesCount=6.551020408163265, mostUseMode=自动, mostUseModeHoursCount=45.2," +
+                " pm25Average=27.305289557128184, defeatUserPercent=100.0, categoryEnvironment=2)", res.toString());
     }
 }

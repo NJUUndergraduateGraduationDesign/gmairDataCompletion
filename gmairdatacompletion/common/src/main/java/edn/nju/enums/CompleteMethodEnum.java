@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * @author ：tsl
  * @date ：Created in 2020/2/25 15:30
- * @description：enum of completeMethod:none,
+ * @description： enum of completeMethod:none,
  */
 
 @AllArgsConstructor
@@ -17,17 +17,18 @@ import java.util.List;
 public enum CompleteMethodEnum {
     NONE(0, "none"),
     MEAN(1, "mean"),
-    USE_PREVIOUS(2, "usePrevious");//原始数据为0
+    USE_PREVIOUS(2, "usePrevious"),
+    KNN(3, "KNN");//原始数据为0
 
     private int code;
     private String name;
 
     public static List<Integer> getAllCompleteMethodCode() {
-        return Lists.newArrayList(MEAN.getCode(), USE_PREVIOUS.getCode());
+        return Lists.newArrayList(MEAN.getCode(), USE_PREVIOUS.getCode(), KNN.getCode());
     }
 
     public static List<Integer> getAllCode() {
-        return Lists.newArrayList(NONE.getCode(), MEAN.getCode(), USE_PREVIOUS.getCode());
+        return Lists.newArrayList(NONE.getCode(), MEAN.getCode(), USE_PREVIOUS.getCode(), KNN.getCode());
     }
 
     public static boolean isValidCode(Integer code) {

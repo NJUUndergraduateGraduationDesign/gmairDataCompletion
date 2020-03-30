@@ -1,9 +1,11 @@
 package edu.nju.asyncTask;
 
+import edu.nju.method.KNN;
 import edu.nju.method.Mean;
 import edu.nju.method.UsePrevious;
 import edu.nju.model.MachineV3Status;
 import edu.nju.service.MachineV3StatusService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.List;
  * @date 2020/2/27 12:00
  */
 
+@Slf4j
 @Service
 public class V3CompletionThread {
 
@@ -26,11 +29,16 @@ public class V3CompletionThread {
     private Mean mean;
     @Resource
     private UsePrevious usePrevious;
+    @Resource
+    private KNN knn;
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
+        log.info("current thread:{},uid{}" + Thread.currentThread().getName(),uid);
+
         List<MachineV3Status> missingDataByMean = new ArrayList<>();
         List<MachineV3Status> missingDataByUsePrevious = new ArrayList<>();
+        List<MachineV3Status> missingDataByKNN = new ArrayList<>();
         int pageIndex = 0;
 
         Page<MachineV3Status> selectedData;
@@ -46,17 +54,20 @@ public class V3CompletionThread {
             }
             selectedDataContent.addAll(selectedData.getContent());
             lastDataInPage = selectedDataContent.get(selectedDataContent.size() - 1);
+            log.info("pageIndex:{},pageSize:{},contentSize:{}",pageIndex,pageSize,selectedDataContent.size());
 
             missingDataByMean.addAll(mean.v3Mean(selectedDataContent));
             missingDataByUsePrevious.addAll(usePrevious.v3UsePrevious(selectedDataContent));
+            missingDataByKNN.addAll(knn.v3KNN(selectedDataContent));
             pageIndex++;
         }
-        System.out.println("Missing data created by MEAN: " + missingDataByMean.size() +
-                "\nFirst missing data: " + missingDataByMean.get(0));
-        System.out.println("Missing data created by USE_PREVIOUS: " + missingDataByUsePrevious.size() +
-                "\nFirst missing data: " + missingDataByUsePrevious.get(0));
-        //先不要存进数据库
+
+        log.info("missing data created by MEAN:{}",missingDataByMean.size());
+        log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
+        log.info("missing data created by KNN:{}",missingDataByKNN.size());
+
         machineV3StatusService.insertBatch(missingDataByMean);
         machineV3StatusService.insertBatch(missingDataByUsePrevious);
+        machineV3StatusService.insertBatch(missingDataByKNN);
     }
 }

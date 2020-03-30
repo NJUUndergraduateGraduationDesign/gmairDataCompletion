@@ -1,5 +1,6 @@
 package edu.nju.asyncTask;
 
+import edu.nju.method.KNN;
 import edu.nju.method.Mean;
 import edu.nju.method.UsePrevious;
 import edu.nju.model.MachinePartialStatus;
@@ -29,6 +30,8 @@ public class PartialCompletionThread {
     private Mean mean;
     @Resource
     private UsePrevious usePrevious;
+    @Resource
+    private KNN knn;
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
@@ -36,6 +39,7 @@ public class PartialCompletionThread {
         //一个uid的所有缺失数据集合
         List<MachinePartialStatus> missingDataByMean = new ArrayList<>();
         List<MachinePartialStatus> missingDataByUsePrevious = new ArrayList<>();
+        List<MachinePartialStatus> missingDataByKNN = new ArrayList<>();
         //分页查询中的页索引
         int pageIndex = 0;
         //选中的一段数据
@@ -58,16 +62,19 @@ public class PartialCompletionThread {
             lastDataInPage = selectedDataContent.get(selectedDataContent.size() - 1);
             log.info("pageIndex:{},pageSize:{},contentSize:{}",pageIndex,pageSize,selectedDataContent.size());
 
-            //这里调用所有补全方法，这边多遍历了一遍
+            //这里调用所有补全方法
             missingDataByMean.addAll(mean.partialMean(selectedDataContent));
             missingDataByUsePrevious.addAll(usePrevious.partialUsePrevious(selectedDataContent));
+            missingDataByKNN.addAll(knn.partialKNN(selectedDataContent));
             pageIndex++;
         }
 
         log.info("missing data created by MEAN:{}",missingDataByMean.size());
         log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
-        //先不要存进数据库
+        log.info("missing data created by KNN:{}",missingDataByKNN.size());
+
         machinePartialStatusService.insertBatch(missingDataByMean);
         machinePartialStatusService.insertBatch(missingDataByUsePrevious);
+        machinePartialStatusService.insertBatch(missingDataByKNN);
     }
 }

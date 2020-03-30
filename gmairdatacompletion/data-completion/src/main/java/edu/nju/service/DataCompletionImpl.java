@@ -3,7 +3,6 @@ package edu.nju.service;
 import edu.nju.asyncTask.PartialCompletionThread;
 import edu.nju.asyncTask.V2CompletionThread;
 import edu.nju.asyncTask.V3CompletionThread;
-import edu.nju.model.User;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -13,7 +12,6 @@ import java.util.List;
 public class DataCompletionImpl implements DataCompletion {
 
     private static final int pageSize = 10000;  //以10000个数据为一组进行补全
-    private static final long timePerBatch = 10;
 
     @Resource
     private UserService userService;

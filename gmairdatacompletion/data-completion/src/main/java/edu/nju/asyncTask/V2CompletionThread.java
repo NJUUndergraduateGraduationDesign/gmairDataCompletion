@@ -1,5 +1,6 @@
 package edu.nju.asyncTask;
 
+import edu.nju.method.KNN;
 import edu.nju.method.Mean;
 import edu.nju.method.UsePrevious;
 import edu.nju.model.MachineV2Status;
@@ -22,15 +23,14 @@ import java.util.List;
 @Service
 public class V2CompletionThread {
 
-    private static final long timeInterval = 300000;
-    private static final long timeBias     = 20000;
-
     @Resource
     private MachineV2StatusService machineV2StatusService;
     @Resource
     private Mean mean;
     @Resource
     private UsePrevious usePrevious;
+    @Resource
+    private KNN knn;
 
     @Async
     public void iterateAndComplete(String uid, int pageSize) {
@@ -38,6 +38,7 @@ public class V2CompletionThread {
         //一个uid的所有缺失数据集合
         List<MachineV2Status> missingDataByMean = new ArrayList<>();
         List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
+        List<MachineV2Status> missingDataByKNN = new ArrayList<>();
         //分页查询中的页索引
         int pageIndex = 0;
         //选中的一段数据
@@ -62,43 +63,16 @@ public class V2CompletionThread {
             //这里调用所有补全方法，这边多遍历了一遍
             missingDataByMean.addAll(mean.v2Mean(selectedDataContent));
             missingDataByUsePrevious.addAll(usePrevious.v2UsePrevious(selectedDataContent));
+            missingDataByKNN.addAll(knn.v2KNN(selectedDataContent));
             pageIndex++;
         }
 
         log.info("missing data created by MEAN:{}",missingDataByMean.size());
         log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
-        //先不要存进数据库
+        log.info("missing data created by KNN:{}",missingDataByKNN.size());
+
         machineV2StatusService.insertBatch(missingDataByMean);
         machineV2StatusService.insertBatch(missingDataByUsePrevious);
-    }
-
-    @Async
-    public void iterateAndComplete(String uid, long timePerBatch) {
-        log.info("current thread:{},uid{}" + Thread.currentThread().getName(),uid);
-        //一个uid的所有缺失数据集合
-        List<MachineV2Status> missingDataByMean = new ArrayList<>();
-        List<MachineV2Status> missingDataByUsePrevious = new ArrayList<>();
-        //查询的起止时间
-        long startTime = machineV2StatusService.getStartTimeByUid(uid);
-        long endTime   = machineV2StatusService.getLatestTimeByUid(uid);
-        //选中的一段数据
-        List<MachineV2Status> selectedData;
-
-        //遍历一个uid的所有数据
-        if ((selectedData =
-                machineV2StatusService.fetchBatchByUid(uid, startTime, endTime, timeInterval, timeBias))
-                .size() > 0) {
-            //这里调用所有补全方法，这边多遍历了一遍
-            missingDataByMean.addAll(mean.v2Mean(selectedData));
-            missingDataByUsePrevious.addAll(usePrevious.v2UsePrevious(selectedData));
-            startTime = endTime;
-            endTime   = startTime + timePerBatch;
-        }
-
-        log.info("missing data created by MEAN:{}",missingDataByMean.size());
-        log.info("missing data created by UserPrevious:{}",missingDataByUsePrevious.size());
-        //先不要存进数据库
-//        machineV2StatusService.insertBatch(missingDataByMean);
-//        machineV2StatusService.insertBatch(missingDataByUsePrevious);
+        machineV2StatusService.insertBatch(missingDataByKNN);
     }
 }
