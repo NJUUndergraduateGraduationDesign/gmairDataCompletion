@@ -20,6 +20,16 @@ public class MyMath {
         return (int) Math.round(res);
     }
 
+    public static double getDoubleAvgWithWeight(List<Double> store) {
+        int n = store.size();
+        List<Double> weights = getWeights(n);
+        double res = 0;
+        for (int i = 0; i < n; i++) {
+            res += store.get(i) * weights.get(i);
+        }
+        return res;
+    }
+
     /**
      * 得到n个数的权重，权重加和为1
      * @param n 权重个数

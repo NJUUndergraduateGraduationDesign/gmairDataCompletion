@@ -18,7 +18,7 @@ import java.util.List;
  * @description：
  */
 
-public class MachineCommonServiceImpl<T extends MachineCommonStatus> implements MachineCommonService<T> {
+public abstract class MachineCommonServiceImpl<T extends MachineCommonStatus> implements MachineCommonService<T> {
     @Resource
     MongoTemplate mongoTemplate;
 

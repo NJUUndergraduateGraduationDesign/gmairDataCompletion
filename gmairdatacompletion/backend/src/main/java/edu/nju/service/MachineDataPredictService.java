@@ -8,7 +8,5 @@ import edu.nju.bo.MachineStatisticData;
  * @description: TODO
  */
 public interface MachineDataPredictService {
-    MachineStatisticData gradientPredict(String uid);
-
-    MachineStatisticData usePreviousPredict(String uid);
+    MachineStatisticData predict(String uid);
 }

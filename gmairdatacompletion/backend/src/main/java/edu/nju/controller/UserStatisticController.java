@@ -125,7 +125,7 @@ public class UserStatisticController {
             return ResponseDTO.ofParamError();
         }
         Map<String, Integer> res = new HashMap<>();
-        MachineStatisticData predictData = machineDataPredictService.gradientPredict(uid);
+        MachineStatisticData predictData = machineDataPredictService.predict(uid);
         res.put("indoorPm25", (int) Math.round(predictData.getIndoorPm25()));
         res.put("outdoorPm25", (int) Math.round(predictData.getInnerPm25()));
         res.put("co2", (int) Math.round(predictData.getCo2()));

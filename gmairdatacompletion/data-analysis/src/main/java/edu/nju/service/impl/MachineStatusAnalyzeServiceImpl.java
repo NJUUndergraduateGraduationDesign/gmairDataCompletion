@@ -219,9 +219,6 @@ public class MachineStatusAnalyzeServiceImpl implements MachineStatusAnalyzeServ
             } else if (status.getPower() == 0) {
                 powerOffTime += cur - before;
             }
-            //log.debug("heatOnTime:{},heatOffTime:{},autoTime:{},manualTime:{},sleepTime:{},powerOnTime:{},powerOffTime:{}",
-            //heatOnTime,heatOffTime,autoTime,manualTime,sleepTime,powerOnTime,powerOffTime);
-            //log.debug("before:{},cur:{},cur-before:{}",before,cur,cur-before);
             before = status.getCreateAt();
         }
         int heatOnMinute = TimeUtil.millisecondsToMinute(heatOnTime);
