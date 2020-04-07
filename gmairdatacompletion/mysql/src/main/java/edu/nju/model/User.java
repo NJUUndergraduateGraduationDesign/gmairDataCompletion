@@ -30,4 +30,6 @@ public class User implements Serializable {
 
     @ColumnDefault("-1")
     private int dataType;
+
+    private String password;
 }

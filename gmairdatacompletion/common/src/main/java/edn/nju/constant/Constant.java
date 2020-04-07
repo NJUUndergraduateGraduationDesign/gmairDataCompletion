@@ -11,6 +11,8 @@ import java.util.Date;
 public class Constant {
     public static class Admin {
         public static final String DEFAULT_ADMIN_USERNAME = "admin";
+        public static final String DEFAULT_ADMIN_SALT = "2020";
+        public static final String DEFAULT_ADMIN_PASSWORD = "f02715fe2e69b75577edd1814edc070c";
     }
 
     public static class User {

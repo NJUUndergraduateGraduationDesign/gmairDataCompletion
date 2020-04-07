@@ -1,5 +1,6 @@
 package edu.nju.shiro;
 
+import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -26,15 +27,13 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean(SecurityManager securityManager) {
         ShiroFilterFactoryBean shiroFilterFactoryBean = new ShiroFilterFactoryBean();
         shiroFilterFactoryBean.setSecurityManager(securityManager);
-        // 登录页面，无权限时跳转的路径
-        shiroFilterFactoryBean.setLoginUrl("/login");
         // 配置拦截规则
         Map<String, String> filterMap = new HashMap<>();
-        // 首页配置放行
-        filterMap.put("/", "anon");
         // 登录页面和登录请求路径需要放行
         filterMap.put("/test/**", "anon");
         filterMap.put("/login", "anon");
+        filterMap.put("/logout", "anon");
+        filterMap.put("/getCurrentUid", "anon");
         // 其他未配置的所有路径都需要通过验证，否则跳转到登录页
         filterMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
@@ -57,6 +56,10 @@ public class ShiroConfig {
     @Bean
     public UserRealm userRealm() {
         UserRealm userRealm = new UserRealm();
+        HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
+        matcher.setHashAlgorithmName("MD5");
+        matcher.setHashIterations(3);
+        userRealm.setCredentialsMatcher(matcher);
         return userRealm;
     }
 

@@ -22,12 +22,15 @@ import edu.nju.model.statistic.UserLocation;
 import edu.nju.request.MachineQueryCond;
 import edu.nju.service.*;
 import edu.nju.service.status.InnerPm25DailyService;
+import edu.nju.shiro.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -72,6 +75,17 @@ class GmairDataCompletionApplicationTests {
     @Resource
     UserReportService userReportService;
 
+    @Test
+    @Transactional
+    @Rollback(false)
+    void insertPassword() {
+        List<User> userList = userService.findAllUsers();
+        for (User user : userList) {
+            String password= ShiroUtil.encrypt(user.getUid(),user.getCodeValue());
+            user.setPassword(password);
+        }
+    }
+
     /**
      * 用于添加User表的dataType字段
      */
@@ -112,12 +126,12 @@ class GmairDataCompletionApplicationTests {
         List<User> res = userService.findAllValidUsers();
         for (User one : res) {
             int overCount = 0;
-            try{
+            try {
                 long end = innerPm25DailyService.getLatestTime(one.getUid());
                 long start = TimeUtil.getNDayBefore(end, Constant.MachineData.LAST_MONTH);
                 overCount = innerPm25DailyService.getOverCount
                         (one.getUid(), Constant.MachineData.BEST_METHOD, start, end);
-            }catch (Exception e) {
+            } catch (Exception e) {
 
             }
             if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V2_STATUS.getCode()) {
@@ -129,8 +143,7 @@ class GmairDataCompletionApplicationTests {
                         overCount);
                 if (!machineLatestStatusService.add(latestStatus))
                     System.out.println("oops");
-            }
-            else if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode()) {
+            } else if (one.getDataType() == MachineStatusTypeEnum.MACHINE_V3_STATUS.getCode()) {
                 MachineV3Status status = machineV3StatusServiceImpl.getLatestRecord(one.getUid());
                 MachineLatestStatus latestStatus = new MachineLatestStatus(one.getUid(),
                         status.getStatus(),
@@ -171,7 +184,7 @@ class GmairDataCompletionApplicationTests {
                     String cityName = city.getString("fullname");
 
                     Location location = new Location(cityId, cityName, provinceName);
-                    if (!locationService.addOneLocation(location)){
+                    if (!locationService.addOneLocation(location)) {
                         System.out.println("ERROR AT: " + cityId + ": " + provinceName + " " + cityName);
                     }
 
@@ -183,7 +196,7 @@ class GmairDataCompletionApplicationTests {
                             district = districts.getJSONObject(k);
                             String districtId = district.getString("id");
                             Location l = new Location(districtId, cityName, provinceName);
-                            if (!locationService.addOneLocation(l)){
+                            if (!locationService.addOneLocation(l)) {
                                 System.out.println("ERROR AT: " + districtId + ": " + provinceName + " " + cityName);
                             }
                         }
@@ -191,9 +204,9 @@ class GmairDataCompletionApplicationTests {
                 }
             }
         }
-        Location last1 = new Location("undefined","未知","未知");
-        Location last2 = new Location("null","未知","未知");
-        if(locationService.addOneLocation(last1) && locationService.addOneLocation(last2)) {
+        Location last1 = new Location("undefined", "未知", "未知");
+        Location last2 = new Location("null", "未知", "未知");
+        if (locationService.addOneLocation(last1) && locationService.addOneLocation(last2)) {
             System.out.println("Add the 'undefined' and 'null' successfully!");
         }
     }
@@ -258,6 +271,7 @@ class GmairDataCompletionApplicationTests {
 
     @Test
     void testUserStatisticsController() {
+        /*
         Map<String, Integer> res1 =
                 (Map<String, Integer>) userStatisticController.getUserDataRadar("F0FE6BAA617C").getData();
         for (String key : res1.keySet()) {
@@ -285,31 +299,34 @@ class GmairDataCompletionApplicationTests {
             System.out.println(key + ": " + res4.get(key));
         }
         System.out.println("==========");
+         */
     }
 
     @Test
     void testPredict() {
+        /*
         Map<String, Integer> res1 =
                 (Map<String, Integer>) userStatisticController.getForecastData("F0FE6BAA617C").getData();
         for (String key : res1.keySet()) {
             System.out.println(key + ": " + res1.get(key));
         }
+         */
     }
 
     @Test
     void testCompletionMethods() {
-        MachinePartialStatus one = new MachinePartialStatus("uid","name",1,
-                false,0,0);
-        MachinePartialStatus two = new MachinePartialStatus("uid","name",2,
-                false,(long)Constant.Completion.PARTIAL_INTERVAL,0);
-        MachinePartialStatus three = new MachinePartialStatus("uid","name",3,
-                false,(long)Constant.Completion.PARTIAL_INTERVAL * 2,0);
-        MachinePartialStatus four = new MachinePartialStatus("uid","name",4,
-                false,(long)Constant.Completion.PARTIAL_INTERVAL * 4,0);
-        MachinePartialStatus five = new MachinePartialStatus("uid","name",5,
-                false,(long)Constant.Completion.PARTIAL_INTERVAL * 5,0);
-        MachinePartialStatus six = new MachinePartialStatus("uid","name",6,
-                false,(long)Constant.Completion.PARTIAL_INTERVAL * 6,0);
+        MachinePartialStatus one = new MachinePartialStatus("uid", "name", 1,
+                false, 0, 0);
+        MachinePartialStatus two = new MachinePartialStatus("uid", "name", 2,
+                false, (long) Constant.Completion.PARTIAL_INTERVAL, 0);
+        MachinePartialStatus three = new MachinePartialStatus("uid", "name", 3,
+                false, (long) Constant.Completion.PARTIAL_INTERVAL * 2, 0);
+        MachinePartialStatus four = new MachinePartialStatus("uid", "name", 4,
+                false, (long) Constant.Completion.PARTIAL_INTERVAL * 4, 0);
+        MachinePartialStatus five = new MachinePartialStatus("uid", "name", 5,
+                false, (long) Constant.Completion.PARTIAL_INTERVAL * 5, 0);
+        MachinePartialStatus six = new MachinePartialStatus("uid", "name", 6,
+                false, (long) Constant.Completion.PARTIAL_INTERVAL * 6, 0);
         List<MachinePartialStatus> store = new ArrayList<>();
         store.add(one);
         store.add(two);

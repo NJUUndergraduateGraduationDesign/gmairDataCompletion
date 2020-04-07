@@ -33,8 +33,12 @@ public class ResponseDTO {
         return new ResponseDTO(ResponseCodeEnum.RESPONSE_SERVER_ERROR.getCode(), ResponseCodeEnum.RESPONSE_SERVER_ERROR.getDesc(), null);
     }
 
-    public static ResponseDTO ofShiroError(){
-        return new ResponseDTO(ResponseCodeEnum.RESPONSE_SHIRO_ERROR.getCode(),ResponseCodeEnum.RESPONSE_SHIRO_ERROR.getDesc(),null);
+    public static ResponseDTO ofUnauthorizedError() {
+        return new ResponseDTO(ResponseCodeEnum.RESPONSE_UNAUTHORIZED_ERROR.getCode(), ResponseCodeEnum.RESPONSE_UNAUTHORIZED_ERROR.getDesc(), null);
+    }
+
+    public static ResponseDTO ofUnauthenticatedError() {
+        return new ResponseDTO(ResponseCodeEnum.RESPONSE_UNAUTHENTICATED_ERROR.getCode(), ResponseCodeEnum.RESPONSE_UNAUTHENTICATED_ERROR.getDesc(), null);
     }
 }
 

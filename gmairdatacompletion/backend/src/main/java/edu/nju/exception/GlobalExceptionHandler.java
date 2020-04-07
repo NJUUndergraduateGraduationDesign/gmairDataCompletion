@@ -3,7 +3,9 @@ package edu.nju.exception;
 import edn.nju.ResponseDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
-import org.checkerframework.checker.index.qual.SameLen;
+import org.apache.shiro.authz.UnauthenticatedException;
+import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,16 +19,34 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    @ExceptionHandler(value = ShiroException.class)
+    @ExceptionHandler(value = UnauthorizedException.class)
     @ResponseBody
-    public ResponseDTO handleShiroException(ShiroException e) {
-        return ResponseDTO.ofShiroError();
+    public ResponseDTO handleUnauthorizedException(UnauthorizedException e) {
+        log.error("Exception:", e);
+        return ResponseDTO.ofUnauthorizedError();
+    }
+
+    @ExceptionHandler(value = UnauthenticatedException.class)
+    @ResponseBody
+    public ResponseDTO handleUnauthenticatedException(ShiroException e) {
+        log.error("Exception:", e);
+        return ResponseDTO.ofUnauthenticatedError();
+    }
+
+    @ExceptionHandler(value = ParamErrorException.class)
+    @ResponseBody
+    public ResponseDTO handleParamErrorException(ParamErrorException e) {
+        log.error("Exception:", e);
+        if (StringUtils.isEmpty(e.getMessage())) {
+            return ResponseDTO.ofParamError();
+        }
+        return ResponseDTO.ofParamError(e.getMessage());
     }
 
     @ExceptionHandler(value = RuntimeException.class)
     @ResponseBody
     public ResponseDTO handleRuntimeException(RuntimeException e) {
-        log.error("Exception:",e);
+        log.error("Exception:", e);
         return ResponseDTO.ofServerError();
     }
 }

@@ -6,6 +6,7 @@ import edu.nju.request.MachineQueryCond;
 import edu.nju.service.MachineInfoService;
 import edu.nju.service.MachineLatestStatusService;
 import edu.nju.service.UserService;
+import edu.nju.shiro.ShiroUtil;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -60,43 +61,36 @@ public class MachineController {
                 overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE, isPower,
                     overCountGTE, overCountLTE, offset, pageSize);
-        }
-        else if (createTimeGTE != null && createTimeLTE != null &&
+        } else if (createTimeGTE != null && createTimeLTE != null &&
                 isPower != -1 &&
                 overCountGTE == 0 && overCountLTE == 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE, isPower,
                     offset, pageSize);
-        }
-        else if (createTimeGTE != null && createTimeLTE != null &&
+        } else if (createTimeGTE != null && createTimeLTE != null &&
                 isPower == -1 &&
                 overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE, overCountGTE,
                     overCountLTE, offset, pageSize);
-        }
-        else if (createTimeGTE == null && createTimeLTE == null &&
+        } else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower != -1 &&
                 overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(overCountGTE, overCountLTE, isPower,
                     offset, pageSize);
-        }
-        else if (createTimeGTE != null && createTimeLTE != null &&
+        } else if (createTimeGTE != null && createTimeLTE != null &&
                 isPower == -1 &&
                 overCountGTE == 0 && overCountLTE == 0) {
             res = machineLatestStatusService.findByQueryCond(createTimeGTE, createTimeLTE,
                     offset, pageSize);
-        }
-        else if (createTimeGTE == null && createTimeLTE == null &&
+        } else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower != -1 &&
                 overCountGTE == 0 && overCountLTE == 0) {
             res = machineLatestStatusService.findByQueryCond(isPower, offset, pageSize);
-        }
-        else if (createTimeGTE == null && createTimeLTE == null &&
+        } else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower == -1 &&
                 overCountGTE >= 0 && overCountLTE > 0) {
             res = machineLatestStatusService.findByQueryCond(overCountGTE, overCountLTE,
                     offset, pageSize);
-        }
-        else if (createTimeGTE == null && createTimeLTE == null &&
+        } else if (createTimeGTE == null && createTimeLTE == null &&
                 isPower == -1 &&
                 overCountGTE == 0 && overCountLTE == 0) {
             res = machineLatestStatusService.findByQueryCond(offset, pageSize);
@@ -109,6 +103,12 @@ public class MachineController {
     @RequiresRoles("user")
     @GetMapping("/getUIDInf")
     public ResponseDTO getUidInfo(@RequestParam String uid) {
+        if (StringUtils.isEmpty(uid)) {
+            return ResponseDTO.ofParamError();
+        }
+        if (!uid.equals(ShiroUtil.getCurrentUid())) {
+            return ResponseDTO.ofUnauthorizedError();
+        }
         return ResponseDTO.ofSuccess(
                 machineInfoService.getMachineBasicInfoByUid(userService.findByUid(uid)));
     }

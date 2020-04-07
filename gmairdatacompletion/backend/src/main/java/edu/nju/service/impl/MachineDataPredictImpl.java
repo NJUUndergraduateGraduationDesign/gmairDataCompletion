@@ -44,24 +44,28 @@ public class MachineDataPredictImpl implements MachineDataPredictService {
         List<Double> indoorPm25Data = indoorPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         double indoorPm25Predict = dataPredictService.holtLinearTrendPredict(indoorPm25Data);
+        indoorPm25Predict=Math.max(0,indoorPm25Predict);
 
         end = innerPm25DailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, TIME_INTERVAL_DAYS);
         List<Double> innerPm25Data = innerPm25DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         double innerPm25Predict = dataPredictService.holtLinearTrendPredict(innerPm25Data);
+        innerPm25Predict=Math.max(0,innerPm25Predict);
 
         end = co2DailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, TIME_INTERVAL_DAYS);
         List<Double> co2Data = co2DailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         double co2Predict = dataPredictService.holtLinearTrendPredict(co2Data);
+        co2Predict=Math.max(0,co2Predict);
 
         end = humidDailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, TIME_INTERVAL_DAYS);
         List<Double> humidData = humidDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         double humidPredict = dataPredictService.holtLinearTrendPredict(humidData);
+        humidPredict=Math.max(0,humidPredict);
 
         end = tempDailyService.getLatestTime(uid);
         start = TimeUtil.getNDayBefore(end, TIME_INTERVAL_DAYS);
@@ -74,6 +78,7 @@ public class MachineDataPredictImpl implements MachineDataPredictService {
         List<Double> volumeData = volumeDailyService.getAvgList(uid,
                 Constant.MachineData.BEST_METHOD, start, end);
         double volumePredict = dataPredictService.holtLinearTrendPredict(volumeData);
+        volumePredict=Math.max(0,volumePredict);
 
         return new MachineStatisticData(indoorPm25Predict, innerPm25Predict, co2Predict, humidPredict, tempPredict, volumePredict);
     }

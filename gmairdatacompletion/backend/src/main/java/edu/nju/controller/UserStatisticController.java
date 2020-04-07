@@ -4,12 +4,15 @@ import edn.nju.ResponseDTO;
 import edn.nju.constant.Constant;
 import edn.nju.util.TimeUtil;
 import edu.nju.bo.MachineStatisticData;
+import edu.nju.exception.ParamErrorException;
 import edu.nju.model.statistic.AvgDataDaily;
 import edu.nju.service.MachineDataPredictService;
 import edu.nju.service.MachineDataRadarService;
-import edu.nju.service.status.*;
+import edu.nju.service.status.IndoorPm25DailyService;
+import edu.nju.service.status.PowerDailyService;
 import edu.nju.shiro.ShiroUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: Bright Chan
@@ -45,9 +51,7 @@ public class UserStatisticController {
 
     @GetMapping("/radar")
     public ResponseDTO getUserDataRadar(@RequestParam String uid) {
-        if(checkUidInValid(uid)){
-            return ResponseDTO.ofParamError();
-        }
+        checkUid(uid);
         int avgIndoorPm25 = machineDataRadarService.getAvgIndoorPm25Daily(uid,
                 Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
         int avgInnerPm25 = machineDataRadarService.getAvgInnerPm25Daily(uid,
@@ -74,9 +78,7 @@ public class UserStatisticController {
 
     @GetMapping("/openTime")
     public ResponseDTO getAvgMachineOpenTime(@RequestParam String uid) {
-        if(checkUidInValid(uid)){
-            return ResponseDTO.ofParamError();
-        }
+        checkUid(uid);
         int avgTime = machineDataRadarService.getAvgMachineOpenTimeDaily(uid,
                 Constant.MachineData.BEST_METHOD, Constant.MachineData.LAST_MONTH);
         Map<String, Integer> res = new HashMap<>();
@@ -86,9 +88,7 @@ public class UserStatisticController {
 
     @GetMapping("/calendar/pm25")
     public ResponseDTO getAvgIndoorPm25PerDayThisYear(@RequestParam String uid) {
-        if(checkUidInValid(uid)){
-            return ResponseDTO.ofParamError();
-        }
+        checkUid(uid);
         long end = indoorPm25DailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
         List<AvgDataDaily> store = indoorPm25DailyService.getAverageList(uid,
@@ -103,9 +103,7 @@ public class UserStatisticController {
 
     @GetMapping("/calendar/openTime")
     public ResponseDTO getAvgMachineOpenTimePerDayThisYear(@RequestParam String uid) {
-        if(checkUidInValid(uid)){
-            return ResponseDTO.ofParamError();
-        }
+        checkUid(uid);
         long end = powerDailyService.getLatestTime(uid);
         long start = getFirstDayOfThisYear(end);
         List<AvgDataDaily> store = powerDailyService.getAverageList(uid,
@@ -121,9 +119,7 @@ public class UserStatisticController {
 
     @GetMapping("/forecastData")
     public ResponseDTO getForecastData(@RequestParam String uid) {
-        if(checkUidInValid(uid)){
-            return ResponseDTO.ofParamError();
-        }
+        checkUid(uid);
         Map<String, Integer> res = new HashMap<>();
         MachineStatisticData predictData = machineDataPredictService.predict(uid);
         res.put("indoorPm25", (int) Math.round(predictData.getIndoorPm25()));
@@ -148,8 +144,12 @@ public class UserStatisticController {
         return start;
     }
 
-    //判断uid是否为已登陆用户
-    private boolean checkUidInValid(String uid){
-        return (StringUtils.isEmpty(uid)) || (!uid.equals(ShiroUtil.getCurrentUid()));
+    private void checkUid(String uid) {
+        if (StringUtils.isEmpty(uid)) {
+            throw new ParamErrorException("empty uid");
+        }
+        if (!uid.equals(ShiroUtil.getCurrentUid())) {
+            throw new UnauthorizedException();
+        }
     }
 }
