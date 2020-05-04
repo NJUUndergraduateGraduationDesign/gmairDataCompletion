@@ -30,10 +30,8 @@ public class ShiroConfig {
         // 配置拦截规则
         Map<String, String> filterMap = new HashMap<>();
         // 登录页面和登录请求路径需要放行
-        filterMap.put("/test/**", "anon");
         filterMap.put("/login", "anon");
         filterMap.put("/logout", "anon");
-        filterMap.put("/getCurrentUid", "anon");
         // 其他未配置的所有路径都需要通过验证，否则跳转到登录页
         filterMap.put("/**", "authc");
         shiroFilterFactoryBean.setFilterChainDefinitionMap(filterMap);
